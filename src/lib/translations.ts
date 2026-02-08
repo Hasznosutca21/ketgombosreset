@@ -69,6 +69,25 @@ Gyári szintű diagnosztikával és célzott műszaki vizsgálattal átnézzük 
       description: "Kötelező éves akkumulátor és rendszer ellenőrzés",
       duration: "1-2 óra",
       price: "31 750 Ft",
+      details: `Az éves Tesla felülvizsgálat célja, hogy biztosítsd járműved hosszú távú megbízhatóságát és értékállóságát. Ez a szolgáltatás különösen fontos használt Tesla vásárlás előtt, garancia lejárta után, vagy egyszerűen a nyugalom érdekében.
+
+Miért fontos az éves felülvizsgálat?
+A Tesla elektromos hajtáslánca kevesebb karbantartást igényel, mint egy hagyományos autó – de ez nem jelenti azt, hogy ne lenne szükség rendszeres ellenőrzésre. Az akkumulátor állapota, a fékrendszer, a futómű és a szoftver mind kritikus elemek, amelyek idővel kopnak vagy frissítést igényelnek.
+
+Mit tartalmaz a felülvizsgálat?
+
+• Akkumulátor egészségi állapot (SoH) mérés
+• Töltőrendszer és töltőport ellenőrzés
+• 12V akkumulátor állapotfelmérés
+• Fékrendszer és fékfolyadék ellenőrzés
+• Futómű és lengéscsillapítók vizsgálata
+• Gumiabroncs állapot és kopásminta ellenőrzés
+• Klíma és fűtésrendszer teszt
+• Gyári diagnosztika és hibakód kiolvasás
+• Karosszéria és alváz szemrevételezés
+• Részletes állapotjelentés és javaslatok
+
+Az árban foglalt személyes konzultáció során átbeszéljük az eredményeket és válaszolunk minden kérdésedre.`,
     },
     brake: {
       title: "Fékszerviz",
@@ -416,6 +435,25 @@ Using factory-level diagnostics and targeted technical inspection, we review you
       description: "Mandatory annual battery and system check",
       duration: "1-2 hours",
       price: "31,750 Ft",
+      details: `The annual Tesla inspection ensures your vehicle's long-term reliability and value retention. This service is especially important before buying a used Tesla, after warranty expiration, or simply for peace of mind.
+
+Why is the annual inspection important?
+Tesla's electric powertrain requires less maintenance than a traditional car – but that doesn't mean regular checks aren't necessary. Battery condition, brake system, suspension, and software are all critical components that wear over time or require updates.
+
+What does the inspection include?
+
+• Battery State of Health (SoH) measurement
+• Charging system and charge port inspection
+• 12V battery condition assessment
+• Brake system and brake fluid check
+• Suspension and shock absorber inspection
+• Tire condition and wear pattern check
+• Climate and heating system test
+• Factory diagnostics and error code reading
+• Body and underbody visual inspection
+• Detailed condition report and recommendations
+
+The price includes a personal consultation where we discuss the results and answer all your questions.`,
     },
     brake: {
       title: "Brake Service",
