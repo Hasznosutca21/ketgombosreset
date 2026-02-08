@@ -144,6 +144,9 @@ const Index = () => {
             <span className="text-xl font-semibold tracking-tight">{t.teslaService}</span>
           </div>
           <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={() => (window.location.href = "/manage")}>
+              {t.manageMyAppointment}
+            </Button>
             <LanguageSwitcher variant="glass" />
             <Button variant="glass" size="sm" onClick={() => (window.location.href = "/auth")}>
               {t.adminLogin}
