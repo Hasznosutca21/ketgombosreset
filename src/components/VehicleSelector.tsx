@@ -144,7 +144,10 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
             >
               <div className="flex flex-col items-center justify-center">
                 <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-1">Tesla</span>
-                <span className="text-3xl font-light tracking-wide">{vehicle.name.replace("Model ", "")}</span>
+                <span className="text-3xl font-light tracking-wide">
+                  <span className="text-lg font-normal mr-1">Model</span>
+                  {vehicle.name.replace("Model ", "")}
+                </span>
               </div>
             </button>
           );
