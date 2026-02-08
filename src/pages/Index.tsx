@@ -315,11 +315,11 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="border-t border-border py-8 px-6">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+        <div className="max-w-4xl mx-auto flex flex-col items-center gap-6 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <img src={teslandLogo} alt="TESLAND" className="h-8 w-auto dark:invert" />
           </div>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap justify-center gap-6">
             <Link to="/about" className="hover:text-foreground transition-colors">
               {language === "hu" ? "Rólunk" : "About"}
             </Link>
@@ -334,6 +334,15 @@ const Index = () => {
             >
               {t.locations}
             </a>
+            <Link to="/terms" className="hover:text-foreground transition-colors">
+              {language === "hu" ? "ÁSZF" : "Terms"}
+            </Link>
+            <Link to="/privacy" className="hover:text-foreground transition-colors">
+              {language === "hu" ? "Adatkezelés" : "Privacy"}
+            </Link>
+          </div>
+          <div className="text-xs">
+            © {new Date().getFullYear()} TESLAND. {language === "hu" ? "Minden jog fenntartva." : "All rights reserved."}
           </div>
         </div>
       </footer>
