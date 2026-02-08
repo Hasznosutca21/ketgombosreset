@@ -115,6 +115,12 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
       description: "Belső fűtés és ülésfűtés ellenőrzés",
       duration: "1 óra",
     },
+    ptcheater: {
+      title: "PTC heater csere",
+      description: "Elektromos kiegészítő fűtőelem csere, hideg időben biztosítja a hatékony fűtést",
+      duration: "3-4 óra",
+      price: "370 000 Ft",
+    },
     // Extra funkciók
     software: {
       title: "Boombox aktiválás",
@@ -498,6 +504,12 @@ The price includes a personal consultation where we discuss the results and answ
       title: "Heating System",
       description: "Interior and seat heating inspection",
       duration: "1 hour",
+    },
+    ptcheater: {
+      title: "PTC Heater Replacement",
+      description: "Electric auxiliary heater replacement for efficient heating in cold weather",
+      duration: "3-4 hours",
+      price: "370 000 Ft",
     },
     // Extra Features
     software: {
