@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, Car, Info, Check, Calendar } from "lucide-react";
+import { ArrowLeft, Car, Info, Check, Calendar, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -11,6 +11,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Import vehicle images
 import modelSImage from "@/assets/vehicles/model-s.png";
@@ -257,35 +264,75 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
       </div>
 
       {/* Year selector - shows after vehicle is selected */}
-      {selectedVehicleId && (
-        <div className="mt-8 animate-fade-in">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Calendar className="w-5 h-5 text-muted-foreground" />
-            <h3 className="text-lg md:text-xl font-light text-center">
-              {t.selectYear || "Válaszd ki az évjáratot"}
-            </h3>
-          </div>
+      {/* Year selector dialog */}
+      <Dialog open={!!selectedVehicleId && !selectedYear} onOpenChange={(open) => {
+        if (!open && !selectedYear) {
+          setSelectedVehicleId(null);
+        }
+      }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Calendar className="w-5 h-5" />
+              {t.selectYear}
+            </DialogTitle>
+          </DialogHeader>
           
-          <div className="flex flex-wrap justify-center gap-2 md:gap-3 max-w-2xl mx-auto">
-            {yearOptions.map((year) => {
-              const isYearSelected = selectedYear === year;
-              
-              return (
+          {selectedVehicle && (
+            <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg mb-4">
+              <img 
+                src={selectedVehicle.image} 
+                alt={selectedVehicle.name}
+                className="w-16 h-12 object-contain"
+              />
+              <span className="font-medium">{selectedVehicle.name}</span>
+            </div>
+          )}
+          
+          <ScrollArea className="max-h-[300px]">
+            <div className="grid grid-cols-3 gap-2 p-1">
+              {yearOptions.map((year) => (
                 <button
                   key={year}
                   onClick={() => handleYearSelect(year)}
                   className={cn(
-                    "px-4 py-2 md:px-5 md:py-2.5 rounded-lg border-2 transition-all duration-200 text-sm md:text-base font-medium",
-                    "hover:bg-muted/50",
-                    isYearSelected
-                      ? "border-foreground bg-foreground text-background"
-                      : "border-border bg-card hover:border-foreground/30"
+                    "px-4 py-3 rounded-lg border-2 transition-all duration-200 text-base font-medium",
+                    "hover:bg-muted/50 hover:border-foreground/30",
+                    "border-border bg-card"
                   )}
                 >
                   {year}
                 </button>
-              );
-            })}
+              ))}
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
+
+      {/* Selected vehicle and year display */}
+      {selectedVehicleId && selectedYear && (
+        <div className="mt-8 animate-fade-in">
+          <div className="flex items-center justify-center gap-3 p-4 bg-muted/30 rounded-xl max-w-md mx-auto">
+            {selectedVehicle && (
+              <>
+                <img 
+                  src={selectedVehicle.image} 
+                  alt={selectedVehicle.name}
+                  className="w-20 h-14 object-contain"
+                />
+                <div className="flex-1">
+                  <div className="font-semibold">{selectedVehicle.name}</div>
+                  <div className="text-sm text-muted-foreground">{selectedYear}</div>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setSelectedYear(null)}
+                >
+                  {t.change || "Módosítás"}
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}
