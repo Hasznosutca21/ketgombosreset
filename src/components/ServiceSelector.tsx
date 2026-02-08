@@ -1,4 +1,17 @@
-import { Wrench, Zap, Settings, Disc, Shield, Paintbrush, ChevronDown } from "lucide-react";
+import { 
+  Wrench, 
+  Zap, 
+  Settings, 
+  Disc, 
+  Shield, 
+  Paintbrush, 
+  Thermometer, 
+  Fan, 
+  Flame,
+  Navigation,
+  MonitorPlay,
+  CircleDot
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import {
@@ -17,23 +30,38 @@ interface ServiceSelectorProps {
 const categories = [
   {
     id: "maintenance",
+    icon: Wrench,
     services: [
       { id: "maintenance", icon: Wrench },
       { id: "battery", icon: Zap },
-      { id: "software", icon: Settings },
-    ],
-  },
-  {
-    id: "repair",
-    services: [
       { id: "brake", icon: Disc },
-      { id: "body", icon: Paintbrush },
     ],
   },
   {
-    id: "warranty",
+    id: "hvac",
+    icon: Thermometer,
     services: [
+      { id: "ac", icon: Fan },
+      { id: "heatpump", icon: Thermometer },
+      { id: "heating", icon: Flame },
+    ],
+  },
+  {
+    id: "extras",
+    icon: Settings,
+    services: [
+      { id: "software", icon: Settings },
+      { id: "autopilot", icon: Navigation },
+      { id: "multimedia", icon: MonitorPlay },
+    ],
+  },
+  {
+    id: "other",
+    icon: Shield,
+    services: [
+      { id: "body", icon: Paintbrush },
       { id: "warranty", icon: Shield },
+      { id: "tires", icon: CircleDot },
     ],
   },
 ];
@@ -65,6 +93,7 @@ const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
         {categories.map((category) => {
           const categoryData = t.serviceCategories[category.id as keyof typeof t.serviceCategories];
           const hasSelectedService = category.services.some(s => s.id === selected);
+          const CategoryIcon = category.icon;
           
           return (
             <AccordionItem 
@@ -81,9 +110,7 @@ const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
                     "w-10 h-10 rounded-lg flex items-center justify-center transition-colors",
                     hasSelectedService ? "bg-primary text-primary-foreground" : "bg-muted"
                   )}>
-                    {category.id === "maintenance" && <Wrench className="w-5 h-5" />}
-                    {category.id === "repair" && <Disc className="w-5 h-5" />}
-                    {category.id === "warranty" && <Shield className="w-5 h-5" />}
+                    <CategoryIcon className="w-5 h-5" />
                   </div>
                   <div className="text-left">
                     <h3 className="text-lg font-semibold">{categoryData.title}</h3>
@@ -92,7 +119,7 @@ const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-6 pb-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
                   {category.services.map((service) => {
                     const Icon = service.icon;
                     const isSelected = selected === service.id;
@@ -110,19 +137,19 @@ const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
                             : "bg-muted/30 border-border/30 hover:bg-muted/50"
                         )}
                       >
-                        <div className="flex items-start gap-3">
+                        <div className="flex flex-col items-center text-center gap-2">
                           <div
                             className={cn(
-                              "w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors",
+                              "w-12 h-12 rounded-lg flex items-center justify-center transition-colors",
                               isSelected ? "bg-primary text-primary-foreground" : "bg-muted"
                             )}
                           >
-                            <Icon className="w-5 h-5" />
+                            <Icon className="w-6 h-6" />
                           </div>
-                          <div className="min-w-0">
-                            <h4 className="font-medium mb-0.5">{serviceData.title}</h4>
-                            <p className="text-xs text-muted-foreground mb-1">{serviceData.description}</p>
-                            <div className="text-xs text-muted-foreground">
+                          <div>
+                            <h4 className="font-medium text-sm mb-0.5">{serviceData.title}</h4>
+                            <p className="text-xs text-muted-foreground mb-1 line-clamp-2">{serviceData.description}</p>
+                            <div className="text-xs text-muted-foreground/70">
                               {t.estTime}: {serviceData.duration}
                             </div>
                           </div>
