@@ -119,6 +119,7 @@ export const hu = {
   continueWithGoogle: "Folytatás Google fiókkal",
   continueWithApple: "Folytatás Apple fiókkal",
   orContinueWith: "vagy folytatás e-maillel",
+  rememberMe: "Emlékezz rám",
   login: "Bejelentkezés",
 
   // Admin Dashboard
@@ -284,6 +285,7 @@ export const en = {
   continueWithGoogle: "Continue with Google",
   continueWithApple: "Continue with Apple",
   orContinueWith: "or continue with email",
+  rememberMe: "Remember me",
   login: "Login",
 
   // Admin Dashboard
