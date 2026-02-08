@@ -141,7 +141,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="relative h-[40vh] min-h-[300px] overflow-hidden">
+      <div className="relative h-[55vh] min-h-[450px] overflow-hidden">
         <img src={heroImage} alt="Tesla Service Center" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background pointer-events-none" />
 
@@ -261,7 +261,8 @@ const Index = () => {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 animate-fade-in">
             {t.scheduleYourService}
           </h1>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-2xl animate-slide-up">{t.expertCare}</p>
+          <h2 className="text-xl md:text-2xl font-semibold mb-3 text-primary animate-slide-up">{t.expertCare}</h2>
+          <p className="text-muted-foreground text-sm md:text-base max-w-2xl animate-slide-up leading-relaxed">{t.heroDescription}</p>
         </div>
       </div>
 
