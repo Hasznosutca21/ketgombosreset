@@ -27,7 +27,6 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isAppleLoading, setIsAppleLoading] = useState(false);
-  const [isTeslaLoading, setIsTeslaLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const navigate = useNavigate();
   const { user, isLoading: authLoading, signIn, signUp } = useAuth();
@@ -79,71 +78,6 @@ const Auth = () => {
     }
   }, [user, authLoading, navigate]);
 
-  // Handle Tesla OAuth callback
-  useEffect(() => {
-    const handleTeslaCallback = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get("code");
-      const state = urlParams.get("state");
-      
-      if (!code) return;
-      
-      // Verify state
-      const savedState = sessionStorage.getItem("tesla_auth_state");
-      if (savedState && state !== savedState) {
-        console.error("State mismatch in Tesla OAuth callback");
-        toast.error(t.teslaLoginFailed || "Tesla login failed");
-        return;
-      }
-      
-      sessionStorage.removeItem("tesla_auth_state");
-      setIsTeslaLoading(true);
-      
-      try {
-        // Clean URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-
-        const redirectUri = `${window.location.origin}/auth`;
-        
-        const response = await supabase.functions.invoke("tesla-login", {
-          body: { code, redirect_uri: redirectUri },
-        });
-        
-        if (response.error) {
-          throw new Error(response.error.message || "Tesla login failed");
-        }
-        
-        if (response.data?.verification_url) {
-          // Verify the email/token to complete login
-          const verifyUrl = new URL(response.data.verification_url);
-          const tokenHash = verifyUrl.hash?.replace("#", "") || verifyUrl.searchParams.get("token_hash");
-          const type = verifyUrl.searchParams.get("type") || "magiclink";
-          
-          const { error: verifyError } = await supabase.auth.verifyOtp({
-            token_hash: tokenHash || response.data.token_hash,
-            type: type as any,
-          });
-          
-          if (verifyError) {
-            console.error("Verification error:", verifyError);
-            throw new Error("Failed to complete Tesla login");
-          }
-          
-          toast.success(t.welcomeBack || "Welcome!");
-          navigate("/");
-        } else {
-          throw new Error("No verification URL returned");
-        }
-      } catch (err) {
-        console.error("Tesla callback error:", err);
-        toast.error(t.teslaLoginFailed || "Failed to sign in with Tesla");
-      } finally {
-        setIsTeslaLoading(false);
-      }
-    };
-    
-    handleTeslaCallback();
-  }, [navigate, t]);
 
   const onSubmit = async (data: LoginFormData | SignupFormData | ForgotFormData) => {
     setIsLoading(true);
@@ -226,44 +160,6 @@ const Auth = () => {
     }
   };
 
-  const handleTeslaLogin = async () => {
-    setIsTeslaLoading(true);
-    try {
-      // Get the Tesla auth URL from our edge function
-      const { data: session } = await supabase.auth.getSession();
-      
-      // For Tesla login, we need to redirect to our Tesla OAuth flow
-      // Use the current origin for the redirect (works for any domain)
-      const redirectUri = `${window.location.origin}/auth`;
-      
-      const response = await supabase.functions.invoke("tesla-auth", {
-        body: {
-          action: "get_auth_url_public",
-          redirect_uri: redirectUri,
-        },
-      });
-      
-      if (response.error) {
-        throw new Error(response.error.message || "Failed to get Tesla auth URL");
-      }
-      
-      if (response.data?.auth_url) {
-        // Store the state in sessionStorage for verification
-        if (response.data.state) {
-          sessionStorage.setItem("tesla_auth_state", response.data.state);
-        }
-        // Redirect to Tesla OAuth
-        window.location.href = response.data.auth_url;
-      } else {
-        throw new Error("No auth URL returned");
-      }
-    } catch (err) {
-      console.error("Tesla login error:", err);
-      toast.error(t.teslaLoginFailed || "Failed to sign in with Tesla");
-    } finally {
-      setIsTeslaLoading(false);
-    }
-  };
 
   // Show loading skeleton while checking auth state
   if (authLoading) {
@@ -314,7 +210,7 @@ const Auth = () => {
                     variant="outline"
                     className="w-full flex items-center justify-center gap-3"
                     onClick={handleGoogleLogin}
-                    disabled={isGoogleLoading || isAppleLoading || isTeslaLoading}
+                    disabled={isGoogleLoading || isAppleLoading}
                   >
                     {isGoogleLoading ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
@@ -346,7 +242,7 @@ const Auth = () => {
                     variant="outline"
                     className="w-full flex items-center justify-center gap-3"
                     onClick={handleAppleLogin}
-                    disabled={isGoogleLoading || isAppleLoading || isTeslaLoading}
+                    disabled={isGoogleLoading || isAppleLoading}
                   >
                     {isAppleLoading ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
@@ -358,22 +254,6 @@ const Auth = () => {
                     {t.continueWithApple || "Continue with Apple"}
                   </Button>
 
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full flex items-center justify-center gap-3"
-                    onClick={handleTeslaLogin}
-                    disabled={isGoogleLoading || isAppleLoading || isTeslaLoading}
-                  >
-                    {isTeslaLoading ? (
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                    ) : (
-                      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 5.362l2.475-3.026s4.245.09 8.471 2.054c-1.082 1.636-3.234 2.563-3.234 2.563.289.143.087.467.087.467l-.323.323c2.5 1.87 3.936 5.163 4.524 8.257-1.98-2.725-5.77-2.83-5.77-2.83.5.5.5 1 .5 1s.5 2.5-2.5 6.5h-2l-2-3s-3 2-3 3h-2c-3-4-2.5-6.5-2.5-6.5s0-.5.5-1c0 0-3.79.105-5.77 2.83.588-3.094 2.024-6.387 4.524-8.257l-.323-.323s-.202-.324.087-.467c0 0-2.152-.927-3.234-2.563 4.226-1.964 8.47-2.054 8.47-2.054L12 5.362z" />
-                      </svg>
-                    )}
-                    {t.continueWithTesla || "Continue with Tesla"}
-                  </Button>
                 </div>
 
                 {/* Divider */}
