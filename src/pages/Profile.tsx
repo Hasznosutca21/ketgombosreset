@@ -39,6 +39,9 @@ interface Profile {
   vehicle_vin: string | null;
   vehicle_plate: string | null;
   vehicle_image_url: string | null;
+  plate_position_x: number | null;
+  plate_position_y: number | null;
+  plate_size: number | null;
   preferences: {
     emailNotifications?: boolean;
     smsNotifications?: boolean;
@@ -384,6 +387,27 @@ const Profile = () => {
     }
   };
 
+  const handlePlateSettingChange = async (key: 'plate_position_x' | 'plate_position_y' | 'plate_size', value: number) => {
+    if (!user) return;
+
+    // Immediately update local state for responsive UI
+    setProfile((prev) => prev ? { ...prev, [key]: value } : null);
+
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .upsert({
+          user_id: user.id,
+          [key]: value,
+        }, { onConflict: 'user_id' });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error("Error updating plate settings:", error);
+      // Don't show error toast for every slider movement
+    }
+  };
+
   const getInitials = () => {
     if (profile?.display_name) {
       return profile.display_name
@@ -618,22 +642,25 @@ const Profile = () => {
                         <Label>{t.vehicleImage || "Vehicle Image"}</Label>
                         <div className="flex flex-col items-center gap-4">
                           {profile?.vehicle_image_url ? (
-                            <div className="relative w-full">
+                            <div className="relative w-full h-48 overflow-hidden rounded-lg border border-border">
                               <img
                                 src={profile.vehicle_image_url}
                                 alt="Vehicle"
-                                className="w-full h-48 object-cover rounded-lg border border-border"
+                                className="w-full h-full object-cover"
                               />
                               {/* License Plate Overlay */}
                               {profile?.vehicle_plate && (
-                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
-                                  <LicensePlateOverlay plateNumber={profile.vehicle_plate} />
-                                </div>
+                                <LicensePlateOverlay 
+                                  plateNumber={profile.vehicle_plate}
+                                  positionX={profile.plate_position_x ?? 50}
+                                  positionY={profile.plate_position_y ?? 85}
+                                  size={profile.plate_size ?? 100}
+                                />
                               )}
                               <button
                                 type="button"
                                 onClick={handleRemoveVehicleImage}
-                                className="absolute top-2 right-2 p-1.5 rounded-full bg-destructive text-destructive-foreground shadow-lg hover:bg-destructive/90 transition-colors"
+                                className="absolute top-2 right-2 p-1.5 rounded-full bg-destructive text-destructive-foreground shadow-lg hover:bg-destructive/90 transition-colors z-10"
                                 disabled={isUploadingVehicleImage}
                               >
                                 <X className="h-4 w-4" />
@@ -658,6 +685,7 @@ const Profile = () => {
                               )}
                             </button>
                           )}
+                          
                           {profile?.vehicle_image_url && (
                             <Button
                               type="button"
@@ -674,6 +702,7 @@ const Profile = () => {
                               {t.uploadVehicleImage || "Upload Image"}
                             </Button>
                           )}
+                          
                           <input
                             ref={vehicleImageInputRef}
                             type="file"
@@ -683,6 +712,60 @@ const Profile = () => {
                           />
                         </div>
                       </div>
+
+                      {/* Plate Position & Size Controls - only show when image and plate exist */}
+                      {profile?.vehicle_image_url && profile?.vehicle_plate && (
+                        <div className="space-y-4 p-4 rounded-lg border border-border bg-muted/30">
+                          <Label className="text-base font-medium">{t.platePosition || "Plate Position"}</Label>
+                          
+                          <div className="space-y-3">
+                            <div className="space-y-2">
+                              <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">{t.platePositionX || "Horizontal Position"}</span>
+                                <span className="font-mono">{profile.plate_position_x ?? 50}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min="10"
+                                max="90"
+                                value={profile.plate_position_x ?? 50}
+                                onChange={(e) => handlePlateSettingChange('plate_position_x', parseInt(e.target.value))}
+                                className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                              />
+                            </div>
+                            
+                            <div className="space-y-2">
+                              <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">{t.platePositionY || "Vertical Position"}</span>
+                                <span className="font-mono">{profile.plate_position_y ?? 85}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min="10"
+                                max="95"
+                                value={profile.plate_position_y ?? 85}
+                                onChange={(e) => handlePlateSettingChange('plate_position_y', parseInt(e.target.value))}
+                                className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                              />
+                            </div>
+                            
+                            <div className="space-y-2">
+                              <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">{t.plateSize || "Plate Size"}</span>
+                                <span className="font-mono">{profile.plate_size ?? 100}%</span>
+                              </div>
+                              <input
+                                type="range"
+                                min="50"
+                                max="150"
+                                value={profile.plate_size ?? 100}
+                                onChange={(e) => handlePlateSettingChange('plate_size', parseInt(e.target.value))}
+                                className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       <Button type="submit" variant="tesla" className="w-full" disabled={isSaving}>
                         {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

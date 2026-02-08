@@ -221,6 +221,13 @@ export const hu = {
   removeVehicleImage: "Kép eltávolítása",
   vehicleImageRemoved: "Jármű kép eltávolítva",
   clickToUploadVehicleImage: "Kattintson a jármű kép feltöltéséhez",
+  platePosition: "Rendszám pozíció",
+  platePositionX: "Vízszintes pozíció",
+  platePositionY: "Függőleges pozíció",
+  plateSize: "Rendszám méret",
+  plateSizeSmall: "Kicsi",
+  plateSizeMedium: "Közepes",
+  plateSizeLarge: "Nagy",
 
   // Admin Dashboard
   admin: "Admin",
@@ -487,6 +494,13 @@ export const en = {
   removeVehicleImage: "Remove Image",
   vehicleImageRemoved: "Vehicle image removed",
   clickToUploadVehicleImage: "Click to upload vehicle image",
+  platePosition: "Plate Position",
+  platePositionX: "Horizontal Position",
+  platePositionY: "Vertical Position",
+  plateSize: "Plate Size",
+  plateSizeSmall: "Small",
+  plateSizeMedium: "Medium",
+  plateSizeLarge: "Large",
 
   // Admin Dashboard
   admin: "Admin",

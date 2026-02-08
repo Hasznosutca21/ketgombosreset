@@ -3,9 +3,18 @@ import { cn } from "@/lib/utils";
 interface LicensePlateOverlayProps {
   plateNumber: string;
   className?: string;
+  positionX?: number; // 0-100 percentage
+  positionY?: number; // 0-100 percentage
+  size?: number; // 50-150 percentage scale
 }
 
-const LicensePlateOverlay = ({ plateNumber, className }: LicensePlateOverlayProps) => {
+const LicensePlateOverlay = ({ 
+  plateNumber, 
+  className,
+  positionX = 50,
+  positionY = 85,
+  size = 100
+}: LicensePlateOverlayProps) => {
   if (!plateNumber) return null;
 
   // Format plate number (e.g., "ABC123" -> "ABC-123" or keep as is if already formatted)
@@ -15,8 +24,17 @@ const LicensePlateOverlay = ({ plateNumber, className }: LicensePlateOverlayProp
       ? `${plateNumber.slice(0, 3)}-${plateNumber.slice(3)}`.toUpperCase()
       : plateNumber.toUpperCase();
 
+  const scale = size / 100;
+
   return (
-    <div className={cn("inline-flex items-center", className)}>
+    <div 
+      className={cn("absolute", className)}
+      style={{
+        left: `${positionX}%`,
+        top: `${positionY}%`,
+        transform: `translate(-50%, -50%) scale(${scale})`,
+      }}
+    >
       <div className="relative flex items-center bg-gradient-to-b from-[#90EE90] to-[#7CCD7C] rounded-md shadow-lg border-2 border-black overflow-hidden">
         {/* EU Blue Strip */}
         <div className="flex flex-col items-center justify-center bg-[#003399] px-1.5 py-1 h-full">
@@ -31,10 +49,10 @@ const LicensePlateOverlay = ({ plateNumber, className }: LicensePlateOverlayProp
         {/* Main Plate Area */}
         <div className="flex items-center justify-center px-3 py-1.5">
           <span 
-            className="font-bold text-black tracking-wider"
+            className="font-bold text-black tracking-wider whitespace-nowrap"
             style={{ 
               fontFamily: "'Arial Black', 'Helvetica Neue', sans-serif",
-              fontSize: "clamp(1rem, 4vw, 1.5rem)",
+              fontSize: "1.25rem",
               textShadow: "0 1px 0 rgba(255,255,255,0.3)"
             }}
           >
