@@ -28,20 +28,25 @@ export const hu = {
   serviceCategories: {
     maintenance: {
       title: "Karbantartás",
-      description: "Időszakos ellenőrzések és frissítések",
+      description: "Időszakos ellenőrzések és szervizelés",
     },
-    repair: {
-      title: "Javítás",
-      description: "Fék, karosszéria és egyéb javítások",
+    hvac: {
+      title: "Fűtés, hűtés",
+      description: "Klíma és hőmérséklet szabályozás",
     },
-    warranty: {
-      title: "Garancia",
-      description: "Garanciális javítások és cserék",
+    extras: {
+      title: "Extra funkciók",
+      description: "Software és intelligens rendszerek",
+    },
+    other: {
+      title: "Egyéb szolgáltatások",
+      description: "Karosszéria, garancia és egyebek",
     },
   },
 
   // Services
   services: {
+    // Karbantartás
     maintenance: {
       title: "Éves karbantartás",
       description: "Teljes átvizsgálás és folyadékellenőrzés",
@@ -57,11 +62,39 @@ export const hu = {
       description: "Fékbetét ellenőrzés és csere",
       duration: "1-2 óra",
     },
+    // Fűtés, hűtés
+    ac: {
+      title: "Klíma szerviz",
+      description: "Klímarendszer tisztítás és töltés",
+      duration: "1-2 óra",
+    },
+    heatpump: {
+      title: "Hőszivattyú szerviz",
+      description: "Hőszivattyú rendszer ellenőrzés és karbantartás",
+      duration: "1-2 óra",
+    },
+    heating: {
+      title: "Fűtésrendszer",
+      description: "Belső fűtés és ülésfűtés ellenőrzés",
+      duration: "1 óra",
+    },
+    // Extra funkciók
     software: {
       title: "Software frissítés",
       description: "Legújabb firmware és funkció frissítések",
       duration: "30 perc",
     },
+    autopilot: {
+      title: "Autopilot kalibrálás",
+      description: "Kamera és szenzor kalibrálás",
+      duration: "1-2 óra",
+    },
+    multimedia: {
+      title: "Multimédia frissítés",
+      description: "Infotainment rendszer frissítés és javítás",
+      duration: "30 perc",
+    },
+    // Egyéb szolgáltatások
     body: {
       title: "Karosszéria javítás",
       description: "Horpadás eltávolítás és festés javítás",
@@ -71,6 +104,11 @@ export const hu = {
       title: "Garanciális szerviz",
       description: "Garanciális javítások és cserék",
       duration: "Változó",
+    },
+    tires: {
+      title: "Abroncs szerviz",
+      description: "Gumiabroncs csere és centírozás",
+      duration: "1 óra",
     },
   },
 
@@ -324,20 +362,25 @@ export const en = {
   serviceCategories: {
     maintenance: {
       title: "Maintenance",
-      description: "Regular inspections and updates",
+      description: "Regular inspections and servicing",
     },
-    repair: {
-      title: "Repair",
-      description: "Brake, body and other repairs",
+    hvac: {
+      title: "Heating & Cooling",
+      description: "Climate and temperature control",
     },
-    warranty: {
-      title: "Warranty",
-      description: "Covered repairs and replacements",
+    extras: {
+      title: "Extra Features",
+      description: "Software and intelligent systems",
+    },
+    other: {
+      title: "Other Services",
+      description: "Body, warranty and more",
     },
   },
 
   // Services
   services: {
+    // Maintenance
     maintenance: {
       title: "Annual Maintenance",
       description: "Complete inspection and fluid checks",
@@ -353,11 +396,39 @@ export const en = {
       description: "Brake pad inspection and replacement",
       duration: "1-2 hours",
     },
+    // Heating & Cooling
+    ac: {
+      title: "AC Service",
+      description: "Air conditioning cleaning and recharge",
+      duration: "1-2 hours",
+    },
+    heatpump: {
+      title: "Heat Pump Service",
+      description: "Heat pump system check and maintenance",
+      duration: "1-2 hours",
+    },
+    heating: {
+      title: "Heating System",
+      description: "Interior and seat heating inspection",
+      duration: "1 hour",
+    },
+    // Extra Features
     software: {
       title: "Software Update",
       description: "Latest firmware and feature updates",
       duration: "30 mins",
     },
+    autopilot: {
+      title: "Autopilot Calibration",
+      description: "Camera and sensor calibration",
+      duration: "1-2 hours",
+    },
+    multimedia: {
+      title: "Multimedia Update",
+      description: "Infotainment system update and repair",
+      duration: "30 mins",
+    },
+    // Other Services
     body: {
       title: "Body Repair",
       description: "Dent removal and paint touch-ups",
@@ -367,6 +438,11 @@ export const en = {
       title: "Warranty Service",
       description: "Covered repairs and replacements",
       duration: "Varies",
+    },
+    tires: {
+      title: "Tire Service",
+      description: "Tire replacement and balancing",
+      duration: "1 hour",
     },
   },
 
