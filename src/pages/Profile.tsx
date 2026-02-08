@@ -286,19 +286,19 @@ const Profile = () => {
       // Delete old vehicle image if exists
       if (profile?.vehicle_image_url) {
         const oldPath = profile.vehicle_image_url.split("/").slice(-2).join("/");
-        await supabase.storage.from("avatars").remove([oldPath]);
+        await supabase.storage.from("vehicle-images").remove([oldPath]);
       }
 
-      // Upload new vehicle image (using avatars bucket)
+      // Upload new vehicle image
       const { error: uploadError } = await supabase.storage
-        .from("avatars")
+        .from("vehicle-images")
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
-        .from("avatars")
+        .from("vehicle-images")
         .getPublicUrl(filePath);
 
       // Update profile with new vehicle image URL
@@ -337,7 +337,7 @@ const Profile = () => {
     try {
       // Delete vehicle image from storage
       const oldPath = profile.vehicle_image_url.split("/").slice(-2).join("/");
-      await supabase.storage.from("avatars").remove([oldPath]);
+      await supabase.storage.from("vehicle-images").remove([oldPath]);
 
       // Update profile to remove vehicle image URL
       const { error } = await supabase
