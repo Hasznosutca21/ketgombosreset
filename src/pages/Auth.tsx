@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { createAuthSchemas, LoginFormData, SignupFormData, ForgotFormData } from "@/lib/validation";
 import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
 import PasswordInput from "@/components/PasswordInput";
+import AuthSkeleton from "@/components/AuthSkeleton";
 
 type AuthMode = "login" | "signup" | "forgot" | "resend";
 
@@ -148,15 +149,9 @@ const Auth = () => {
     }
   };
 
-  // Show loading while checking auth state
+  // Show loading skeleton while checking auth state
   if (authLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      </div>
-    );
+    return <AuthSkeleton />;
   }
 
   return (
