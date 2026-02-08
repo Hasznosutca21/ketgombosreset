@@ -20,6 +20,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DeleteAccountDialog from "@/components/DeleteAccountDialog";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import LicensePlateOverlay from "@/components/LicensePlateOverlay";
 
 interface Profile {
   id: string;
@@ -623,6 +624,12 @@ const Profile = () => {
                                 alt="Vehicle"
                                 className="w-full h-48 object-cover rounded-lg border border-border"
                               />
+                              {/* License Plate Overlay */}
+                              {profile?.vehicle_plate && (
+                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
+                                  <LicensePlateOverlay plateNumber={profile.vehicle_plate} />
+                                </div>
+                              )}
                               <button
                                 type="button"
                                 onClick={handleRemoveVehicleImage}
