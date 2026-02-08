@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, Car, Info, Check, Calendar, ChevronDown } from "lucide-react";
+import { ArrowLeft, Car, Info, Check, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { YearPicker } from "@/components/ui/year-picker";
 
 // Import vehicle images
 import modelSImage from "@/assets/vehicles/model-s.png";
@@ -158,10 +158,16 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
     setSelectedYear(null); // Reset year when changing vehicle
   };
 
+  const [tempYear, setTempYear] = useState<number | null>(null);
+
   const handleYearSelect = (year: number) => {
-    setSelectedYear(year);
-    if (selectedVehicleId) {
-      onSelect(`${selectedVehicleId}-${year}`);
+    setTempYear(year);
+  };
+
+  const handleYearConfirm = () => {
+    if (tempYear && selectedVehicleId) {
+      setSelectedYear(tempYear);
+      onSelect(`${selectedVehicleId}-${tempYear}`);
     }
   };
 
@@ -278,21 +284,25 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
 
       {/* Year selector - shows after vehicle is selected */}
       {/* Year selector dialog */}
-      <Dialog open={!!selectedVehicleId && !selectedYear} onOpenChange={(open) => {
-        if (!open && !selectedYear) {
-          setSelectedVehicleId(null);
-        }
-      }}>
-        <DialogContent className="max-w-md">
+      <Dialog 
+        open={!!selectedVehicleId && !selectedYear} 
+        onOpenChange={(open) => {
+          if (!open && !selectedYear) {
+            setSelectedVehicleId(null);
+            setTempYear(null);
+          }
+        }}
+      >
+        <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-xl">
+            <DialogTitle className="flex items-center justify-center gap-2 text-xl">
               <Calendar className="w-5 h-5" />
               {t.selectYear}
             </DialogTitle>
           </DialogHeader>
           
           {selectedVehicle && (
-            <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg mb-4">
+            <div className="flex items-center justify-center gap-3 p-3 bg-muted/50 rounded-lg mb-2">
               <img 
                 src={selectedVehicle.image} 
                 alt={selectedVehicle.name}
@@ -302,23 +312,20 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
             </div>
           )}
           
-          <ScrollArea className="max-h-[300px]">
-            <div className="grid grid-cols-3 gap-2 p-1">
-              {yearOptions.map((year) => (
-                <button
-                  key={year}
-                  onClick={() => handleYearSelect(year)}
-                  className={cn(
-                    "px-4 py-3 rounded-lg border-2 transition-all duration-200 text-base font-medium",
-                    "hover:bg-muted/50 hover:border-foreground/30",
-                    "border-border bg-card"
-                  )}
-                >
-                  {year}
-                </button>
-              ))}
-            </div>
-          </ScrollArea>
+          <YearPicker
+            years={yearOptions}
+            value={tempYear}
+            onChange={handleYearSelect}
+            className="my-4"
+          />
+
+          <Button 
+            onClick={handleYearConfirm}
+            disabled={!tempYear}
+            className="w-full"
+          >
+            {t.confirm || "Megerősítés"}
+          </Button>
         </DialogContent>
       </Dialog>
 

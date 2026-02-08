@@ -175,4 +175,13 @@
   .text-tesla-body {
     @apply font-light leading-relaxed;
   }
+
+  /* Hide scrollbar for picker */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
