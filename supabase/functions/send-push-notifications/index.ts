@@ -34,10 +34,15 @@ const serviceNames: Record<string, string> = {
 
 const vehicleNames: Record<string, string> = {
   "model-s": "Model S",
+  "model-s-plaid": "Model S Plaid",
   "model-3": "Model 3",
+  "model-3-performance": "Model 3 Performance",
   "model-x": "Model X",
+  "model-x-plaid": "Model X Plaid",
   "model-y": "Model Y",
+  "model-y-performance": "Model Y Performance",
   cybertruck: "Cybertruck",
+  "cybertruck-cyberbeast": "Cybertruck Cyberbeast",
   roadster: "Roadster",
 };
 
@@ -61,12 +66,8 @@ serve(async (req) => {
     const currentDate = now.toISOString().split('T')[0];
     const targetHour = oneHourFromNow.getHours();
     const targetMinute = oneHourFromNow.getMinutes();
-    
-    // Format time to match appointment_time format (e.g., "10:00 AM")
-    const targetTimeStart = formatTime(targetHour, targetMinute - 5);
-    const targetTimeEnd = formatTime(targetHour, targetMinute + 5);
 
-    console.log(`Checking for appointments on ${currentDate} between ${targetTimeStart} and ${targetTimeEnd}`);
+    console.log(`Checking for appointments on ${currentDate} around ${targetHour}:${targetMinute}`);
 
     // Get appointments happening in approximately 1 hour
     const { data: appointments, error: appointmentsError } = await supabase
@@ -77,7 +78,10 @@ serve(async (req) => {
 
     if (appointmentsError) {
       console.error('Error fetching appointments:', appointmentsError);
-      throw appointmentsError;
+      return new Response(
+        JSON.stringify({ error: 'Failed to process notifications' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      );
     }
 
     console.log(`Found ${appointments?.length || 0} appointments for today`);
@@ -131,7 +135,7 @@ serve(async (req) => {
               body: JSON.stringify({
                 to: subscription.device_token,
                 notification: {
-                  title: 'Upcoming Tesla Service Appointment',
+                  title: 'Upcoming TESLAND Service Appointment',
                   body: `Your ${serviceName} for ${vehicleName} is in 1 hour!`,
                 },
                 data: {
@@ -140,8 +144,7 @@ serve(async (req) => {
               }),
             });
 
-            const result = await response.json();
-            console.log(`FCM notification sent for appointment ${appointment.id}:`, result);
+            console.log(`FCM notification sent for appointment ${appointment.id}, status: ${response.status}`);
             notificationResults.push({ 
               appointmentId: appointment.id, 
               platform: 'android', 
@@ -149,10 +152,9 @@ serve(async (req) => {
             });
           }
 
-          // For iOS (APNs), you would typically use a service like Firebase or a direct APNs connection
-          // This is a placeholder for iOS push notification logic
+          // For iOS (APNs)
           if (subscription.platform === 'ios') {
-            console.log(`iOS push notification would be sent to token: ${subscription.device_token.substring(0, 10)}...`);
+            console.log(`iOS push notification would be sent for appointment ${appointment.id}`);
             notificationResults.push({ 
               appointmentId: appointment.id, 
               platform: 'ios', 
@@ -160,13 +162,12 @@ serve(async (req) => {
               note: 'iOS notifications require APNs configuration'
             });
           }
-        } catch (error) {
-          console.error(`Error sending notification for subscription ${subscription.id}:`, error);
+        } catch (notifError) {
+          console.error(`Error sending notification for subscription ${subscription.id}:`, notifError);
           notificationResults.push({ 
             appointmentId: appointment.id, 
             platform: subscription.platform, 
-            success: false, 
-            error: String(error) 
+            success: false
           });
         }
       }
@@ -176,40 +177,34 @@ serve(async (req) => {
       JSON.stringify({ 
         success: true, 
         processed: upcomingAppointments.length,
-        notifications: notificationResults 
+        notifications: notificationResults.length
       }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200 
-      }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
 
   } catch (error) {
     console.error('Error in send-push-notifications:', error);
     return new Response(
-      JSON.stringify({ error: String(error) }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500 
-      }
+      JSON.stringify({ error: 'Failed to process push notifications' }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     );
   }
 });
 
-function formatTime(hours: number, minutes: number): string {
-  const h = hours % 12 || 12;
-  const m = Math.max(0, Math.min(59, minutes));
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  return `${h}:${m.toString().padStart(2, '0')} ${ampm}`;
-}
-
 function parseTimeString(timeStr: string): { hours: number; minutes: number } | null {
-  const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-  if (!match) return null;
+  // Handle 24-hour format (e.g., "14:00")
+  const match24 = timeStr.match(/^(\d{1,2}):(\d{2})$/);
+  if (match24) {
+    return { hours: parseInt(match24[1]), minutes: parseInt(match24[2]) };
+  }
   
-  let hours = parseInt(match[1]);
-  const minutes = parseInt(match[2]);
-  const isPM = match[3].toUpperCase() === 'PM';
+  // Handle 12-hour format (e.g., "2:00 PM")
+  const match12 = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (!match12) return null;
+  
+  let hours = parseInt(match12[1]);
+  const minutes = parseInt(match12[2]);
+  const isPM = match12[3].toUpperCase() === 'PM';
   
   if (isPM && hours !== 12) hours += 12;
   if (!isPM && hours === 12) hours = 0;
