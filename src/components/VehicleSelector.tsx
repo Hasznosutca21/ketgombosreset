@@ -166,7 +166,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
       )}
 
       {/* Card-style vehicle grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <TooltipProvider>
           {vehicles.map((vehicle) => {
             const isSelected = selected === vehicle.id;
@@ -176,7 +176,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
                 key={vehicle.id}
                 onClick={() => onSelect(vehicle.id)}
                 className={cn(
-                  "relative flex flex-col items-center p-6 rounded-2xl border-2 transition-all duration-200 text-left",
+                  "relative flex flex-col items-center p-3 md:p-6 rounded-xl md:rounded-2xl border-2 transition-all duration-200 text-left",
                   "bg-card hover:bg-muted/50",
                   isSelected 
                     ? "border-foreground shadow-lg" 
@@ -186,8 +186,8 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
                 {/* Info tooltip */}
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="absolute top-4 right-4 p-1 rounded-full hover:bg-muted transition-colors">
-                      <Info className="w-4 h-4 text-muted-foreground" />
+                    <div className="absolute top-2 right-2 md:top-4 md:right-4 p-1 rounded-full hover:bg-muted transition-colors">
+                      <Info className="w-3 h-3 md:w-4 md:h-4 text-muted-foreground" />
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -197,27 +197,27 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
 
                 {/* Selected checkmark */}
                 {isSelected && (
-                  <div className="absolute top-4 left-4 w-6 h-6 rounded-full bg-foreground flex items-center justify-center">
-                    <Check className="w-4 h-4 text-background" />
+                  <div className="absolute top-2 left-2 md:top-4 md:left-4 w-5 h-5 md:w-6 md:h-6 rounded-full bg-foreground flex items-center justify-center">
+                    <Check className="w-3 h-3 md:w-4 md:h-4 text-background" />
                   </div>
                 )}
 
                 {/* Vehicle Image in circle */}
-                <div className="w-20 h-20 rounded-full bg-muted/50 flex items-center justify-center mb-4 overflow-hidden">
+                <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-muted/50 flex items-center justify-center mb-2 md:mb-4 overflow-hidden">
                   <img 
                     src={vehicle.image} 
                     alt={vehicle.name}
-                    className="w-16 h-16 object-contain"
+                    className="w-11 h-11 md:w-16 md:h-16 object-contain"
                   />
                 </div>
                 
                 {/* Vehicle Name */}
-                <h3 className="text-lg font-semibold text-foreground mb-1">
+                <h3 className="text-sm md:text-lg font-semibold text-foreground mb-0.5 md:mb-1">
                   {vehicle.name}
                 </h3>
 
-                {/* Description */}
-                <p className="text-sm text-muted-foreground text-center">
+                {/* Description - hidden on mobile */}
+                <p className="hidden md:block text-sm text-muted-foreground text-center">
                   {vehicle.description}
                 </p>
               </button>
