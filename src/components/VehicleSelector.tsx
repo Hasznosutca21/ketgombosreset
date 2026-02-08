@@ -13,51 +13,28 @@ interface VehicleSelectorProps {
 }
 
 const vehicles = [
-  { id: "model-s", name: "Model S", type: "Sedan", image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=400&h=250&fit=crop" },
-  { id: "model-s-plaid", name: "Model S Plaid", type: "Sedan", image: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?w=400&h=250&fit=crop" },
-  { id: "model-3", name: "Model 3", type: "Sedan", image: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=400&h=250&fit=crop" },
-  { id: "model-3-performance", name: "Model 3 Performance", type: "Sedan", image: "https://images.unsplash.com/photo-1536700503339-1e4b06520771?w=400&h=250&fit=crop" },
-  { id: "model-x", name: "Model X", type: "SUV", image: "https://images.unsplash.com/photo-1566055909643-a51b4271aa47?w=400&h=250&fit=crop" },
-  { id: "model-x-plaid", name: "Model X Plaid", type: "SUV", image: "https://images.unsplash.com/photo-1551826152-d7248fa0a961?w=400&h=250&fit=crop" },
-  { id: "model-y", name: "Model Y", type: "SUV", image: "https://images.unsplash.com/photo-1619317408004-7d3d48bd4311?w=400&h=250&fit=crop" },
-  { id: "model-y-performance", name: "Model Y Performance", type: "SUV", image: "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=400&h=250&fit=crop" },
-  { id: "cybertruck", name: "Cybertruck", type: "Truck", image: "https://images.unsplash.com/photo-1676394635498-c75e1cc59edd?w=400&h=250&fit=crop" },
-  { id: "cybertruck-cyberbeast", name: "Cybertruck Cyberbeast", type: "Truck", image: "https://images.unsplash.com/photo-1707834696823-71c73a8a1c29?w=400&h=250&fit=crop" },
-  { id: "roadster", name: "Roadster", type: "Sports", image: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?w=400&h=250&fit=crop" },
+  { id: "model-s", name: "Model S" },
+  { id: "model-3", name: "Model 3" },
+  { id: "model-x", name: "Model X" },
+  { id: "model-y", name: "Model Y" },
 ];
 
 // Find matching vehicle ID from model name (flexible matching)
 const findVehicleIdFromModel = (modelName: string): string | null => {
   const normalized = modelName.toLowerCase().trim();
   
-  // Check for exact matches first (with variants like Plaid, Performance)
+  // Check for exact matches first
   for (const vehicle of vehicles) {
     if (vehicle.name.toLowerCase() === normalized) {
       return vehicle.id;
     }
   }
   
-  // Check for variants - Performance, Plaid
-  if (normalized.includes('plaid')) {
-    if (normalized.includes('model s')) return 'model-s-plaid';
-    if (normalized.includes('model x')) return 'model-x-plaid';
-  }
-  if (normalized.includes('performance')) {
-    if (normalized.includes('model 3')) return 'model-3-performance';
-    if (normalized.includes('model y')) return 'model-y-performance';
-  }
-  if (normalized.includes('cyberbeast')) {
-    return 'cybertruck-cyberbeast';
-  }
-  
-  // Check for base model matches
-  for (const vehicle of vehicles) {
-    const vehicleNormalized = vehicle.name.toLowerCase();
-    // If profile model contains the vehicle name
-    if (normalized.includes(vehicleNormalized) || vehicleNormalized.startsWith(normalized)) {
-      return vehicle.id;
-    }
-  }
+  // Check for base model matches (e.g., "Model S Plaid" -> "model-s")
+  if (normalized.includes('model s')) return 'model-s';
+  if (normalized.includes('model 3')) return 'model-3';
+  if (normalized.includes('model x')) return 'model-x';
+  if (normalized.includes('model y')) return 'model-y';
   
   // Fallback - check if model name is just the model part (e.g., "3" for Model 3)
   const modelMatch = normalized.match(/model\s*([3sxy])/i);
@@ -120,7 +97,6 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
     loadProfileVehicle();
   }, [user, selected, onSelect, hasAutoSelected]);
 
-
   return (
     <div className="animate-fade-in">
       <Button variant="ghost" onClick={onBack} className="mb-6 -ml-2">
@@ -151,32 +127,21 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {vehicles.map((vehicle) => {
           const isSelected = selected === vehicle.id;
-          const translatedType = t.vehicleTypes[vehicle.type as keyof typeof t.vehicleTypes];
 
           return (
             <button
               key={vehicle.id}
               onClick={() => onSelect(vehicle.id)}
               className={cn(
-                "glass-card overflow-hidden text-left transition-all duration-300 hover:scale-[1.02] hover:border-primary/50",
+                "glass-card p-6 text-center transition-all duration-300 hover:scale-[1.02] hover:border-primary/50",
                 isSelected && "border-primary shadow-[0_0_30px_-10px_hsl(352_85%_49%/0.4)]"
               )}
             >
-              <div className="relative h-40 overflow-hidden">
-                <img
-                  src={vehicle.image}
-                  alt={vehicle.name}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold">{vehicle.name}</h3>
-                <p className="text-sm text-muted-foreground">{translatedType}</p>
-              </div>
+              <Car className="w-8 h-8 mx-auto mb-3 text-primary" />
+              <h3 className="text-lg font-semibold">{vehicle.name}</h3>
             </button>
           );
         })}
