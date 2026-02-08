@@ -61,6 +61,7 @@ export const hu = {
   // Vehicle Selector
   selectVehicle: "Válassza ki járművét",
   chooseVehicleModel: "Válassza ki járműmodelljét a pontos szerviz opciókhoz",
+  fromProfile: "Profilból",
 
   // Vehicle Types
   vehicleTypes: {
@@ -340,6 +341,7 @@ export const en = {
   // Vehicle Selector
   selectVehicle: "Select Your Vehicle",
   chooseVehicleModel: "Choose your vehicle model for accurate service options",
+  fromProfile: "From profile",
 
   // Vehicle Types
   vehicleTypes: {
