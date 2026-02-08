@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Zap, ArrowLeft, Loader2, Camera, User, Mail, Phone, MapPin, Settings, Trash2, Car, ImagePlus, X } from "lucide-react";
+import { ArrowLeft, Loader2, Camera, User, Mail, Phone, MapPin, Settings, Trash2, Car, ImagePlus, X } from "lucide-react";
+import teslandLogo from "@/assets/tesland-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -488,8 +489,7 @@ const Profile = () => {
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4 md:px-12 border-b border-border">
         <div className="flex items-center gap-2">
-          <Zap className="h-8 w-8 text-primary" />
-          <span className="text-xl font-semibold tracking-tight">{t.teslaService}</span>
+          <img src={teslandLogo} alt="TESLAND" className="h-12 md:h-16 w-auto" />
         </div>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
