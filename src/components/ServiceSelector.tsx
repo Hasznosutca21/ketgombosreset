@@ -59,6 +59,7 @@ const categories = [
       { id: "ac", icon: Fan, vehicleRestriction: [] },
       { id: "heatpump", icon: Thermometer, vehicleRestriction: [] },
       { id: "heating", icon: Flame, vehicleRestriction: [] },
+      { id: "ptcheater", icon: Zap, vehicleRestriction: [] },
     ],
   },
   {
