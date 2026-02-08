@@ -72,6 +72,38 @@ const Index = () => {
         setSavedAppointment(saved);
         setAppointmentData(data);
         
+        // Send confirmation email
+        try {
+          const emailResponse = await fetch(
+            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-confirmation-email`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              },
+              body: JSON.stringify({
+                appointmentId: saved.id,
+                customerName: data.name,
+                customerEmail: data.email,
+                service: selectedService,
+                vehicle: selectedVehicle,
+                appointmentDate: data.date.toISOString(),
+                appointmentTime: data.time,
+                location: data.location,
+              }),
+            }
+          );
+          
+          if (emailResponse.ok) {
+            console.log('Confirmation email sent successfully');
+          } else {
+            console.error('Failed to send confirmation email');
+          }
+        } catch (emailError) {
+          console.error('Error sending confirmation email:', emailError);
+        }
+        
         // Register for push notifications if on native platform
         if (isSupported && token) {
           const platform = Capacitor.getPlatform() as 'ios' | 'android';
@@ -80,7 +112,7 @@ const Index = () => {
         }
         
         setCurrentStep("confirmation");
-        toast.success("Appointment booked successfully!");
+        toast.success("Appointment booked successfully! Check your email for confirmation.");
       } else {
         toast.error("Failed to book appointment. Please try again.");
       }
