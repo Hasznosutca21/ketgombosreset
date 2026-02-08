@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Calendar, Car, Wrench, ChevronRight, Menu, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -23,7 +23,7 @@ import { Capacitor } from "@capacitor/core";
 type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
 const Index = () => {
-  const navigate = useNavigate();
+  // Header navigation uses <Link/> for reliability in preview/published environments
   const { t, language } = useLanguage();
   const { user, isLoading: authLoading, signOut } = useAuth();
   const [currentStep, setCurrentStep] = useState<Step>("service");
@@ -142,8 +142,8 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <div className="relative h-[40vh] min-h-[300px] overflow-hidden">
-        <img src={heroImage} alt="Tesla Service Center" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
+        <img src={heroImage} alt="Tesla Service Center" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background pointer-events-none" />
 
         {/* Header */}
         <header className="relative z-10 flex items-center justify-between px-6 py-4 md:px-12">
@@ -153,8 +153,8 @@ const Index = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => navigate("/manage")}>
-              {t.manageMyAppointment}
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/manage">{t.manageMyAppointment}</Link>
             </Button>
             <LanguageSwitcher variant="glass" />
             {authLoading ? null : user ? (
@@ -162,13 +162,13 @@ const Index = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => navigate("/profile")}
+                  asChild
                   className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10"
                 >
-                  <User className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium truncate max-w-[150px]">
-                    {user.email}
-                  </span>
+                  <Link to="/profile" className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium truncate max-w-[150px]">{user.email}</span>
+                  </Link>
                 </Button>
                 <Button 
                   variant="ghost" 
@@ -181,12 +181,8 @@ const Index = () => {
                 </Button>
               </div>
             ) : (
-              <Button
-                variant="tesla"
-                size="sm"
-                onClick={() => navigate("/auth")}
-              >
-                {t.login}
+              <Button variant="tesla" size="sm" asChild>
+                <Link to="/auth">{t.login}</Link>
               </Button>
             )}
           </div>
@@ -206,18 +202,20 @@ const Index = () => {
                     <Button
                       variant="ghost"
                       className="justify-start"
-                      onClick={() => navigate("/profile")}
+                      asChild
                     >
-                      <User className="h-4 w-4 mr-2" />
-                      {t.myProfile || "My Profile"}
+                      <Link to="/profile" className="flex items-center">
+                        <User className="h-4 w-4 mr-2" />
+                        {t.myProfile || "My Profile"}
+                      </Link>
                     </Button>
                   )}
                   <Button
                     variant="ghost"
                     className="justify-start"
-                    onClick={() => navigate("/manage")}
+                    asChild
                   >
-                    {t.manageMyAppointment}
+                    <Link to="/manage">{t.manageMyAppointment}</Link>
                   </Button>
                   {authLoading ? null : user ? (
                     <Button
@@ -232,9 +230,9 @@ const Index = () => {
                     <Button
                       variant="tesla"
                       className="justify-start"
-                      onClick={() => navigate("/auth")}
+                      asChild
                     >
-                      {t.login}
+                      <Link to="/auth">{t.login}</Link>
                     </Button>
                   )}
                 </nav>
