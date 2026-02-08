@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface VehicleSelectorProps {
   onSelect: (vehicle: string) => void;
   selected: string | null;
-  onBack: () => void;
+  onBack?: () => void;
 }
 
 const vehicles = [
@@ -99,10 +99,12 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
 
   return (
     <div className="animate-fade-in">
-      <Button variant="ghost" onClick={onBack} className="mb-6 -ml-2">
-        <ArrowLeft className="w-4 h-4 mr-2" />
-        {t.back}
-      </Button>
+      {onBack && (
+        <Button variant="ghost" onClick={onBack} className="mb-6 -ml-2">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          {t.back}
+        </Button>
+      )}
 
       <h2 className="text-2xl md:text-3xl font-bold mb-2">{t.selectVehicle}</h2>
       <p className="text-muted-foreground mb-4">{t.chooseVehicleModel}</p>

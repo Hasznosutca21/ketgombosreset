@@ -31,7 +31,7 @@ type Step = "service" | "vehicle" | "appointment" | "confirmation";
 const Index = () => {
   const { t, language } = useLanguage();
   const { user, isLoading: authLoading, signOut } = useAuth();
-  const [currentStep, setCurrentStep] = useState<Step>("service");
+  const [currentStep, setCurrentStep] = useState<Step>("vehicle");
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
   const [appointmentData, setAppointmentData] = useState<{
@@ -48,21 +48,21 @@ const Index = () => {
   const { token, isSupported, registerTokenForAppointment } = usePushNotifications();
 
   const steps = [
-    { id: "service", label: t.service, icon: Wrench },
     { id: "vehicle", label: t.vehicle, icon: Car },
+    { id: "service", label: t.service, icon: Wrench },
     { id: "appointment", label: t.schedule, icon: Calendar },
     { id: "confirmation", label: t.confirm, icon: ChevronRight },
   ];
 
   const currentStepIndex = steps.findIndex((s) => s.id === currentStep);
 
-  const handleServiceSelect = (service: string) => {
-    setSelectedService(service);
-    setCurrentStep("vehicle");
-  };
-
   const handleVehicleSelect = (vehicle: string) => {
     setSelectedVehicle(vehicle);
+    setCurrentStep("service");
+  };
+
+  const handleServiceSelect = (service: string) => {
+    setSelectedService(service);
     setCurrentStep("appointment");
   };
 
@@ -334,12 +334,14 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-6 py-12">
-        {currentStep === "service" && <ServiceSelector onSelect={handleServiceSelect} selected={selectedService} />}
         {currentStep === "vehicle" && (
-          <VehicleSelector onSelect={handleVehicleSelect} selected={selectedVehicle} onBack={() => setCurrentStep("service")} />
+          <VehicleSelector onSelect={handleVehicleSelect} selected={selectedVehicle} />
+        )}
+        {currentStep === "service" && (
+          <ServiceSelector onSelect={handleServiceSelect} selected={selectedService} selectedVehicle={selectedVehicle} onBack={() => setCurrentStep("vehicle")} />
         )}
         {currentStep === "appointment" && (
-          <AppointmentForm onSubmit={handleAppointmentSubmit} onBack={() => setCurrentStep("vehicle")} isSubmitting={isSubmitting} selectedService={selectedService || undefined} />
+          <AppointmentForm onSubmit={handleAppointmentSubmit} onBack={() => setCurrentStep("service")} isSubmitting={isSubmitting} selectedService={selectedService || undefined} />
         )}
         {currentStep === "confirmation" && (
           <ConfirmationView

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { 
   Wrench, 
   Zap, 
@@ -13,8 +13,10 @@ import {
   MonitorPlay,
   CircleDot,
   Info,
-  Donut
+  Donut,
+  ArrowLeft
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import {
@@ -33,49 +35,52 @@ import {
 interface ServiceSelectorProps {
   onSelect: (service: string) => void;
   selected: string | null;
+  selectedVehicle?: string | null;
+  onBack?: () => void;
 }
 
 // Categories with their services
+// vehicleRestriction: array of vehicle IDs that can use this service (empty = all vehicles)
 const categories = [
   {
     id: "maintenance",
     icon: Wrench,
     services: [
-      { id: "maintenance", icon: Wrench },
-      { id: "battery", icon: Zap },
-      { id: "brake", icon: Disc },
+      { id: "maintenance", icon: Wrench, vehicleRestriction: [] },
+      { id: "battery", icon: Zap, vehicleRestriction: [] },
+      { id: "brake", icon: Disc, vehicleRestriction: [] },
     ],
   },
   {
     id: "hvac",
     icon: Thermometer,
     services: [
-      { id: "ac", icon: Fan },
-      { id: "heatpump", icon: Thermometer },
-      { id: "heating", icon: Flame },
+      { id: "ac", icon: Fan, vehicleRestriction: [] },
+      { id: "heatpump", icon: Thermometer, vehicleRestriction: [] },
+      { id: "heating", icon: Flame, vehicleRestriction: [] },
     ],
   },
   {
     id: "extras",
     icon: Settings,
     services: [
-      { id: "software", icon: Donut },
-      { id: "autopilot", icon: Lightbulb },
-      { id: "multimedia", icon: MonitorPlay },
+      { id: "software", icon: Donut, vehicleRestriction: ["model-3"] }, // Boombox - only Model 3
+      { id: "autopilot", icon: Lightbulb, vehicleRestriction: ["model-3"] }, // Interior lighting - only Model 3
+      { id: "multimedia", icon: MonitorPlay, vehicleRestriction: [] },
     ],
   },
   {
     id: "other",
     icon: Shield,
     services: [
-      { id: "body", icon: Paintbrush },
-      { id: "warranty", icon: Shield },
-      { id: "tires", icon: CircleDot },
+      { id: "body", icon: Paintbrush, vehicleRestriction: [] },
+      { id: "warranty", icon: Shield, vehicleRestriction: [] },
+      { id: "tires", icon: CircleDot, vehicleRestriction: [] },
     ],
   },
 ];
 
-const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
+const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: ServiceSelectorProps) => {
   const { t } = useLanguage();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [selectedDetails, setSelectedDetails] = useState<{
@@ -113,8 +118,28 @@ const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
     }
   };
 
+  // Filter categories to only show services available for the selected vehicle
+  const filteredCategories = useMemo(() => {
+    return categories.map(category => ({
+      ...category,
+      services: category.services.filter(service => {
+        // If no restriction, available for all vehicles
+        if (service.vehicleRestriction.length === 0) return true;
+        // If restriction exists, check if selected vehicle is in the list
+        return selectedVehicle ? service.vehicleRestriction.includes(selectedVehicle) : true;
+      })
+    })).filter(category => category.services.length > 0); // Remove empty categories
+  }, [selectedVehicle]);
+
   return (
     <div className="animate-fade-in">
+      {onBack && (
+        <Button variant="ghost" onClick={onBack} className="mb-6 -ml-2">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          {t.back}
+        </Button>
+      )}
+      
       <h2 className="text-2xl md:text-3xl font-bold mb-2">{t.selectService}</h2>
       <p className="text-muted-foreground mb-8">{t.chooseServiceType}</p>
 
@@ -123,7 +148,7 @@ const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
         defaultValue={getDefaultOpenCategory()}
         className="space-y-4"
       >
-        {categories.map((category) => {
+        {filteredCategories.map((category) => {
           const categoryData = t.serviceCategories[category.id as keyof typeof t.serviceCategories];
           const hasSelectedService = category.services.some(s => s.id === selected);
           const CategoryIcon = category.icon;
