@@ -23,14 +23,13 @@ const AppointmentAssistant = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
-    }
-  }, [messages]);
+    if (!isOpen) return;
+    bottomRef.current?.scrollIntoView({ block: "end" });
+  }, [messages, isOpen]);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -165,7 +164,7 @@ const AppointmentAssistant = () => {
         </div>
 
         {/* Messages */}
-        <ScrollArea className="h-[400px] p-4" ref={scrollAreaRef}>
+        <ScrollArea className="h-[400px] p-4">
           <div className="flex flex-col gap-4">
             {messages.map((message, index) => (
               <div
@@ -212,6 +211,7 @@ const AppointmentAssistant = () => {
                 </div>
               </div>
             )}
+            <div ref={bottomRef} />
           </div>
         </ScrollArea>
 
