@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { vehicleSilhouettes } from "./TeslaSilhouettes";
 
 interface VehicleSelectorProps {
   onSelect: (vehicle: string) => void;
@@ -139,19 +138,14 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
               key={vehicle.id}
               onClick={() => onSelect(vehicle.id)}
               className={cn(
-                "glass-card p-6 text-center transition-all duration-300 hover:scale-[1.02] hover:border-primary/50",
+                "glass-card p-8 text-center transition-all duration-300 hover:scale-[1.02] hover:border-primary/50",
                 isSelected && "border-primary shadow-[0_0_30px_-10px_hsl(352_85%_49%/0.4)]"
               )}
             >
-              {vehicleSilhouettes[vehicle.id] ? (
-                (() => {
-                  const SilhouetteComponent = vehicleSilhouettes[vehicle.id];
-                  return <SilhouetteComponent className="w-24 h-12 mx-auto mb-3 text-primary" />;
-                })()
-              ) : (
-                <Car className="w-8 h-8 mx-auto mb-3 text-primary" />
-              )}
-              <h3 className="text-lg font-semibold">{vehicle.name}</h3>
+              <div className="flex flex-col items-center justify-center">
+                <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-1">Tesla</span>
+                <span className="text-3xl font-light tracking-wide">{vehicle.name.replace("Model ", "")}</span>
+              </div>
             </button>
           );
         })}
