@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, Car, Info } from "lucide-react";
+import { ArrowLeft, Car, Info, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface VehicleSelectorProps {
   onSelect: (vehicle: string) => void;
@@ -26,24 +28,47 @@ const vehicles = [
   { id: "roadster", name: "Roadster", type: "Sports", image: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?w=400&h=250&fit=crop" },
 ];
 
-// Find matching vehicle ID from profile model name (flexible matching)
+// Find matching vehicle ID from model name (flexible matching)
 const findVehicleIdFromModel = (modelName: string): string | null => {
   const normalized = modelName.toLowerCase().trim();
   
-  // Check for exact matches first
+  // Check for exact matches first (with variants like Plaid, Performance)
   for (const vehicle of vehicles) {
     if (vehicle.name.toLowerCase() === normalized) {
       return vehicle.id;
     }
   }
   
-  // Check for partial matches (e.g., "Model 3" matches "model-3")
+  // Check for variants - Performance, Plaid
+  if (normalized.includes('plaid')) {
+    if (normalized.includes('model s')) return 'model-s-plaid';
+    if (normalized.includes('model x')) return 'model-x-plaid';
+  }
+  if (normalized.includes('performance')) {
+    if (normalized.includes('model 3')) return 'model-3-performance';
+    if (normalized.includes('model y')) return 'model-y-performance';
+  }
+  if (normalized.includes('cyberbeast')) {
+    return 'cybertruck-cyberbeast';
+  }
+  
+  // Check for base model matches
   for (const vehicle of vehicles) {
     const vehicleNormalized = vehicle.name.toLowerCase();
-    // If profile model is contained in vehicle name or vice versa
-    if (vehicleNormalized.startsWith(normalized) || normalized.startsWith(vehicleNormalized)) {
+    // If profile model contains the vehicle name
+    if (normalized.includes(vehicleNormalized) || vehicleNormalized.startsWith(normalized)) {
       return vehicle.id;
     }
+  }
+  
+  // Fallback - check if model name is just the model part (e.g., "3" for Model 3)
+  const modelMatch = normalized.match(/model\s*([3sxy])/i);
+  if (modelMatch) {
+    const modelLetter = modelMatch[1].toLowerCase();
+    if (modelLetter === 's') return 'model-s';
+    if (modelLetter === '3') return 'model-3';
+    if (modelLetter === 'x') return 'model-x';
+    if (modelLetter === 'y') return 'model-y';
   }
   
   return null;
@@ -60,6 +85,13 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
   const { user } = useAuth();
   const [profileVehicle, setProfileVehicle] = useState<ProfileVehicle | null>(null);
   const [hasAutoSelected, setHasAutoSelected] = useState(false);
+  const [vinInput, setVinInput] = useState("");
+  const [isDecoding, setIsDecoding] = useState(false);
+  const [decodedVehicle, setDecodedVehicle] = useState<{
+    model: string;
+    year: number | null;
+    variant: string | null;
+  } | null>(null);
 
   // Load vehicle from profile
   useEffect(() => {
@@ -97,6 +129,67 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
     loadProfileVehicle();
   }, [user, selected, onSelect, hasAutoSelected]);
 
+  const handleVinDecode = async () => {
+    const cleanVin = vinInput.trim().toUpperCase();
+    
+    if (cleanVin.length !== 17) {
+      toast.error(t.invalidVinLength);
+      return;
+    }
+
+    setIsDecoding(true);
+    setDecodedVehicle(null);
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/decode-vin`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ vin: cleanVin }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (data.error === "Only Tesla vehicles are supported") {
+          toast.error(t.onlyTeslaSupported);
+        } else {
+          toast.error(data.error || t.vinDecodeFailed);
+        }
+        return;
+      }
+
+      if (data.model) {
+        setDecodedVehicle({
+          model: data.model,
+          year: data.year,
+          variant: data.variant,
+        });
+
+        // Auto-select the matching vehicle
+        const vehicleId = findVehicleIdFromModel(data.model);
+        if (vehicleId) {
+          onSelect(vehicleId);
+          toast.success(t.vinDecoded);
+        } else {
+          toast.error(t.vinDecodeFailed);
+        }
+      } else {
+        toast.error(t.vinDecodeFailed);
+      }
+    } catch (error) {
+      console.error("VIN decode error:", error);
+      toast.error(t.vinDecodeFailed);
+    } finally {
+      setIsDecoding(false);
+    }
+  };
+
   return (
     <div className="animate-fade-in">
       <Button variant="ghost" onClick={onBack} className="mb-6 -ml-2">
@@ -107,8 +200,52 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
       <h2 className="text-2xl md:text-3xl font-bold mb-2">{t.selectVehicle}</h2>
       <p className="text-muted-foreground mb-4">{t.chooseVehicleModel}</p>
 
+      {/* VIN Decoder Section */}
+      <div className="glass-card p-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex-1">
+            <Input
+              placeholder={t.vehicleVinPlaceholder || "VIN (17 karakter)"}
+              value={vinInput}
+              onChange={(e) => setVinInput(e.target.value.toUpperCase())}
+              maxLength={17}
+              className="font-mono uppercase"
+            />
+          </div>
+          <Button 
+            onClick={handleVinDecode}
+            disabled={isDecoding || vinInput.length !== 17}
+            variant="tesla"
+          >
+            {isDecoding ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Search className="w-4 h-4 mr-2" />
+            )}
+            {t.decodeVin}
+          </Button>
+        </div>
+        <p className="text-xs text-muted-foreground mt-2">{t.vinHelp}</p>
+        
+        {/* Decoded vehicle result */}
+        {decodedVehicle && (
+          <div className="mt-3 p-3 rounded-lg bg-primary/10 border border-primary/30 flex items-center gap-3">
+            <Car className="w-5 h-5 text-primary flex-shrink-0" />
+            <div>
+              <div className="font-medium">
+                {decodedVehicle.model}
+                {decodedVehicle.year && ` (${decodedVehicle.year})`}
+              </div>
+              {decodedVehicle.variant && (
+                <div className="text-sm text-muted-foreground">{decodedVehicle.variant}</div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Profile vehicle banner */}
-      {profileVehicle && (
+      {profileVehicle && !decodedVehicle && (
         <div className="glass-card p-4 mb-6 flex items-center gap-3 border-primary/30 bg-primary/5">
           <Car className="w-5 h-5 text-primary flex-shrink-0" />
           <div className="flex-1">
