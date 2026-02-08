@@ -315,7 +315,7 @@ serve(async (req) => {
 
     // Send email to customer AND cc to admin
     const { data: emailResult, error } = await resend.emails.send({
-      from: 'TESLAND <onboarding@resend.dev>',
+      from: 'TESLAND <info@tesland.hu>',
       to: [data.customerEmail],
       cc: [ADMIN_EMAIL],
       subject: t.subject(serviceName, formattedDate),
