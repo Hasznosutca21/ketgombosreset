@@ -47,7 +47,7 @@ const vehicles = [
     image: model3Image,
     chromeImage: model3ChromeImage,
     chromeYearRange: { from: 2018, to: 2020 },
-    description: "Kompakt szedán, népszerű választás",
+    description: "A legnépszerűbb, főleg fehérben",
     info: "Standard, Long Range és Performance",
     yearRange: { from: 2018, to: 2026 }
   },
