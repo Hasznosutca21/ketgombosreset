@@ -140,6 +140,15 @@ export const hu = {
   passwordNeedsNumber: "A jelszónak tartalmaznia kell számot",
   emailRequired: "E-mail cím megadása kötelező",
   passwordRequired: "Jelszó megadása kötelező",
+  passwordStrength: "Jelszó erőssége",
+  passwordWeak: "Gyenge",
+  passwordFair: "Közepes",
+  passwordGood: "Jó",
+  passwordStrong: "Erős",
+  passwordMinLength: "Legalább 6 karakter",
+  passwordHasUppercase: "Nagybetű",
+  passwordHasNumber: "Szám",
+  passwordHasSpecial: "Speciális karakter",
 
   // Admin Dashboard
   admin: "Admin",
@@ -325,6 +334,15 @@ export const en = {
   passwordNeedsNumber: "Password must contain a number",
   emailRequired: "Email is required",
   passwordRequired: "Password is required",
+  passwordStrength: "Password strength",
+  passwordWeak: "Weak",
+  passwordFair: "Fair",
+  passwordGood: "Good",
+  passwordStrong: "Strong",
+  passwordMinLength: "At least 6 characters",
+  passwordHasUppercase: "Uppercase letter",
+  passwordHasNumber: "Number",
+  passwordHasSpecial: "Special character",
 
   // Admin Dashboard
   admin: "Admin",

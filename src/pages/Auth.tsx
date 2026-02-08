@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { lovable } from "@/integrations/lovable";
 import { supabase } from "@/integrations/supabase/client";
 import { createAuthSchemas, LoginFormData, SignupFormData, ForgotFormData } from "@/lib/validation";
+import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
 
 type AuthMode = "login" | "signup" | "forgot";
 
@@ -43,10 +44,13 @@ const Auth = () => {
     formState: { errors },
     reset,
     clearErrors,
+    watch,
   } = useForm<LoginFormData | SignupFormData | ForgotFormData>({
     resolver: zodResolver(getSchema()),
     mode: "onBlur",
   });
+
+  const passwordValue = watch("password" as any) || "";
 
   // Reset form when mode changes
   useEffect(() => {
@@ -269,6 +273,9 @@ const Auth = () => {
                   </div>
                   {"password" in errors && errors.password && (
                     <p className="text-sm text-destructive">{errors.password.message}</p>
+                  )}
+                  {mode === "signup" && (
+                    <PasswordStrengthIndicator password={passwordValue} />
                   )}
                 </div>
               )}

@@ -11,6 +11,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { createAuthSchemas, ResetPasswordFormData } from "@/lib/validation";
+import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
 
 const ResetPassword = () => {
   const { t } = useLanguage();
@@ -24,10 +25,13 @@ const ResetPassword = () => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(schemas.resetPasswordSchema),
     mode: "onBlur",
   });
+
+  const passwordValue = watch("password") || "";
 
   useEffect(() => {
     // Check if we have a valid recovery session
@@ -96,6 +100,7 @@ const ResetPassword = () => {
                 {errors.password && (
                   <p className="text-sm text-destructive">{errors.password.message}</p>
                 )}
+                <PasswordStrengthIndicator password={passwordValue} />
               </div>
               <div className="space-y-1">
                 <div className="relative">
