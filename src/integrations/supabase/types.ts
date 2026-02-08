@@ -70,6 +70,9 @@ export type Database = {
           display_name: string | null
           id: string
           phone: string | null
+          plate_position_x: number | null
+          plate_position_y: number | null
+          plate_size: number | null
           postal_code: string | null
           preferences: Json | null
           updated_at: string
@@ -91,6 +94,9 @@ export type Database = {
           display_name?: string | null
           id?: string
           phone?: string | null
+          plate_position_x?: number | null
+          plate_position_y?: number | null
+          plate_size?: number | null
           postal_code?: string | null
           preferences?: Json | null
           updated_at?: string
@@ -112,6 +118,9 @@ export type Database = {
           display_name?: string | null
           id?: string
           phone?: string | null
+          plate_position_x?: number | null
+          plate_position_y?: number | null
+          plate_size?: number | null
           postal_code?: string | null
           preferences?: Json | null
           updated_at?: string
