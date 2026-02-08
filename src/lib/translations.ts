@@ -115,9 +115,10 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
     },
     // Extra funkciók
     software: {
-      title: "Software frissítés",
-      description: "Legújabb firmware és funkció frissítések",
+      title: "Boombox aktiválás",
+      description: "Egyedi hangok és dallamok külső hangszóróra",
       duration: "30 perc",
+      price: "10 000 Ft",
     },
     autopilot: {
       title: "Autopilot kalibrálás",
@@ -493,9 +494,10 @@ The price includes a personal consultation where we discuss the results and answ
     },
     // Extra Features
     software: {
-      title: "Software Update",
-      description: "Latest firmware and feature updates",
+      title: "Boombox Activation",
+      description: "Custom sounds and melodies for external speaker",
       duration: "30 mins",
+      price: "10 000 Ft",
     },
     autopilot: {
       title: "Autopilot Calibration",
