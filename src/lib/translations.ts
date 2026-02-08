@@ -104,6 +104,7 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
       title: "Klíma szerviz",
       description: "Klímarendszer tisztítás és töltés",
       duration: "1-2 óra",
+      price: "Javítási költség előzetes felmérés alapján",
     },
     heatpump: {
       title: "Supermanifold hiba",
@@ -495,6 +496,7 @@ The price includes a personal consultation where we discuss the results and answ
       title: "AC Service",
       description: "Air conditioning cleaning and recharge",
       duration: "1-2 hours",
+      price: "Repair cost based on preliminary assessment",
     },
     heatpump: {
       title: "Supermanifold Issue",
