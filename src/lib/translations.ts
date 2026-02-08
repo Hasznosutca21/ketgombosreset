@@ -49,8 +49,20 @@ export const hu = {
     // Karbantartás
     maintenance: {
       title: "Általános átvizsgálás",
-      description: "Teljes átvizsgálás és folyadékellenőrzés",
+      description: "Pontos kép Teslád állapotáról – meglepetések nélkül",
       duration: "2-3 óra",
+      details: `A Tesland általános átvizsgálás egy átfogó ellenőrzési szolgáltatás Tesla modellekhez (Model 3 / Y / S / X), amely segít feltárni az autó aktuális műszaki állapotát, és időben felismerni az esetleges hibákat.
+
+Gyári szintű diagnosztikával és célzott műszaki vizsgálattal átnézzük a jármű legfontosabb rendszereit, hogy átlátható, érthető képet kapj Teslád állapotáról – még azelőtt, hogy komolyabb problémák jelentkeznének.
+
+• Gyári diagnosztika és hibakód kiolvasás
+• Akkumulátor és töltőrendszer alapellenőrzés
+• Fűtés és klímarendszer működésének vizsgálata
+• Futómű és felfüggesztés vizuális ellenőrzése
+• Fékek állapotfelmérése
+• Alváz és főbb szerkezeti elemek átnézése
+• Szoftveres állapotellenőrzés
+• Rövid állapotjelentés + javaslatok`,
     },
     battery: {
       title: "Akkumulátor szerviz",
@@ -383,8 +395,20 @@ export const en = {
     // Maintenance
     maintenance: {
       title: "General Inspection",
-      description: "Complete inspection and fluid checks",
+      description: "A clear picture of your Tesla's condition – no surprises",
       duration: "2-3 hours",
+      details: `Tesland General Inspection is a comprehensive checkup service for Tesla models (Model 3 / Y / S / X), helping to reveal your car's current technical condition and identify potential issues early.
+
+Using factory-level diagnostics and targeted technical inspection, we review your vehicle's most important systems to give you a clear, understandable picture of your Tesla's condition – before any major problems arise.
+
+• Factory diagnostics and error code reading
+• Battery and charging system basic check
+• Heating and AC system operation test
+• Suspension and chassis visual inspection
+• Brake condition assessment
+• Underbody and main structural elements review
+• Software status check
+• Brief condition report + recommendations`,
     },
     battery: {
       title: "Battery Service",
