@@ -371,7 +371,7 @@ const Index = () => {
               {t.contact}
             </Link>
             <a 
-              href="https://www.google.com/maps/search/?api=1&query=Ganz+%C3%81brah%C3%A1m+utca+3+Nagytarcsa+Hungary" 
+              href="https://www.google.com/maps/search/?api=1&query=Pesti+%C3%BAt+36+2119+P%C3%A9cel+Hungary" 
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-foreground transition-colors"

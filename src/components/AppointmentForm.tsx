@@ -273,7 +273,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
             <div className="space-y-2">
               {locations.map((loc) => {
                 const locationData = t.locationsList[loc.id as keyof typeof t.locationsList];
-                const mapsUrl = "https://www.google.com/maps/search/?api=1&query=Ganz+%C3%81brah%C3%A1m+utca+3+Nagytarcsa+Hungary";
+                const mapsUrl = "https://www.google.com/maps/search/?api=1&query=Pesti+%C3%BAt+36+2119+P%C3%A9cel+Hungary";
                 return (
                   <div key={loc.id} className="flex gap-2">
                     <button
