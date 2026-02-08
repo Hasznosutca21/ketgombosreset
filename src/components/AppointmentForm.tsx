@@ -231,6 +231,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
                   mode="single"
                   selected={date}
                   onSelect={setDate}
+                  locale={dateLocale}
                   disabled={(date) => {
                     // Disable past dates
                     if (date < new Date()) return true;
