@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Zap, Mail, Lock, ArrowLeft, Loader2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -11,20 +13,46 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { toast } from "sonner";
 import { lovable } from "@/integrations/lovable";
 import { supabase } from "@/integrations/supabase/client";
+import { createAuthSchemas, LoginFormData, SignupFormData, ForgotFormData } from "@/lib/validation";
 
 type AuthMode = "login" | "signup" | "forgot";
 
 const Auth = () => {
   const { t } = useLanguage();
   const [mode, setMode] = useState<AuthMode>("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isAppleLoading, setIsAppleLoading] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading: authLoading, signIn, signUp } = useAuth();
+
+  const schemas = createAuthSchemas(t);
+  
+  const getSchema = () => {
+    switch (mode) {
+      case "login": return schemas.loginSchema;
+      case "signup": return schemas.signupSchema;
+      case "forgot": return schemas.forgotSchema;
+    }
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    clearErrors,
+  } = useForm<LoginFormData | SignupFormData | ForgotFormData>({
+    resolver: zodResolver(getSchema()),
+    mode: "onBlur",
+  });
+
+  // Reset form when mode changes
+  useEffect(() => {
+    reset();
+    clearErrors();
+  }, [mode, reset, clearErrors]);
 
   // Redirect authenticated users to home page
   useEffect(() => {
@@ -33,13 +61,12 @@ const Auth = () => {
     }
   }, [user, authLoading, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginFormData | SignupFormData | ForgotFormData) => {
     setIsLoading(true);
 
     try {
       if (mode === "forgot") {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
           redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) {
@@ -49,7 +76,8 @@ const Auth = () => {
           setMode("login");
         }
       } else if (mode === "login") {
-        const { error } = await signIn(email, password, rememberMe);
+        const loginData = data as LoginFormData;
+        const { error } = await signIn(loginData.email, loginData.password, rememberMe);
         if (error) {
           toast.error(error.message);
         } else {
@@ -57,7 +85,8 @@ const Auth = () => {
           navigate("/");
         }
       } else {
-        const { error } = await signUp(email, password);
+        const signupData = data as SignupFormData;
+        const { error } = await signUp(signupData.email, signupData.password);
         if (error) {
           toast.error(error.message);
         } else {
@@ -210,36 +239,37 @@ const Auth = () => {
             )}
 
             {/* Email/Password Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="space-y-1">
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="email"
                     placeholder={t.email}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    required
+                    {...register("email")}
+                    className={`pl-10 ${errors.email ? "border-destructive" : ""}`}
                   />
                 </div>
+                {errors.email && (
+                  <p className="text-sm text-destructive">{errors.email.message}</p>
+                )}
               </div>
               
               {/* Password field - hide for forgot password mode */}
               {mode !== "forgot" && (
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       type="password"
                       placeholder={t.password}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10"
-                      required
-                      minLength={6}
+                      {...register("password")}
+                      className={`pl-10 ${"password" in errors && errors.password ? "border-destructive" : ""}`}
                     />
                   </div>
+                  {"password" in errors && errors.password && (
+                    <p className="text-sm text-destructive">{errors.password.message}</p>
+                  )}
                 </div>
               )}
               
