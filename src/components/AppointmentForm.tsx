@@ -35,14 +35,12 @@ interface BookedAppointment {
 
 const locations = [{ id: "nagytarcsa" }];
 
-// Generate 30-minute time slots from 9:00 to 16:30
+// Generate 30-minute time slots from 9:00 to 15:30
 const generateTimeSlots = (): string[] => {
   const slots: string[] = [];
-  for (let hour = 9; hour <= 16; hour++) {
+  for (let hour = 9; hour <= 15; hour++) {
     slots.push(`${hour}:00`);
-    if (hour < 16) {
-      slots.push(`${hour}:30`);
-    }
+    slots.push(`${hour}:30`);
   }
   return slots;
 };
