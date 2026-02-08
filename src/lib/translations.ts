@@ -149,6 +149,13 @@ export const hu = {
   passwordHasUppercase: "Nagybetű",
   passwordHasNumber: "Szám",
   passwordHasSpecial: "Speciális karakter",
+  resendVerification: "Visszaigazoló e-mail újraküldése",
+  resendVerificationDesc: "Adja meg e-mail címét az visszaigazoló e-mail újraküldéséhez",
+  resendEmail: "E-mail újraküldése",
+  resending: "Küldés...",
+  verificationEmailResent: "Visszaigazoló e-mail elküldve! Ellenőrizze postafiókját.",
+  didntReceiveEmail: "Nem kapta meg az e-mailt?",
+  resendIt: "Újraküldés",
 
   // Admin Dashboard
   admin: "Admin",
@@ -343,6 +350,13 @@ export const en = {
   passwordHasUppercase: "Uppercase letter",
   passwordHasNumber: "Number",
   passwordHasSpecial: "Special character",
+  resendVerification: "Resend Verification Email",
+  resendVerificationDesc: "Enter your email to resend the verification link",
+  resendEmail: "Resend Email",
+  resending: "Sending...",
+  verificationEmailResent: "Verification email sent! Check your inbox.",
+  didntReceiveEmail: "Didn't receive the email?",
+  resendIt: "Resend it",
 
   // Admin Dashboard
   admin: "Admin",
