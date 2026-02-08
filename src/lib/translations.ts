@@ -9,7 +9,7 @@ export const hu = {
   contact: "Kapcsolat",
 
   // Header
-  teslaService: "Tesla Szerviz",
+  teslaService: "TESLAND",
   scheduleYourService: "Foglalja le szervizét",
   expertCare: "Szakértői gondoskodás Teslájáról, az Ön kényelmében",
 
@@ -257,7 +257,7 @@ export const en = {
   contact: "Kapcsolat",
 
   // Header
-  teslaService: "Tesla Service",
+  teslaService: "TESLAND",
   scheduleYourService: "Schedule Your Service",
   expertCare: "Expert care for your Tesla, at your convenience",
 
