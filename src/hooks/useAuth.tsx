@@ -100,11 +100,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
-  const signOut = async () => {
-    localStorage.removeItem(REMEMBER_ME_KEY);
-    await supabase.auth.signOut();
-    setIsAdmin(false);
-  };
+  const signOut = useCallback(async () => {
+    try {
+      localStorage.removeItem(REMEMBER_ME_KEY);
+      await supabase.auth.signOut();
+      setUser(null);
+      setSession(null);
+      setIsAdmin(false);
+    } catch (error) {
+      console.error("Sign out error:", error);
+      // Force clear state even if signOut fails
+      setUser(null);
+      setSession(null);
+      setIsAdmin(false);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider
