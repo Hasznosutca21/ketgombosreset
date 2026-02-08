@@ -17,7 +17,7 @@ import { createAuthSchemas, LoginFormData, SignupFormData, ForgotFormData } from
 import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
 import PasswordInput from "@/components/PasswordInput";
 
-type AuthMode = "login" | "signup" | "forgot";
+type AuthMode = "login" | "signup" | "forgot" | "resend";
 
 const Auth = () => {
   const { t } = useLanguage();
@@ -36,6 +36,7 @@ const Auth = () => {
       case "login": return schemas.loginSchema;
       case "signup": return schemas.signupSchema;
       case "forgot": return schemas.forgotSchema;
+      case "resend": return schemas.forgotSchema; // Same schema - just email
     }
   };
 
@@ -80,6 +81,17 @@ const Auth = () => {
           toast.success(t.resetEmailSent);
           setMode("login");
         }
+      } else if (mode === "resend") {
+        const { error } = await supabase.auth.resend({
+          type: "signup",
+          email: data.email,
+        });
+        if (error) {
+          toast.error(error.message);
+        } else {
+          toast.success(t.verificationEmailResent);
+          setMode("login");
+        }
       } else if (mode === "login") {
         const loginData = data as LoginFormData;
         const { error } = await signIn(loginData.email, loginData.password, rememberMe);
@@ -96,6 +108,7 @@ const Auth = () => {
           toast.error(error.message);
         } else {
           toast.success(t.checkEmailVerify);
+          setMode("resend"); // Switch to resend mode after signup
         }
       }
     } finally {
@@ -168,15 +181,21 @@ const Auth = () => {
         <Card className="w-full max-w-md glass-card">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">
-              {mode === "forgot" ? t.resetPassword : mode === "login" ? t.signIn : t.createAccount}
+              {mode === "forgot" ? t.resetPassword 
+                : mode === "resend" ? t.resendVerification
+                : mode === "login" ? t.signIn 
+                : t.createAccount}
             </CardTitle>
             <CardDescription>
-              {mode === "forgot" ? t.resetPasswordDesc : mode === "login" ? t.signInToYourAccount : t.createAccountToStart}
+              {mode === "forgot" ? t.resetPasswordDesc 
+                : mode === "resend" ? t.resendVerificationDesc
+                : mode === "login" ? t.signInToYourAccount 
+                : t.createAccountToStart}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Social Login Buttons - only show for login/signup */}
-            {mode !== "forgot" && (
+            {(mode === "login" || mode === "signup") && (
               <>
                 <div className="space-y-3">
                   <Button
@@ -260,8 +279,8 @@ const Auth = () => {
                 )}
               </div>
               
-              {/* Password field - hide for forgot password mode */}
-              {mode !== "forgot" && (
+              {/* Password field - hide for forgot/resend modes */}
+              {(mode === "login" || mode === "signup") && (
                 <div className="space-y-1">
                   <PasswordInput
                     placeholder={t.password}
@@ -307,14 +326,16 @@ const Auth = () => {
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {mode === "forgot" 
                   ? (isLoading ? t.sending : t.sendResetLink)
-                  : mode === "login" 
-                    ? t.signIn 
-                    : t.createAccount}
+                  : mode === "resend"
+                    ? (isLoading ? t.resending : t.resendEmail)
+                    : mode === "login" 
+                      ? t.signIn 
+                      : t.createAccount}
               </Button>
             </form>
 
-            <div className="text-center text-sm">
-              {mode === "forgot" ? (
+            <div className="text-center text-sm space-y-2">
+              {(mode === "forgot" || mode === "resend") ? (
                 <button
                   type="button"
                   onClick={() => setMode("login")}
@@ -324,16 +345,30 @@ const Auth = () => {
                 </button>
               ) : (
                 <>
-                  <span className="text-muted-foreground">
-                    {mode === "login" ? t.dontHaveAccount + " " : t.alreadyHaveAccount + " "}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setMode(mode === "login" ? "signup" : "login")}
-                    className="text-primary hover:underline font-medium"
-                  >
-                    {mode === "login" ? t.signUp : t.signIn}
-                  </button>
+                  <div>
+                    <span className="text-muted-foreground">
+                      {mode === "login" ? t.dontHaveAccount + " " : t.alreadyHaveAccount + " "}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setMode(mode === "login" ? "signup" : "login")}
+                      className="text-primary hover:underline font-medium"
+                    >
+                      {mode === "login" ? t.signUp : t.signIn}
+                    </button>
+                  </div>
+                  {mode === "login" && (
+                    <div>
+                      <span className="text-muted-foreground">{t.didntReceiveEmail} </span>
+                      <button
+                        type="button"
+                        onClick={() => setMode("resend")}
+                        className="text-primary hover:underline font-medium"
+                      >
+                        {t.resendIt}
+                      </button>
+                    </div>
+                  )}
                 </>
               )}
             </div>
