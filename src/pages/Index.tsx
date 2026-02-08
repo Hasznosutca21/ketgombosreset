@@ -3,6 +3,13 @@ import { Link } from "react-router-dom";
 import { Calendar, Car, Wrench, ChevronRight, Menu, LogOut, User } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import heroImage from "@/assets/tesland-hero.jpg";
 import teslandLogo from "@/assets/tesland-logo.png";
@@ -141,7 +148,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="relative h-[55vh] min-h-[450px] overflow-hidden">
+      <div className="relative h-[40vh] min-h-[300px] overflow-hidden">
         <img src={heroImage} alt="Tesla Service Center" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background pointer-events-none" />
 
@@ -257,12 +264,23 @@ const Index = () => {
         </header>
 
         {/* Hero Content */}
-        <div className="relative z-10 pointer-events-none flex flex-col items-center justify-center h-full pt-16 px-6 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 animate-fade-in">
+        <div className="relative z-10 flex flex-col items-center justify-center h-full pt-16 px-6 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 animate-fade-in pointer-events-none">
             {t.scheduleYourService}
           </h1>
-          <h2 className="text-xl md:text-2xl font-semibold mb-3 text-primary animate-slide-up">{t.expertCare}</h2>
-          <p className="text-muted-foreground text-sm md:text-base max-w-2xl animate-slide-up leading-relaxed">{t.heroDescription}</p>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="text-xl md:text-2xl font-semibold text-primary animate-slide-up hover:underline underline-offset-4 transition-all cursor-pointer pointer-events-auto">
+                {t.expertCare}
+              </button>
+            </DialogTrigger>
+            <DialogContent className="max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="text-2xl text-primary">{t.expertCare}</DialogTitle>
+              </DialogHeader>
+              <p className="text-muted-foreground leading-relaxed">{t.heroDescription}</p>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
