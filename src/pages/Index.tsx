@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Calendar, Car, Wrench, Zap, ChevronRight } from "lucide-react";
+import { Calendar, Car, Wrench, Zap, ChevronRight, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import heroImage from "@/assets/tesla-hero.jpg";
 import ServiceSelector from "@/components/ServiceSelector";
@@ -143,7 +144,9 @@ const Index = () => {
             <Zap className="h-8 w-8 text-primary" />
             <span className="text-xl font-semibold tracking-tight">{t.teslaService}</span>
           </div>
-          <div className="flex items-center gap-2">
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={() => (window.location.href = "/manage")}>
               {t.manageMyAppointment}
             </Button>
@@ -151,6 +154,36 @@ const Index = () => {
             <Button variant="glass" size="sm" onClick={() => (window.location.href = "/auth")}>
               {t.adminLogin}
             </Button>
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="flex md:hidden items-center gap-2">
+            <LanguageSwitcher variant="glass" />
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="glass" size="icon">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-72 bg-background border-border">
+                <nav className="flex flex-col gap-4 mt-8">
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => (window.location.href = "/manage")}
+                  >
+                    {t.manageMyAppointment}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => (window.location.href = "/auth")}
+                  >
+                    {t.adminLogin}
+                  </Button>
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </header>
 
