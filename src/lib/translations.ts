@@ -214,6 +214,13 @@ export const hu = {
   vinHelp: "17 karakteres alvázszám (Vehicle Identification Number)",
   vehiclePlate: "Rendszám",
   vehiclePlatePlaceholder: "pl. ABC-123",
+  vehicleImage: "Jármű kép",
+  uploadVehicleImage: "Kép feltöltése",
+  vehicleImageUpdated: "Jármű kép sikeresen frissítve",
+  failedToUploadVehicleImage: "Jármű kép feltöltése sikertelen",
+  removeVehicleImage: "Kép eltávolítása",
+  vehicleImageRemoved: "Jármű kép eltávolítva",
+  clickToUploadVehicleImage: "Kattintson a jármű kép feltöltéséhez",
 
   // Admin Dashboard
   admin: "Admin",
@@ -473,6 +480,13 @@ export const en = {
   vinHelp: "17 character Vehicle Identification Number",
   vehiclePlate: "License Plate",
   vehiclePlatePlaceholder: "e.g., ABC-123",
+  vehicleImage: "Vehicle Image",
+  uploadVehicleImage: "Upload Image",
+  vehicleImageUpdated: "Vehicle image updated successfully",
+  failedToUploadVehicleImage: "Failed to upload vehicle image",
+  removeVehicleImage: "Remove Image",
+  vehicleImageRemoved: "Vehicle image removed",
+  clickToUploadVehicleImage: "Click to upload vehicle image",
 
   // Admin Dashboard
   admin: "Admin",

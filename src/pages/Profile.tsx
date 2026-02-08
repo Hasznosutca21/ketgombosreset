@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Zap, ArrowLeft, Loader2, Camera, User, Mail, Phone, MapPin, Settings, Trash2, Car } from "lucide-react";
+import { Zap, ArrowLeft, Loader2, Camera, User, Mail, Phone, MapPin, Settings, Trash2, Car, ImagePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,6 +37,7 @@ interface Profile {
   vehicle_year: number | null;
   vehicle_vin: string | null;
   vehicle_plate: string | null;
+  vehicle_image_url: string | null;
   preferences: {
     emailNotifications?: boolean;
     smsNotifications?: boolean;
@@ -51,7 +52,9 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [isUploadingVehicleImage, setIsUploadingVehicleImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const vehicleImageInputRef = useRef<HTMLInputElement>(null);
 
   const profileSchema = z.object({
     display_name: z.string().max(100, t.displayNameTooLong || "Display name must be less than 100 characters").optional().or(z.literal("")),
@@ -256,6 +259,101 @@ const Profile = () => {
       toast.error(t.failedToUploadAvatar || "Failed to upload avatar");
     } finally {
       setIsUploadingAvatar(false);
+    }
+  };
+
+  const handleVehicleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error(t.invalidFileType || "Please select an image file");
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error(t.fileTooLarge || "Image must be less than 5MB");
+      return;
+    }
+
+    setIsUploadingVehicleImage(true);
+    try {
+      const fileExt = file.name.split(".").pop();
+      const filePath = `${user.id}/vehicle.${fileExt}`;
+
+      // Delete old vehicle image if exists
+      if (profile?.vehicle_image_url) {
+        const oldPath = profile.vehicle_image_url.split("/").slice(-2).join("/");
+        await supabase.storage.from("avatars").remove([oldPath]);
+      }
+
+      // Upload new vehicle image (using avatars bucket)
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(filePath);
+
+      // Update profile with new vehicle image URL
+      if (profile) {
+        const { error } = await supabase
+          .from("profiles")
+          .update({ vehicle_image_url: publicUrl })
+          .eq("user_id", user.id);
+
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("profiles")
+          .insert({
+            user_id: user.id,
+            vehicle_image_url: publicUrl,
+          });
+
+        if (error) throw error;
+      }
+
+      setProfile((prev) => prev ? { ...prev, vehicle_image_url: publicUrl } : null);
+      toast.success(t.vehicleImageUpdated || "Vehicle image updated successfully");
+    } catch (error) {
+      console.error("Error uploading vehicle image:", error);
+      toast.error(t.failedToUploadVehicleImage || "Failed to upload vehicle image");
+    } finally {
+      setIsUploadingVehicleImage(false);
+    }
+  };
+
+  const handleRemoveVehicleImage = async () => {
+    if (!user || !profile?.vehicle_image_url) return;
+
+    setIsUploadingVehicleImage(true);
+    try {
+      // Delete vehicle image from storage
+      const oldPath = profile.vehicle_image_url.split("/").slice(-2).join("/");
+      await supabase.storage.from("avatars").remove([oldPath]);
+
+      // Update profile to remove vehicle image URL
+      const { error } = await supabase
+        .from("profiles")
+        .update({ vehicle_image_url: null })
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+
+      setProfile((prev) => prev ? { ...prev, vehicle_image_url: null } : null);
+      toast.success(t.vehicleImageRemoved || "Vehicle image removed");
+    } catch (error) {
+      console.error("Error removing vehicle image:", error);
+      toast.error(t.failedToUploadVehicleImage || "Failed to remove vehicle image");
+    } finally {
+      setIsUploadingVehicleImage(false);
     }
   };
 
@@ -521,6 +619,71 @@ const Profile = () => {
                           placeholder={t.vehiclePlatePlaceholder || "e.g., ABC-123"}
                           {...register("vehicle_plate")}
                         />
+                      </div>
+
+                      {/* Vehicle Image Upload */}
+                      <div className="space-y-2">
+                        <Label>{t.vehicleImage || "Vehicle Image"}</Label>
+                        <div className="flex flex-col items-center gap-4">
+                          {profile?.vehicle_image_url ? (
+                            <div className="relative w-full">
+                              <img
+                                src={profile.vehicle_image_url}
+                                alt="Vehicle"
+                                className="w-full h-48 object-cover rounded-lg border border-border"
+                              />
+                              <button
+                                type="button"
+                                onClick={handleRemoveVehicleImage}
+                                className="absolute top-2 right-2 p-1.5 rounded-full bg-destructive text-destructive-foreground shadow-lg hover:bg-destructive/90 transition-colors"
+                                disabled={isUploadingVehicleImage}
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => vehicleImageInputRef.current?.click()}
+                              disabled={isUploadingVehicleImage}
+                              className="w-full h-48 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-colors cursor-pointer"
+                            >
+                              {isUploadingVehicleImage ? (
+                                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                              ) : (
+                                <>
+                                  <ImagePlus className="h-10 w-10 text-muted-foreground" />
+                                  <span className="text-sm text-muted-foreground">
+                                    {t.clickToUploadVehicleImage || "Click to upload vehicle image"}
+                                  </span>
+                                </>
+                              )}
+                            </button>
+                          )}
+                          {profile?.vehicle_image_url && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => vehicleImageInputRef.current?.click()}
+                              disabled={isUploadingVehicleImage}
+                            >
+                              {isUploadingVehicleImage ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              ) : (
+                                <ImagePlus className="mr-2 h-4 w-4" />
+                              )}
+                              {t.uploadVehicleImage || "Upload Image"}
+                            </Button>
+                          )}
+                          <input
+                            ref={vehicleImageInputRef}
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleVehicleImageUpload}
+                          />
+                        </div>
                       </div>
 
                       <Button type="submit" variant="tesla" className="w-full" disabled={isSaving}>

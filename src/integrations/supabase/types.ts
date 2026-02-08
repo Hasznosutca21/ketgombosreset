@@ -74,6 +74,7 @@ export type Database = {
           preferences: Json | null
           updated_at: string
           user_id: string
+          vehicle_image_url: string | null
           vehicle_model: string | null
           vehicle_plate: string | null
           vehicle_type: string | null
@@ -94,6 +95,7 @@ export type Database = {
           preferences?: Json | null
           updated_at?: string
           user_id: string
+          vehicle_image_url?: string | null
           vehicle_model?: string | null
           vehicle_plate?: string | null
           vehicle_type?: string | null
@@ -114,6 +116,7 @@ export type Database = {
           preferences?: Json | null
           updated_at?: string
           user_id?: string
+          vehicle_image_url?: string | null
           vehicle_model?: string | null
           vehicle_plate?: string | null
           vehicle_type?: string | null
