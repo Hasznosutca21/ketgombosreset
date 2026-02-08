@@ -56,6 +56,7 @@ const Profile = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [isUploadingVehicleImage, setIsUploadingVehicleImage] = useState(false);
+  const [isDecodingVin, setIsDecodingVin] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const vehicleImageInputRef = useRef<HTMLInputElement>(null);
 
@@ -407,6 +408,57 @@ const Profile = () => {
     }
   };
 
+  const handleDecodeVin = async () => {
+    const vinInput = document.getElementById('vehicle_vin') as HTMLInputElement;
+    const vin = vinInput?.value?.trim();
+
+    if (!vin) {
+      toast.error(t.vehicleVinPlaceholder || "Please enter a VIN");
+      return;
+    }
+
+    if (vin.length !== 17) {
+      toast.error(t.invalidVinLength || "VIN must be exactly 17 characters");
+      return;
+    }
+
+    setIsDecodingVin(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('decode-vin', {
+        body: { vin },
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        if (data.error.includes("Only Tesla")) {
+          toast.error(t.onlyTeslaSupported || "Only Tesla vehicles are supported");
+        } else {
+          toast.error(data.error);
+        }
+        return;
+      }
+
+      // Update profile state with decoded data
+      if (data.model) {
+        setProfile((prev) => prev ? { ...prev, vehicle_model: data.model } : null);
+      }
+      if (data.type) {
+        setProfile((prev) => prev ? { ...prev, vehicle_type: data.type } : null);
+      }
+      if (data.year) {
+        setProfile((prev) => prev ? { ...prev, vehicle_year: data.year } : null);
+      }
+
+      toast.success(t.vinDecoded || "Vehicle data filled successfully");
+    } catch (error) {
+      console.error("Error decoding VIN:", error);
+      toast.error(t.vinDecodeFailed || "Failed to decode VIN");
+    } finally {
+      setIsDecodingVin(false);
+    }
+  };
+
   const getInitials = () => {
     if (profile?.display_name) {
       return profile.display_name
@@ -616,12 +668,27 @@ const Profile = () => {
 
                       <div className="space-y-2">
                         <Label htmlFor="vehicle_vin">{t.vehicleVin || "VIN"}</Label>
-                        <Input
-                          id="vehicle_vin"
-                          placeholder={t.vehicleVinPlaceholder || "Vehicle Identification Number"}
-                          maxLength={17}
-                          {...register("vehicle_vin")}
-                        />
+                        <div className="flex gap-2">
+                          <Input
+                            id="vehicle_vin"
+                            placeholder={t.vehicleVinPlaceholder || "Vehicle Identification Number"}
+                            maxLength={17}
+                            className="flex-1 font-mono uppercase"
+                            {...register("vehicle_vin")}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleDecodeVin}
+                            disabled={isDecodingVin}
+                          >
+                            {isDecodingVin ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              t.decodeVin || "Decode VIN"
+                            )}
+                          </Button>
+                        </div>
                         <p className="text-xs text-muted-foreground">
                           {t.vinHelp || "17 character Vehicle Identification Number"}
                         </p>
