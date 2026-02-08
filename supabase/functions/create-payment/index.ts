@@ -1,11 +1,20 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
+
+// Input validation schema
+const PaymentRequestSchema = z.object({
+  appointmentId: z.string().uuid("Invalid appointment ID"),
+  serviceId: z.string().min(1).max(50),
+  customerEmail: z.string().email("Invalid email address").max(255),
+  customerName: z.string().max(100).optional(),
+});
 
 // Service prices in HUF (forints) - stored in minor units
 const SERVICE_PRICES: Record<string, { amount: number; name: string }> = {
@@ -30,21 +39,63 @@ serve(async (req) => {
   }
 
   try {
-    const { appointmentId, serviceId, customerEmail, customerName } = await req.json();
+    // Parse and validate input
+    const rawData = await req.json();
+    const validationResult = PaymentRequestSchema.safeParse(rawData);
+    
+    if (!validationResult.success) {
+      console.error("Validation error:", validationResult.error.issues);
+      return new Response(
+        JSON.stringify({ error: "Invalid request data" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const { appointmentId, serviceId, customerEmail, customerName } = validationResult.data;
 
     console.log("Creating payment for:", { appointmentId, serviceId, customerEmail });
 
-    if (!appointmentId || !serviceId || !customerEmail) {
-      throw new Error("Missing required fields: appointmentId, serviceId, or customerEmail");
-    }
-
     const servicePrice = SERVICE_PRICES[serviceId];
     if (!servicePrice) {
-      throw new Error(`Unknown service: ${serviceId}`);
+      return new Response(
+        JSON.stringify({ error: `Unknown service: ${serviceId}` }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     if (servicePrice.amount === 0) {
-      throw new Error("This service is free (warranty service)");
+      return new Response(
+        JSON.stringify({ error: "This service is free (warranty service)" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Verify the appointment exists in the database
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    const { data: appointment, error: appointmentError } = await supabase
+      .from("appointments")
+      .select("id, email, service")
+      .eq("id", appointmentId)
+      .maybeSingle();
+
+    if (appointmentError || !appointment) {
+      console.error("Appointment not found:", appointmentId);
+      return new Response(
+        JSON.stringify({ error: "Appointment not found" }),
+        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Verify the email matches the appointment
+    if (appointment.email !== customerEmail) {
+      console.error("Email mismatch for appointment:", appointmentId);
+      return new Response(
+        JSON.stringify({ error: "Invalid request" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     // Initialize Stripe
@@ -88,7 +139,7 @@ serve(async (req) => {
       metadata: {
         appointmentId,
         serviceId,
-        customerName,
+        customerName: customerName || "",
       },
     });
 

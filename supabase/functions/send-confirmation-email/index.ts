@@ -113,6 +113,34 @@ serve(async (req) => {
   }
 
   try {
+    // Authentication check
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      console.error('Missing authorization header');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    
+    // Create client with user token to verify identity
+    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const { data: { user }, error: userError } = await userClient.auth.getUser();
+    if (userError || !user) {
+      console.error('Auth error:', userError?.message || 'No user found');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Parse and validate input
     const rawData = await req.json();
     const validationResult = AppointmentEmailSchema.safeParse(rawData);
@@ -126,11 +154,9 @@ serve(async (req) => {
     }
 
     const data = validationResult.data;
-    console.log('Sending confirmation email for appointment:', data.appointmentId);
+    console.log(`User ${user.id} sending confirmation email for appointment:`, data.appointmentId);
 
-    // Verify the appointment exists in the database
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    // Verify the appointment exists in the database using service role
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const { data: appointment, error: appointmentError } = await supabase
@@ -147,13 +173,24 @@ serve(async (req) => {
       );
     }
 
-    // Verify the email matches the appointment
-    if (appointment.email !== data.customerEmail) {
-      console.error('Email mismatch for appointment:', data.appointmentId);
-      return new Response(
-        JSON.stringify({ error: 'Invalid request' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    // Verify user owns this appointment or email matches their account
+    const userEmail = user.email;
+    if (appointment.email !== data.customerEmail || (appointment.email !== userEmail)) {
+      // Check if user is admin
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .maybeSingle();
+
+      if (!roleData && appointment.email !== userEmail) {
+        console.error('Forbidden: User does not own this appointment and is not admin');
+        return new Response(
+          JSON.stringify({ error: 'Forbidden' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
     }
 
     const lang = data.language === "en" ? "en" : "hu";

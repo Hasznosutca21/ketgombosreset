@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "npm:resend@2.0.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -8,6 +9,31 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
+
+// Input validation schema
+const UpdateEmailSchema = z.object({
+  type: z.enum(["cancellation", "reschedule"]),
+  appointmentId: z.string().uuid("Invalid appointment ID"),
+  customerName: z.string().min(1).max(100),
+  customerEmail: z.string().email("Invalid email address").max(255),
+  service: z.string().max(50),
+  vehicle: z.string().max(50),
+  originalDate: z.string(),
+  originalTime: z.string().max(20),
+  newDate: z.string().optional(),
+  newTime: z.string().max(20).optional(),
+  location: z.string().max(100),
+  language: z.enum(["hu", "en"]).optional(),
+});
+
+// Sanitize text for email content
+function sanitizeForEmail(text: string): string {
+  return text
+    .replace(/[<>]/g, '')
+    .replace(/[\r\n]/g, ' ')
+    .trim()
+    .substring(0, 100);
+}
 
 const translations = {
   hu: {
@@ -101,21 +127,6 @@ const vehicleNames: Record<string, string> = {
   roadster: "Roadster",
 };
 
-interface UpdateEmailRequest {
-  type: "cancellation" | "reschedule";
-  appointmentId: string;
-  customerName: string;
-  customerEmail: string;
-  service: string;
-  vehicle: string;
-  originalDate: string;
-  originalTime: string;
-  newDate?: string;
-  newTime?: string;
-  location: string;
-  language?: "hu" | "en";
-}
-
 const formatDate = (dateStr: string, lang: "hu" | "en") => {
   const dateObj = new Date(dateStr);
   return dateObj.toLocaleDateString(lang === "hu" ? "hu-HU" : "en-US", {
@@ -157,7 +168,19 @@ serve(async (req) => {
       );
     }
 
-    const data: UpdateEmailRequest = await req.json();
+    // Parse and validate input
+    const rawData = await req.json();
+    const validationResult = UpdateEmailSchema.safeParse(rawData);
+    
+    if (!validationResult.success) {
+      console.error("Validation error:", validationResult.error.issues);
+      return new Response(
+        JSON.stringify({ error: "Invalid request data" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const data = validationResult.data;
     console.log(`User ${user.id} requesting ${data.type} email for appointment:`, data.appointmentId);
 
     // Verify appointment exists and user has access
@@ -199,8 +222,10 @@ serve(async (req) => {
     const lang = data.language === "en" ? "en" : "hu";
     const t = translations[lang];
 
-    const serviceName = t.services[data.service as keyof typeof t.services] || data.service;
-    const vehicleName = vehicleNames[data.vehicle] || data.vehicle;
+    // Sanitize user-provided content
+    const safeName = sanitizeForEmail(data.customerName);
+    const serviceName = t.services[data.service as keyof typeof t.services] || sanitizeForEmail(data.service);
+    const vehicleName = vehicleNames[data.vehicle] || sanitizeForEmail(data.vehicle);
     const locationData = t.locationsList[data.location as keyof typeof t.locationsList] || { name: data.location, address: '' };
     
     const originalFormattedDate = formatDate(data.originalDate, lang);
@@ -221,7 +246,7 @@ serve(async (req) => {
     if (data.type === "cancellation") {
       subject = t.cancellationSubject(serviceName);
       headerTitle = t.appointmentCancelled;
-      greeting = t.cancellationGreeting(data.customerName);
+      greeting = t.cancellationGreeting(safeName);
       headerIcon = "✕";
       headerColor = "#ef4444";
       ctaButton = t.bookNewAppointment;
@@ -261,7 +286,7 @@ serve(async (req) => {
     } else {
       subject = t.rescheduleSubject(serviceName, newFormattedDate);
       headerTitle = t.appointmentRescheduled;
-      greeting = t.rescheduleGreeting(data.customerName);
+      greeting = t.rescheduleGreeting(safeName);
       headerIcon = "📅";
       headerColor = "#e11d48";
       ctaButton = t.manageAppointment;
