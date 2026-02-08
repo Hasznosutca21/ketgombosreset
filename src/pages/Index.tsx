@@ -265,7 +265,7 @@ const Index = () => {
 
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full pt-16 px-6 text-center">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight tracking-[0.15em] uppercase mb-2 animate-fade-in pointer-events-none">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.15em] uppercase mb-2 animate-fade-in pointer-events-none">
             {t.scheduleYourService}
           </h1>
           <p className="text-base md:text-lg text-muted-foreground max-w-2xl mb-4 animate-slide-up pointer-events-none">
