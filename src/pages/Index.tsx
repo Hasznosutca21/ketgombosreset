@@ -18,21 +18,16 @@ import VehicleSelector from "@/components/VehicleSelector";
 import AppointmentForm from "@/components/AppointmentForm";
 import ConfirmationView from "@/components/ConfirmationView";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import CartDrawer from "@/components/CartDrawer";
-import ProductGrid from "@/components/ProductGrid";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { saveAppointment, SavedAppointment } from "@/lib/appointments";
 import { toast } from "sonner";
 import { Capacitor } from "@capacitor/core";
-// AI Assistant temporarily disabled for debugging
-// import AppointmentAssistant from "@/components/AppointmentAssistant";
 
 type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
 const Index = () => {
-  // Header navigation uses <Link/> for reliability in preview/published environments
   const { t, language } = useLanguage();
   const { user, isLoading: authLoading, signOut } = useAuth();
   const [currentStep, setCurrentStep] = useState<Step>("service");
@@ -162,7 +157,6 @@ const Index = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-2">
-            <CartDrawer />
             <Button variant="ghost" size="sm" asChild>
               <a href="/manage">{t.manageMyAppointment}</a>
             </Button>
@@ -195,7 +189,6 @@ const Index = () => {
                 href="/auth"
                 className={buttonVariants({ variant: "tesla", size: "sm" })}
                 onClick={(e) => {
-                  // Failsafe navigation: force hard navigation if something blocks header clicks
                   e.preventDefault();
                   window.location.assign("/auth");
                 }}
@@ -207,7 +200,6 @@ const Index = () => {
 
           {/* Mobile Navigation */}
           <div className="flex md:hidden items-center gap-2">
-            <CartDrawer />
             <LanguageSwitcher variant="glass" />
             <Sheet>
               <SheetTrigger asChild>
@@ -355,14 +347,6 @@ const Index = () => {
           />
         )}
       </main>
-
-      {/* Shop Section */}
-      <section className="bg-secondary/5 py-8">
-        <div className="max-w-6xl mx-auto px-6">
-          <ProductGrid />
-        </div>
-      </section>
-      {/* AI Assistant temporarily disabled */}
 
       {/* Footer */}
       <footer className="border-t border-border py-8 px-6">
