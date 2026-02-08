@@ -96,8 +96,7 @@ const Contact = () => {
                   </h3>
                   <p className="text-muted-foreground">
                     {language === "hu" ? "Hétfő - Péntek: 9:00 - 17:00" : "Monday - Friday: 9:00 AM - 5:00 PM"}<br />
-                    {language === "hu" ? "Szombat: 9:00 - 13:00" : "Saturday: 9:00 AM - 1:00 PM"}<br />
-                    {language === "hu" ? "Vasárnap: Zárva" : "Sunday: Closed"}
+                    {language === "hu" ? "Szombat - Vasárnap: Zárva" : "Saturday - Sunday: Closed"}
                   </p>
                 </div>
               </div>
