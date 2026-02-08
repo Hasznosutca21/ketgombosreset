@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, Car, Wrench, ChevronRight, Menu, LogOut, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import heroImage from "@/assets/tesland-hero.jpg";
@@ -146,7 +146,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background pointer-events-none" />
 
         {/* Header */}
-        <header className="relative z-10 flex items-center justify-between px-6 py-4 md:px-12">
+        <header className="relative z-20 flex items-center justify-between px-6 py-4 md:px-12">
           <div className="flex items-center gap-2">
             <img src={teslandLogo} alt="TESLAND" className="h-10 w-auto" />
           </div>
@@ -154,7 +154,7 @@ const Index = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/manage">{t.manageMyAppointment}</Link>
+              <a href="/manage">{t.manageMyAppointment}</a>
             </Button>
             <LanguageSwitcher variant="glass" />
             {authLoading ? null : user ? (
@@ -165,10 +165,10 @@ const Index = () => {
                   asChild
                   className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10"
                 >
-                  <Link to="/profile" className="flex items-center gap-2">
+                  <a href="/profile" className="flex items-center gap-2">
                     <User className="h-4 w-4 text-primary" />
                     <span className="text-sm font-medium truncate max-w-[150px]">{user.email}</span>
-                  </Link>
+                  </a>
                 </Button>
                 <Button 
                   variant="ghost" 
@@ -181,9 +181,17 @@ const Index = () => {
                 </Button>
               </div>
             ) : (
-              <Button variant="tesla" size="sm" asChild>
-                <Link to="/auth">{t.login}</Link>
-              </Button>
+              <a
+                href="/auth"
+                className={buttonVariants({ variant: "tesla", size: "sm" })}
+                onClick={(e) => {
+                  // Failsafe navigation: force hard navigation if something blocks header clicks
+                  e.preventDefault();
+                  window.location.assign("/auth");
+                }}
+              >
+                {t.login}
+              </a>
             )}
           </div>
 
@@ -204,10 +212,10 @@ const Index = () => {
                       className="justify-start"
                       asChild
                     >
-                      <Link to="/profile" className="flex items-center">
+                      <a href="/profile" className="flex items-center">
                         <User className="h-4 w-4 mr-2" />
                         {t.myProfile || "My Profile"}
-                      </Link>
+                      </a>
                     </Button>
                   )}
                   <Button
@@ -215,7 +223,7 @@ const Index = () => {
                     className="justify-start"
                     asChild
                   >
-                    <Link to="/manage">{t.manageMyAppointment}</Link>
+                    <a href="/manage">{t.manageMyAppointment}</a>
                   </Button>
                   {authLoading ? null : user ? (
                     <Button
@@ -227,13 +235,20 @@ const Index = () => {
                       {t.signOut}
                     </Button>
                   ) : (
-                    <Button
-                      variant="tesla"
-                      className="justify-start"
-                      asChild
+                    <a
+                      href="/auth"
+                      className={buttonVariants({
+                        variant: "tesla",
+                        size: "default",
+                        className: "w-full justify-start",
+                      })}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.location.assign("/auth");
+                      }}
                     >
-                      <Link to="/auth">{t.login}</Link>
-                    </Button>
+                      {t.login}
+                    </a>
                   )}
                 </nav>
               </SheetContent>
@@ -242,7 +257,7 @@ const Index = () => {
         </header>
 
         {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full -mt-16 px-6 text-center">
+        <div className="relative z-10 pointer-events-none flex flex-col items-center justify-center h-full -mt-16 px-6 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 animate-fade-in">
             {t.scheduleYourService}
           </h1>
