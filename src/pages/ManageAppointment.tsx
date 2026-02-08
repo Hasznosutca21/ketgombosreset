@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Zap, Calendar, Car, MapPin, Clock, Search, X, CalendarClock, ArrowLeft, Loader2 } from "lucide-react";
+import { Calendar, Car, MapPin, Clock, Search, X, CalendarClock, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { hu, enUS } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+import teslandLogo from "@/assets/tesland-logo.png";
 
 const vehicleLabels: Record<string, string> = {
   "model-s": "Model S",
@@ -155,8 +156,7 @@ const ManageAppointment = () => {
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4 md:px-12 border-b border-border">
         <div className="flex items-center gap-2">
-          <Zap className="h-8 w-8 text-primary" />
-          <span className="text-xl font-semibold tracking-tight">{t.teslaService}</span>
+          <img src={teslandLogo} alt="TESLAND" className="h-6 md:h-8 w-auto" />
         </div>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
