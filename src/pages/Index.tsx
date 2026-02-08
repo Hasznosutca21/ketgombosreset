@@ -265,7 +265,7 @@ const Index = () => {
 
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full pt-16 px-6 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 animate-fade-in pointer-events-none">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-4 animate-fade-in pointer-events-none">
             {t.scheduleYourService}
           </h1>
           <Dialog>
