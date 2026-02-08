@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Zap, ArrowLeft, Calendar, Car, MapPin, Clock, Trash2, Loader2, RefreshCw, LogOut, Shield } from "lucide-react";
+import { Zap, ArrowLeft, Calendar, Car, MapPin, Clock, Trash2, Loader2, RefreshCw, LogOut, Shield, X, CalendarClock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import AdminRescheduleDialog from "@/components/AdminRescheduleDialog";
 import { supabase } from "@/integrations/supabase/client";
+import { cancelAppointment, rescheduleAppointment } from "@/lib/appointments";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { hu, enUS } from "date-fns/locale";
@@ -43,6 +46,15 @@ const Admin = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  // Cancel dialog state
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [appointmentToCancel, setAppointmentToCancel] = useState<Appointment | null>(null);
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  // Reschedule dialog state
+  const [rescheduleDialogOpen, setRescheduleDialogOpen] = useState(false);
+  const [appointmentToReschedule, setAppointmentToReschedule] = useState<Appointment | null>(null);
 
   const dateLocale = language === "hu" ? hu : enUS;
 
@@ -97,6 +109,52 @@ const Admin = () => {
     }
   };
 
+  const handleCancelClick = (appointment: Appointment) => {
+    setAppointmentToCancel(appointment);
+    setCancelDialogOpen(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    if (!appointmentToCancel) return;
+    setIsCancelling(true);
+    const success = await cancelAppointment(appointmentToCancel.id);
+    if (success) {
+      toast.success(t.appointmentCancelled);
+      setAppointments((prev) =>
+        prev.map((a) => (a.id === appointmentToCancel.id ? { ...a, status: "cancelled" } : a))
+      );
+    } else {
+      toast.error(t.failedToCancel);
+    }
+    setIsCancelling(false);
+    setCancelDialogOpen(false);
+    setAppointmentToCancel(null);
+  };
+
+  const handleRescheduleClick = (appointment: Appointment) => {
+    setAppointmentToReschedule(appointment);
+    setRescheduleDialogOpen(true);
+  };
+
+  const handleConfirmReschedule = async (newDate: Date, newTime: string) => {
+    if (!appointmentToReschedule) return;
+    const updated = await rescheduleAppointment(appointmentToReschedule.id, newDate, newTime);
+    if (updated) {
+      toast.success(t.appointmentRescheduled);
+      setAppointments((prev) =>
+        prev.map((a) =>
+          a.id === updated.id
+            ? { ...a, appointment_date: newDate.toISOString().split("T")[0], appointment_time: newTime, status: "rescheduled" }
+            : a
+        )
+      );
+    } else {
+      toast.error(t.failedToReschedule);
+    }
+    setRescheduleDialogOpen(false);
+    setAppointmentToReschedule(null);
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
@@ -110,6 +168,19 @@ const Admin = () => {
   const getLocationLabel = (locationId: string) => {
     const locationData = t.locationsList[locationId as keyof typeof t.locationsList];
     return locationData?.name || locationId;
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "confirmed":
+        return <Badge variant="default">{t.confirmed}</Badge>;
+      case "rescheduled":
+        return <Badge variant="secondary">{t.rescheduled}</Badge>;
+      case "cancelled":
+        return <Badge variant="destructive">{t.cancelled}</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
+    }
   };
 
   if (authLoading) {
@@ -184,7 +255,7 @@ const Admin = () => {
                       </TableHead>
                       <TableHead>{t.locationLabel}</TableHead>
                       <TableHead>{t.status}</TableHead>
-                      {isAdmin && <TableHead className="w-[80px]">{t.actions}</TableHead>}
+                      {isAdmin && <TableHead className="w-[150px]">{t.actions}</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -226,26 +297,46 @@ const Admin = () => {
                             {getLocationLabel(appointment.location)}
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <Badge variant={appointment.status === "confirmed" ? "default" : "secondary"}>
-                            {appointment.status === "confirmed" ? t.confirmed : appointment.status}
-                          </Badge>
-                        </TableCell>
+                        <TableCell>{getStatusBadge(appointment.status)}</TableCell>
                         {isAdmin && (
                           <TableCell>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleDelete(appointment.id)}
-                              disabled={deletingId === appointment.id}
-                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                            >
-                              {deletingId === appointment.id ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <Trash2 className="h-4 w-4" />
+                            <div className="flex gap-1">
+                              {appointment.status !== "cancelled" && (
+                                <>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => handleRescheduleClick(appointment)}
+                                    title={t.reschedule}
+                                  >
+                                    <CalendarClock className="h-4 w-4" />
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => handleCancelClick(appointment)}
+                                    title={t.cancel}
+                                    className="text-orange-500 hover:text-orange-600 hover:bg-orange-500/10"
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </>
                               )}
-                            </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDelete(appointment.id)}
+                                disabled={deletingId === appointment.id}
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                title={t.appointmentDeleted}
+                              >
+                                {deletingId === appointment.id ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Trash2 className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </div>
                           </TableCell>
                         )}
                       </TableRow>
@@ -257,6 +348,36 @@ const Admin = () => {
           </CardContent>
         </Card>
       </main>
+
+      {/* Cancel Confirmation Dialog */}
+      <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t.cancelAppointment}</DialogTitle>
+            <DialogDescription>{t.cancelConfirmation}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCancelDialogOpen(false)}>
+              {t.back}
+            </Button>
+            <Button variant="destructive" onClick={handleConfirmCancel} disabled={isCancelling}>
+              {isCancelling ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+              {t.confirmCancel}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reschedule Dialog */}
+      {appointmentToReschedule && (
+        <AdminRescheduleDialog
+          open={rescheduleDialogOpen}
+          onOpenChange={setRescheduleDialogOpen}
+          currentDate={new Date(appointmentToReschedule.appointment_date)}
+          currentTime={appointmentToReschedule.appointment_time}
+          onConfirm={handleConfirmReschedule}
+        />
+      )}
     </div>
   );
 };

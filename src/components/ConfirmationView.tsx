@@ -1,8 +1,9 @@
-import { CheckCircle, Calendar, Car, MapPin, Clock, Wrench } from "lucide-react";
+import { CheckCircle, Calendar, Car, MapPin, Clock, Wrench, CalendarClock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { hu, enUS } from "date-fns/locale";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useNavigate } from "react-router-dom";
 
 interface ConfirmationViewProps {
   service: string;
@@ -15,6 +16,7 @@ interface ConfirmationViewProps {
     email: string;
     phone: string;
   };
+  appointmentId?: string;
   onStartOver: () => void;
 }
 
@@ -27,11 +29,20 @@ const vehicleNames: Record<string, string> = {
   roadster: "Roadster",
 };
 
-const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: ConfirmationViewProps) => {
+const ConfirmationView = ({ service, vehicle, appointment, appointmentId, onStartOver }: ConfirmationViewProps) => {
   const { t, language } = useLanguage();
+  const navigate = useNavigate();
   const dateLocale = language === "hu" ? hu : enUS;
   const location = t.locationsList[appointment.location as keyof typeof t.locationsList];
   const serviceData = t.services[service as keyof typeof t.services];
+
+  const handleManageAppointment = () => {
+    if (appointmentId) {
+      navigate(`/manage?id=${appointmentId}`);
+    } else {
+      navigate("/manage");
+    }
+  };
 
   return (
     <div className="animate-fade-in text-center">
@@ -111,8 +122,9 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
         <Button variant="teslaOutline" size="lg" onClick={onStartOver}>
           {t.scheduleAnother}
         </Button>
-        <Button variant="glass" size="lg">
-          {t.addToCalendar}
+        <Button variant="glass" size="lg" onClick={handleManageAppointment}>
+          <CalendarClock className="mr-2 h-4 w-4" />
+          {t.manageMyAppointment}
         </Button>
       </div>
     </div>

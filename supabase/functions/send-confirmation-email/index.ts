@@ -20,7 +20,8 @@ const translations = {
     time: "Időpont",
     location: "Helyszín",
     reminder: "📱 Emlékeztetőt küldünk 1 órával az időpont előtt.",
-    needChanges: "Módosítani szeretné? Írjon nekünk: support@tesla-service.com",
+    needChanges: "Módosítani szeretné időpontját?",
+    manageAppointment: "Időpont kezelése",
     support: "Támogatás",
     locations: "Helyszínek",
     contact: "Kapcsolat",
@@ -49,7 +50,8 @@ const translations = {
     time: "Time",
     location: "Location",
     reminder: "📱 You'll receive a reminder notification 1 hour before your appointment.",
-    needChanges: "Need to make changes? Contact us at support@tesla-service.com",
+    needChanges: "Need to reschedule or cancel?",
+    manageAppointment: "Manage Appointment",
     support: "Support",
     locations: "Locations",
     contact: "Contact",
@@ -89,6 +91,7 @@ interface AppointmentEmailRequest {
   appointmentTime: string;
   location: string;
   language?: "hu" | "en";
+  manageUrl?: string;
 }
 
 serve(async (req) => {
@@ -114,6 +117,9 @@ serve(async (req) => {
       month: 'long',
       day: 'numeric',
     });
+
+    // Generate manage URL
+    const manageUrl = data.manageUrl || `https://ketgombosreset.lovable.app/manage?id=${data.appointmentId}`;
 
     const emailHtml = `
       <!DOCTYPE html>
@@ -212,11 +218,18 @@ serve(async (req) => {
               </p>
             </div>
 
-            <!-- Footer -->
-            <div style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 32px;">
+            <!-- Manage Appointment Button -->
+            <div style="text-align: center; margin-bottom: 32px;">
               <p style="margin: 0 0 16px 0; color: #a1a1aa; font-size: 14px;">
                 ${t.needChanges}
               </p>
+              <a href="${manageUrl}" style="display: inline-block; background: #e11d48; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; font-size: 14px;">
+                ${t.manageAppointment}
+              </a>
+            </div>
+
+            <!-- Footer -->
+            <div style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 32px;">
               <div style="display: flex; justify-content: center; gap: 24px; color: #71717a; font-size: 12px;">
                 <span>${t.support}</span>
                 <span>${t.locations}</span>
