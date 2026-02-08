@@ -19,6 +19,7 @@ interface AppointmentFormProps {
     phone: string;
   }) => void;
   onBack: () => void;
+  isSubmitting?: boolean;
 }
 
 const locations = [
@@ -32,7 +33,7 @@ const timeSlots = [
   "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM",
 ];
 
-const AppointmentForm = ({ onSubmit, onBack }: AppointmentFormProps) => {
+const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: AppointmentFormProps) => {
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
@@ -179,10 +180,10 @@ const AppointmentForm = ({ onSubmit, onBack }: AppointmentFormProps) => {
             variant="tesla"
             size="xl"
             className="w-full"
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
             onClick={handleSubmit}
           >
-            Confirm Appointment
+            {isSubmitting ? "Booking..." : "Confirm Appointment"}
           </Button>
         </div>
       </div>

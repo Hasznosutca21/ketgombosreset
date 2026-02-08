@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar, Car, Clock, MapPin, Wrench, Zap, Battery, Settings, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,10 @@ import ServiceSelector from "@/components/ServiceSelector";
 import VehicleSelector from "@/components/VehicleSelector";
 import AppointmentForm from "@/components/AppointmentForm";
 import ConfirmationView from "@/components/ConfirmationView";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { saveAppointment, SavedAppointment } from "@/lib/appointments";
+import { toast } from "sonner";
+import { Capacitor } from "@capacitor/core";
 
 type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
@@ -22,6 +26,10 @@ const Index = () => {
     email: string;
     phone: string;
   } | null>(null);
+  const [savedAppointment, setSavedAppointment] = useState<SavedAppointment | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const { token, isSupported, registerTokenForAppointment } = usePushNotifications();
 
   const steps = [
     { id: "service", label: "Service", icon: Wrench },
@@ -42,9 +50,46 @@ const Index = () => {
     setCurrentStep("appointment");
   };
 
-  const handleAppointmentSubmit = (data: typeof appointmentData) => {
-    setAppointmentData(data);
-    setCurrentStep("confirmation");
+  const handleAppointmentSubmit = async (data: typeof appointmentData) => {
+    if (!data || !data.date || !selectedService || !selectedVehicle) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Save appointment to database
+      const saved = await saveAppointment({
+        service: selectedService,
+        vehicle: selectedVehicle,
+        date: data.date,
+        time: data.time,
+        location: data.location,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+      });
+
+      if (saved) {
+        setSavedAppointment(saved);
+        setAppointmentData(data);
+        
+        // Register for push notifications if on native platform
+        if (isSupported && token) {
+          const platform = Capacitor.getPlatform() as 'ios' | 'android';
+          await registerTokenForAppointment(saved.id, platform);
+          toast.success("Push notifications enabled for appointment reminders!");
+        }
+        
+        setCurrentStep("confirmation");
+        toast.success("Appointment booked successfully!");
+      } else {
+        toast.error("Failed to book appointment. Please try again.");
+      }
+    } catch (error) {
+      console.error('Error booking appointment:', error);
+      toast.error("Failed to book appointment. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleStartOver = () => {
@@ -52,6 +97,7 @@ const Index = () => {
     setSelectedService(null);
     setSelectedVehicle(null);
     setAppointmentData(null);
+    setSavedAppointment(null);
   };
 
   return (
@@ -150,6 +196,7 @@ const Index = () => {
           <AppointmentForm
             onSubmit={handleAppointmentSubmit}
             onBack={() => setCurrentStep("vehicle")}
+            isSubmitting={isSubmitting}
           />
         )}
         {currentStep === "confirmation" && (

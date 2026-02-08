@@ -14,7 +14,83 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appointments: {
+        Row: {
+          appointment_date: string
+          appointment_time: string
+          created_at: string
+          email: string
+          id: string
+          location: string
+          name: string
+          phone: string | null
+          service: string
+          status: string
+          updated_at: string
+          vehicle: string
+        }
+        Insert: {
+          appointment_date: string
+          appointment_time: string
+          created_at?: string
+          email: string
+          id?: string
+          location: string
+          name: string
+          phone?: string | null
+          service: string
+          status?: string
+          updated_at?: string
+          vehicle: string
+        }
+        Update: {
+          appointment_date?: string
+          appointment_time?: string
+          created_at?: string
+          email?: string
+          id?: string
+          location?: string
+          name?: string
+          phone?: string | null
+          service?: string
+          status?: string
+          updated_at?: string
+          vehicle?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          appointment_id: string | null
+          created_at: string
+          device_token: string
+          id: string
+          platform: string
+        }
+        Insert: {
+          appointment_id?: string | null
+          created_at?: string
+          device_token: string
+          id?: string
+          platform: string
+        }
+        Update: {
+          appointment_id?: string | null
+          created_at?: string
+          device_token?: string
+          id?: string
+          platform?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
