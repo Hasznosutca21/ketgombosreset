@@ -100,8 +100,8 @@ const Auth = () => {
       <main className="flex-1 flex items-center justify-center px-6 py-12">
         <Card className="w-full max-w-md glass-card">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">{isLogin ? t.adminSignIn : t.createAccount}</CardTitle>
-            <CardDescription>{isLogin ? t.signInToAccess : t.createAccountToStart}</CardDescription>
+            <CardTitle className="text-2xl">{isLogin ? t.signIn : t.createAccount}</CardTitle>
+            <CardDescription>{isLogin ? t.signInToYourAccount : t.createAccountToStart}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Social Login Buttons */}
