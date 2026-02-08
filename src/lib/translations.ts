@@ -48,7 +48,7 @@ export const hu = {
   services: {
     // Karbantartás
     maintenance: {
-      title: "Éves karbantartás",
+      title: "Általános átvizsgálás",
       description: "Teljes átvizsgálás és folyadékellenőrzés",
       duration: "2-3 óra",
     },
@@ -382,7 +382,7 @@ export const en = {
   services: {
     // Maintenance
     maintenance: {
-      title: "Annual Maintenance",
+      title: "General Inspection",
       description: "Complete inspection and fluid checks",
       duration: "2-3 hours",
     },
