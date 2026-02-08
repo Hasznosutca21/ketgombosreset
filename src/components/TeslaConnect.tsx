@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { useTeslaApi } from "@/hooks/useTeslaApi";
 import { useLanguage } from "@/hooks/useLanguage";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Car,
   Battery,
@@ -42,6 +43,46 @@ export function TeslaConnect() {
 
   const [selectedVin, setSelectedVin] = useState<string | null>(null);
   const [commandLoading, setCommandLoading] = useState<string | null>(null);
+  const [registerLoading, setRegisterLoading] = useState(false);
+
+  const registerPartner = async () => {
+    try {
+      setRegisterLoading(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        toast.error("Nincs bejelentkezve");
+        return;
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tesla-register-partner`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ region: "eu" }),
+        }
+      );
+
+      const data = await response.json();
+      console.log("Partner registration response:", data);
+
+      if (data.success) {
+        toast.success("Partner regisztráció sikeres!");
+        // Try loading vehicles again
+        await listVehicles();
+      } else {
+        toast.error(`Regisztráció sikertelen: ${data.error || "Ismeretlen hiba"}`);
+      }
+    } catch (err) {
+      console.error("Partner registration error:", err);
+      toast.error("Hiba a partner regisztráció során");
+    } finally {
+      setRegisterLoading(false);
+    }
+  };
 
   const t = {
     hu: {
@@ -80,6 +121,8 @@ export function TeslaConnect() {
       commandFailed: "Parancs végrehajtása sikertelen",
       noVehicles: "Nincs elérhető jármű",
       selectVehicle: "Válassz járművet",
+      registerPartner: "Fleet API Regisztráció",
+      registerHint: "Ha 412-es hibát kapsz, először regisztrálni kell a partner fiókot",
     },
     en: {
       title: "Tesla Account",
@@ -117,6 +160,8 @@ export function TeslaConnect() {
       commandFailed: "Command execution failed",
       noVehicles: "No vehicles available",
       selectVehicle: "Select a vehicle",
+      registerPartner: "Fleet API Registration",
+      registerHint: "If you get a 412 error, you need to register the partner account first",
     },
   }[language];
 
@@ -204,19 +249,43 @@ export function TeslaConnect() {
       <CardContent className="space-y-6">
         {/* Vehicle selector */}
         {vehicles.length === 0 ? (
-          <Button
-            onClick={listVehicles}
-            disabled={isLoading}
-            variant="outline"
-            className="w-full"
-          >
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            ) : (
-              <RefreshCw className="w-4 h-4 mr-2" />
+          <div className="space-y-3">
+            <Button
+              onClick={listVehicles}
+              disabled={isLoading}
+              variant="outline"
+              className="w-full"
+            >
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <RefreshCw className="w-4 h-4 mr-2" />
+              )}
+              {t.loadVehicles}
+            </Button>
+            
+            {/* Partner Registration Button for 412 errors */}
+            {error?.includes("412") && (
+              <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-2">
+                <p className="text-sm text-amber-600 dark:text-amber-400">
+                  {t.registerHint}
+                </p>
+                <Button
+                  onClick={registerPartner}
+                  disabled={registerLoading}
+                  variant="outline"
+                  className="w-full border-amber-500/50"
+                >
+                  {registerLoading ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Zap className="w-4 h-4 mr-2" />
+                  )}
+                  {t.registerPartner}
+                </Button>
+              </div>
             )}
-            {t.loadVehicles}
-          </Button>
+          </div>
         ) : (
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">{t.selectVehicle}</p>
