@@ -30,7 +30,7 @@ const services = [
   },
   {
     id: "software",
-    title: "Software Update",
+    title: "Software frissítés",
     description: "Latest firmware and feature updates",
     icon: Settings,
     duration: "30 mins",
