@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Calendar, Car, Wrench, ChevronRight, Menu, LogOut, User } from "lucide-react";
+import { Calendar, Car, Wrench, ChevronRight, Menu, LogOut, User, Info } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -270,8 +270,9 @@ const Index = () => {
           </h1>
           <Dialog>
             <DialogTrigger asChild>
-              <button className="text-xl md:text-2xl font-semibold text-primary animate-slide-up hover:underline underline-offset-4 transition-all cursor-pointer pointer-events-auto">
+              <button className="flex items-center gap-2 text-xl md:text-2xl font-semibold text-primary animate-slide-up hover:underline underline-offset-4 transition-all cursor-pointer pointer-events-auto">
                 {t.expertCare}
+                <Info className="w-5 h-5" />
               </button>
             </DialogTrigger>
             <DialogContent className="max-w-lg">
