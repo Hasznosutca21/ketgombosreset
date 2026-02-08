@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
-import { Calendar, Car, Wrench, ChevronRight, Menu, LogOut, User, Info } from "lucide-react";
+import { Calendar, Car, Wrench, ChevronRight, Menu, LogOut, User, Info, Shield } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -30,7 +30,7 @@ type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
 const Index = () => {
   const { t, language } = useLanguage();
-  const { user, isLoading: authLoading, signOut } = useAuth();
+  const { user, isAdmin, isLoading: authLoading, signOut } = useAuth();
   const [currentStep, setCurrentStep] = useState<Step>("vehicle");
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
@@ -171,6 +171,19 @@ const Index = () => {
             <LanguageSwitcher variant="glass" />
             {authLoading ? null : user ? (
               <div className="flex items-center gap-3">
+                {isAdmin && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="text-white/80 hover:text-white hover:bg-white/10"
+                  >
+                    <a href="/admin" className="flex items-center gap-2">
+                      <Shield className="h-4 w-4" />
+                      Admin
+                    </a>
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -216,6 +229,18 @@ const Index = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-72 bg-white border-border">
                 <nav className="flex flex-col gap-4 mt-8">
+                  {user && isAdmin && (
+                    <Button
+                      variant="ghost"
+                      className="justify-start"
+                      asChild
+                    >
+                      <a href="/admin" className="flex items-center">
+                        <Shield className="h-4 w-4 mr-2" />
+                        Admin
+                      </a>
+                    </Button>
+                  )}
                   {user && (
                     <Button
                       variant="ghost"
