@@ -232,6 +232,9 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
                   selected={date}
                   onSelect={setDate}
                   locale={dateLocale}
+                  captionLayout="dropdown-buttons"
+                  fromYear={new Date().getFullYear()}
+                  toYear={new Date().getFullYear() + 2}
                   disabled={(date) => {
                     // Disable past dates
                     if (date < new Date()) return true;
