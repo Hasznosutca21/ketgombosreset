@@ -1,7 +1,10 @@
-import { ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowLeft, Car, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 interface VehicleSelectorProps {
   onSelect: (vehicle: string) => void;
@@ -23,8 +26,68 @@ const vehicles = [
   { id: "roadster", name: "Roadster", type: "Sports", image: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?w=400&h=250&fit=crop" },
 ];
 
+// Map profile vehicle_model to vehicle id
+const modelToVehicleId: Record<string, string> = {
+  "Model S": "model-s",
+  "Model S Plaid": "model-s-plaid",
+  "Model 3": "model-3",
+  "Model 3 Performance": "model-3-performance",
+  "Model X": "model-x",
+  "Model X Plaid": "model-x-plaid",
+  "Model Y": "model-y",
+  "Model Y Performance": "model-y-performance",
+  "Cybertruck": "cybertruck",
+  "Cybertruck Cyberbeast": "cybertruck-cyberbeast",
+  "Roadster": "roadster",
+};
+
+interface ProfileVehicle {
+  model: string;
+  plate: string | null;
+  year: number | null;
+}
+
 const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) => {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const [profileVehicle, setProfileVehicle] = useState<ProfileVehicle | null>(null);
+  const [hasAutoSelected, setHasAutoSelected] = useState(false);
+
+  // Load vehicle from profile
+  useEffect(() => {
+    const loadProfileVehicle = async () => {
+      if (!user) return;
+
+      try {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("vehicle_model, vehicle_plate, vehicle_year")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (profile?.vehicle_model) {
+          setProfileVehicle({
+            model: profile.vehicle_model,
+            plate: profile.vehicle_plate,
+            year: profile.vehicle_year,
+          });
+
+          // Auto-select if no vehicle is selected yet
+          if (!selected && !hasAutoSelected) {
+            const vehicleId = modelToVehicleId[profile.vehicle_model];
+            if (vehicleId) {
+              onSelect(vehicleId);
+              setHasAutoSelected(true);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error loading profile vehicle:", error);
+      }
+    };
+
+    loadProfileVehicle();
+  }, [user, selected, onSelect, hasAutoSelected]);
 
   return (
     <div className="animate-fade-in">
@@ -34,7 +97,27 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
       </Button>
 
       <h2 className="text-2xl md:text-3xl font-bold mb-2">{t.selectVehicle}</h2>
-      <p className="text-muted-foreground mb-8">{t.chooseVehicleModel}</p>
+      <p className="text-muted-foreground mb-4">{t.chooseVehicleModel}</p>
+
+      {/* Profile vehicle banner */}
+      {profileVehicle && (
+        <div className="glass-card p-4 mb-6 flex items-center gap-3 border-primary/30 bg-primary/5">
+          <Car className="w-5 h-5 text-primary flex-shrink-0" />
+          <div className="flex-1">
+            <div className="font-medium">
+              {profileVehicle.model}
+              {profileVehicle.year && ` (${profileVehicle.year})`}
+            </div>
+            {profileVehicle.plate && (
+              <div className="text-sm text-muted-foreground">{profileVehicle.plate}</div>
+            )}
+          </div>
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Info className="w-3 h-3" />
+            {t.fromProfile || "From profile"}
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {vehicles.map((vehicle) => {
