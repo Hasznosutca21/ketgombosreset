@@ -26,19 +26,27 @@ const vehicles = [
   { id: "roadster", name: "Roadster", type: "Sports", image: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?w=400&h=250&fit=crop" },
 ];
 
-// Map profile vehicle_model to vehicle id
-const modelToVehicleId: Record<string, string> = {
-  "Model S": "model-s",
-  "Model S Plaid": "model-s-plaid",
-  "Model 3": "model-3",
-  "Model 3 Performance": "model-3-performance",
-  "Model X": "model-x",
-  "Model X Plaid": "model-x-plaid",
-  "Model Y": "model-y",
-  "Model Y Performance": "model-y-performance",
-  "Cybertruck": "cybertruck",
-  "Cybertruck Cyberbeast": "cybertruck-cyberbeast",
-  "Roadster": "roadster",
+// Find matching vehicle ID from profile model name (flexible matching)
+const findVehicleIdFromModel = (modelName: string): string | null => {
+  const normalized = modelName.toLowerCase().trim();
+  
+  // Check for exact matches first
+  for (const vehicle of vehicles) {
+    if (vehicle.name.toLowerCase() === normalized) {
+      return vehicle.id;
+    }
+  }
+  
+  // Check for partial matches (e.g., "Model 3" matches "model-3")
+  for (const vehicle of vehicles) {
+    const vehicleNormalized = vehicle.name.toLowerCase();
+    // If profile model is contained in vehicle name or vice versa
+    if (vehicleNormalized.startsWith(normalized) || normalized.startsWith(vehicleNormalized)) {
+      return vehicle.id;
+    }
+  }
+  
+  return null;
 };
 
 interface ProfileVehicle {
@@ -74,7 +82,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
 
           // Auto-select if no vehicle is selected yet
           if (!selected && !hasAutoSelected) {
-            const vehicleId = modelToVehicleId[profile.vehicle_model];
+            const vehicleId = findVehicleIdFromModel(profile.vehicle_model);
             if (vehicleId) {
               onSelect(vehicleId);
               setHasAutoSelected(true);
