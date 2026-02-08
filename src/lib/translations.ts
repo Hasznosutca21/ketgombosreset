@@ -134,6 +134,12 @@ export const hu = {
   passwordUpdated: "Jelszó sikeresen frissítve!",
   passwordsDoNotMatch: "A jelszavak nem egyeznek",
   backToLogin: "Vissza a bejelentkezéshez",
+  invalidEmail: "Érvénytelen e-mail cím",
+  passwordTooShort: "A jelszónak legalább 6 karakter hosszúnak kell lennie",
+  passwordNeedsUppercase: "A jelszónak tartalmaznia kell nagybetűt",
+  passwordNeedsNumber: "A jelszónak tartalmaznia kell számot",
+  emailRequired: "E-mail cím megadása kötelező",
+  passwordRequired: "Jelszó megadása kötelező",
 
   // Admin Dashboard
   admin: "Admin",
@@ -313,6 +319,12 @@ export const en = {
   passwordUpdated: "Password updated successfully!",
   passwordsDoNotMatch: "Passwords do not match",
   backToLogin: "Back to Login",
+  invalidEmail: "Invalid email address",
+  passwordTooShort: "Password must be at least 6 characters",
+  passwordNeedsUppercase: "Password must contain an uppercase letter",
+  passwordNeedsNumber: "Password must contain a number",
+  emailRequired: "Email is required",
+  passwordRequired: "Password is required",
 
   // Admin Dashboard
   admin: "Admin",
