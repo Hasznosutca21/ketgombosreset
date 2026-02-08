@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Car, Clock, MapPin, Wrench, Zap, ChevronRight } from "lucide-react";
+import { Calendar, Car, Wrench, Zap, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import heroImage from "@/assets/tesla-hero.jpg";
@@ -7,15 +7,17 @@ import ServiceSelector from "@/components/ServiceSelector";
 import VehicleSelector from "@/components/VehicleSelector";
 import AppointmentForm from "@/components/AppointmentForm";
 import ConfirmationView from "@/components/ConfirmationView";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { useLanguage } from "@/hooks/useLanguage";
 import { saveAppointment, SavedAppointment } from "@/lib/appointments";
 import { toast } from "sonner";
 import { Capacitor } from "@capacitor/core";
-import { translations } from "@/lib/translations";
 
 type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
 const Index = () => {
+  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState<Step>("service");
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
@@ -29,14 +31,14 @@ const Index = () => {
   } | null>(null);
   const [savedAppointment, setSavedAppointment] = useState<SavedAppointment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const { token, isSupported, registerTokenForAppointment } = usePushNotifications();
 
   const steps = [
-    { id: "service", label: translations.service, icon: Wrench },
-    { id: "vehicle", label: translations.vehicle, icon: Car },
-    { id: "appointment", label: translations.schedule, icon: Calendar },
-    { id: "confirmation", label: translations.confirm, icon: ChevronRight },
+    { id: "service", label: t.service, icon: Wrench },
+    { id: "vehicle", label: t.vehicle, icon: Car },
+    { id: "appointment", label: t.schedule, icon: Calendar },
+    { id: "confirmation", label: t.confirm, icon: ChevronRight },
   ];
 
   const currentStepIndex = steps.findIndex((s) => s.id === currentStep);
@@ -53,11 +55,10 @@ const Index = () => {
 
   const handleAppointmentSubmit = async (data: typeof appointmentData) => {
     if (!data || !data.date || !selectedService || !selectedVehicle) return;
-    
+
     setIsSubmitting(true);
-    
+
     try {
-      // Save appointment to database
       const saved = await saveAppointment({
         service: selectedService,
         vehicle: selectedVehicle,
@@ -72,54 +73,49 @@ const Index = () => {
       if (saved) {
         setSavedAppointment(saved);
         setAppointmentData(data);
-        
-        // Send confirmation email
+
         try {
-          const emailResponse = await fetch(
-            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-confirmation-email`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-              },
-              body: JSON.stringify({
-                appointmentId: saved.id,
-                customerName: data.name,
-                customerEmail: data.email,
-                service: selectedService,
-                vehicle: selectedVehicle,
-                appointmentDate: data.date.toISOString(),
-                appointmentTime: data.time,
-                location: data.location,
-              }),
-            }
-          );
-          
+          const emailResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-confirmation-email`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            },
+            body: JSON.stringify({
+              appointmentId: saved.id,
+              customerName: data.name,
+              customerEmail: data.email,
+              service: selectedService,
+              vehicle: selectedVehicle,
+              appointmentDate: data.date.toISOString(),
+              appointmentTime: data.time,
+              location: data.location,
+            }),
+          });
+
           if (emailResponse.ok) {
-            console.log('Confirmation email sent successfully');
+            console.log("Confirmation email sent successfully");
           } else {
-            console.error('Failed to send confirmation email');
+            console.error("Failed to send confirmation email");
           }
         } catch (emailError) {
-          console.error('Error sending confirmation email:', emailError);
+          console.error("Error sending confirmation email:", emailError);
         }
-        
-        // Register for push notifications if on native platform
+
         if (isSupported && token) {
-          const platform = Capacitor.getPlatform() as 'ios' | 'android';
+          const platform = Capacitor.getPlatform() as "ios" | "android";
           await registerTokenForAppointment(saved.id, platform);
-          toast.success(translations.pushNotificationsEnabled);
+          toast.success(t.pushNotificationsEnabled);
         }
-        
+
         setCurrentStep("confirmation");
-        toast.success(translations.appointmentBookedSuccess);
+        toast.success(t.appointmentBookedSuccess);
       } else {
-        toast.error(translations.failedToBook);
+        toast.error(t.failedToBook);
       }
     } catch (error) {
-      console.error('Error booking appointment:', error);
-      toast.error(translations.failedToBook);
+      console.error("Error booking appointment:", error);
+      toast.error(t.failedToBook);
     } finally {
       setIsSubmitting(false);
     }
@@ -137,32 +133,29 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <div className="relative h-[40vh] min-h-[300px] overflow-hidden">
-        <img
-          src={heroImage}
-          alt="Tesla Service Center"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+        <img src={heroImage} alt="Tesla Service Center" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
-        
+
         {/* Header */}
         <header className="relative z-10 flex items-center justify-between px-6 py-4 md:px-12">
           <div className="flex items-center gap-2">
             <Zap className="h-8 w-8 text-primary" />
-            <span className="text-xl font-semibold tracking-tight">{translations.teslaService}</span>
+            <span className="text-xl font-semibold tracking-tight">{t.teslaService}</span>
           </div>
-          <Button variant="glass" size="sm" onClick={() => window.location.href = '/auth'}>
-            {translations.adminLogin}
-          </Button>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher variant="glass" />
+            <Button variant="glass" size="sm" onClick={() => (window.location.href = "/auth")}>
+              {t.adminLogin}
+            </Button>
+          </div>
         </header>
 
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full -mt-16 px-6 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 animate-fade-in">
-            {translations.scheduleYourService}
+            {t.scheduleYourService}
           </h1>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-2xl animate-slide-up">
-            {translations.expertCare}
-          </p>
+          <p className="text-muted-foreground text-lg md:text-xl max-w-2xl animate-slide-up">{t.expertCare}</p>
         </div>
       </div>
 
@@ -215,30 +208,15 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-6 py-12">
-        {currentStep === "service" && (
-          <ServiceSelector onSelect={handleServiceSelect} selected={selectedService} />
-        )}
+        {currentStep === "service" && <ServiceSelector onSelect={handleServiceSelect} selected={selectedService} />}
         {currentStep === "vehicle" && (
-          <VehicleSelector
-            onSelect={handleVehicleSelect}
-            selected={selectedVehicle}
-            onBack={() => setCurrentStep("service")}
-          />
+          <VehicleSelector onSelect={handleVehicleSelect} selected={selectedVehicle} onBack={() => setCurrentStep("service")} />
         )}
         {currentStep === "appointment" && (
-          <AppointmentForm
-            onSubmit={handleAppointmentSubmit}
-            onBack={() => setCurrentStep("vehicle")}
-            isSubmitting={isSubmitting}
-          />
+          <AppointmentForm onSubmit={handleAppointmentSubmit} onBack={() => setCurrentStep("vehicle")} isSubmitting={isSubmitting} />
         )}
         {currentStep === "confirmation" && (
-          <ConfirmationView
-            service={selectedService!}
-            vehicle={selectedVehicle!}
-            appointment={appointmentData!}
-            onStartOver={handleStartOver}
-          />
+          <ConfirmationView service={selectedService!} vehicle={selectedVehicle!} appointment={appointmentData!} onStartOver={handleStartOver} />
         )}
       </main>
 
@@ -247,12 +225,18 @@ const Index = () => {
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
-            <span>{translations.teslaService}</span>
+            <span>{t.teslaService}</span>
           </div>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground transition-colors">{translations.support}</a>
-            <a href="#" className="hover:text-foreground transition-colors">{translations.locations}</a>
-            <a href="#" className="hover:text-foreground transition-colors">{translations.contact}</a>
+            <a href="#" className="hover:text-foreground transition-colors">
+              {t.support}
+            </a>
+            <a href="#" className="hover:text-foreground transition-colors">
+              {t.locations}
+            </a>
+            <a href="#" className="hover:text-foreground transition-colors">
+              {t.contact}
+            </a>
           </div>
         </div>
       </footer>

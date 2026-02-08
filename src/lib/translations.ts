@@ -1,4 +1,4 @@
-export const translations = {
+export const hu = {
   // Common
   back: "Vissza",
   signIn: "Bejelentkezés",
@@ -137,4 +137,146 @@ export const translations = {
   onlyAdminsCanDelete: "Csak adminok törölhetnek időpontokat",
 };
 
-export type Translations = typeof translations;
+export const en = {
+  // Common
+  back: "Back",
+  signIn: "Sign In",
+  signOut: "Sign Out",
+  adminLogin: "Admin Login",
+  support: "Support",
+  locations: "Locations",
+  contact: "Contact",
+
+  // Header
+  teslaService: "Tesla Service",
+  scheduleYourService: "Schedule Your Service",
+  expertCare: "Expert care for your Tesla, at your convenience",
+
+  // Progress Steps
+  service: "Service",
+  vehicle: "Vehicle",
+  schedule: "Schedule",
+  confirm: "Confirm",
+
+  // Service Selector
+  selectService: "Select a Service",
+  chooseServiceType: "Choose the type of service your Tesla needs",
+  estTime: "Est. time",
+
+  // Services
+  services: {
+    maintenance: {
+      title: "Annual Maintenance",
+      description: "Complete inspection and fluid checks",
+      duration: "2-3 hours",
+    },
+    battery: {
+      title: "Battery Service",
+      description: "Battery health check and optimization",
+      duration: "1-2 hours",
+    },
+    brake: {
+      title: "Brake Service",
+      description: "Brake pad inspection and replacement",
+      duration: "1-2 hours",
+    },
+    software: {
+      title: "Software Update",
+      description: "Latest firmware and feature updates",
+      duration: "30 mins",
+    },
+    body: {
+      title: "Body Repair",
+      description: "Dent removal and paint touch-ups",
+      duration: "Varies",
+    },
+    warranty: {
+      title: "Warranty Service",
+      description: "Covered repairs and replacements",
+      duration: "Varies",
+    },
+  },
+
+  // Vehicle Selector
+  selectVehicle: "Select Your Vehicle",
+  chooseVehicleModel: "Choose your Tesla model for accurate service options",
+
+  // Vehicle Types
+  vehicleTypes: {
+    Sedan: "Sedan",
+    SUV: "SUV",
+    Truck: "Truck",
+    Sports: "Sports",
+  },
+
+  // Appointment Form
+  scheduleAppointment: "Schedule Appointment",
+  chooseDateTimeLocation: "Choose your preferred date, time, and location",
+  selectDate: "Select Date",
+  pickDate: "Pick a date",
+  selectTime: "Select Time",
+  selectLocation: "Select Location",
+  contactInformation: "Contact Information",
+  fullName: "Full Name",
+  email: "Email",
+  phone: "Phone",
+  confirmAppointment: "Confirm Appointment",
+  booking: "Booking...",
+
+  // Locations
+  locationsList: {
+    sf: { name: "San Francisco Service Center", address: "123 Tesla Blvd, SF, CA" },
+    la: { name: "Los Angeles Service Center", address: "456 Electric Ave, LA, CA" },
+    ny: { name: "New York Service Center", address: "789 Innovation St, NY, NY" },
+  },
+
+  // Confirmation
+  appointmentConfirmed: "Appointment Confirmed!",
+  confirmationEmailSent: "A confirmation email has been sent to",
+  appointmentDetails: "Appointment Details",
+  serviceLabel: "Service",
+  vehicleLabel: "Vehicle",
+  dateLabel: "Date",
+  timeLabel: "Time",
+  locationLabel: "Location",
+  scheduleAnother: "Schedule Another",
+  addToCalendar: "Add to Calendar",
+
+  // Auth
+  adminSignIn: "Admin Sign In",
+  signInToAccess: "Sign in to access the admin dashboard",
+  createAccount: "Create Account",
+  createAccountToStart: "Create an account to get started",
+  password: "Password",
+  dontHaveAccount: "Don't have an account?",
+  signUp: "Sign up",
+  alreadyHaveAccount: "Already have an account?",
+  checkEmailVerify: "Check your email to verify your account!",
+  welcomeBack: "Welcome back!",
+  backToHome: "Back to Home",
+
+  // Admin Dashboard
+  admin: "Admin",
+  appointmentsDashboard: "Appointments Dashboard",
+  viewManageAppointments: "View and manage all booked service appointments",
+  refresh: "Refresh",
+  noAppointments: "No appointments found",
+  customer: "Customer",
+  status: "Status",
+  actions: "Actions",
+  confirmed: "Confirmed",
+
+  // Toast Messages
+  appointmentBookedSuccess: "Appointment booked successfully! Check your email for confirmation.",
+  failedToBook: "Failed to book appointment. Please try again.",
+  pushNotificationsEnabled: "Push notifications enabled for appointment reminders!",
+  appointmentDeleted: "Appointment deleted",
+  failedToDelete: "Failed to delete appointment",
+  failedToLoad: "Failed to load appointments",
+  onlyAdminsCanDelete: "Only admins can delete appointments",
+};
+
+export type Language = "hu" | "en";
+export type Translations = typeof hu;
+
+export const translations = { hu, en };
