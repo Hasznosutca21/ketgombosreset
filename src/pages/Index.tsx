@@ -151,6 +151,9 @@ const Index = () => {
               {t.manageMyAppointment}
             </Button>
             <LanguageSwitcher variant="glass" />
+            <Button variant="tesla" size="sm" onClick={() => (window.location.href = "/auth")}>
+              {t.login}
+            </Button>
           </div>
 
           {/* Mobile Navigation */}
@@ -170,6 +173,13 @@ const Index = () => {
                     onClick={() => (window.location.href = "/manage")}
                   >
                     {t.manageMyAppointment}
+                  </Button>
+                  <Button
+                    variant="tesla"
+                    className="justify-start"
+                    onClick={() => (window.location.href = "/auth")}
+                  >
+                    {t.login}
                   </Button>
                 </nav>
               </SheetContent>

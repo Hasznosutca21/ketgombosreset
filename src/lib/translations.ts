@@ -106,6 +106,7 @@ export const hu = {
   // Auth
   adminSignIn: "Admin bejelentkezés",
   signInToAccess: "Jelentkezzen be az admin felület eléréséhez",
+  signInToYourAccount: "Jelentkezzen be fiókjába",
   createAccount: "Fiók létrehozása",
   createAccountToStart: "Hozzon létre fiókot a kezdéshez",
   password: "Jelszó",
@@ -118,6 +119,7 @@ export const hu = {
   continueWithGoogle: "Folytatás Google fiókkal",
   continueWithApple: "Folytatás Apple fiókkal",
   orContinueWith: "vagy folytatás e-maillel",
+  login: "Bejelentkezés",
 
   // Admin Dashboard
   admin: "Admin",
@@ -269,6 +271,7 @@ export const en = {
   // Auth
   adminSignIn: "Admin Sign In",
   signInToAccess: "Sign in to access the admin dashboard",
+  signInToYourAccount: "Sign in to your account",
   createAccount: "Create Account",
   createAccountToStart: "Create an account to get started",
   password: "Password",
@@ -281,6 +284,7 @@ export const en = {
   continueWithGoogle: "Continue with Google",
   continueWithApple: "Continue with Apple",
   orContinueWith: "or continue with email",
+  login: "Login",
 
   // Admin Dashboard
   admin: "Admin",
