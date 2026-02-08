@@ -113,9 +113,14 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
       price: "Javítási költség előzetes felmérés alapján",
     },
     heating: {
-      title: "Fűtésrendszer",
-      description: "Belső fűtés és ülésfűtés ellenőrzés",
-      duration: "1 óra",
+      title: "Pollen szűrő csere",
+      description: "Utastér szűrő csere a tiszta levegőért",
+      duration: "30 perc",
+    },
+    hepa: {
+      title: "HEPA szűrő csere",
+      description: "Prémium HEPA szűrő csere Model Y-hoz",
+      duration: "30 perc",
     },
     ptcheater: {
       title: "PTC heater csere",
@@ -505,9 +510,14 @@ The price includes a personal consultation where we discuss the results and answ
       price: "Repair cost based on preliminary assessment",
     },
     heating: {
-      title: "Heating System",
-      description: "Interior and seat heating inspection",
-      duration: "1 hour",
+      title: "Pollen Filter Replacement",
+      description: "Cabin air filter replacement for clean air",
+      duration: "30 min",
+    },
+    hepa: {
+      title: "HEPA Filter Replacement",
+      description: "Premium HEPA filter replacement for Model Y",
+      duration: "30 min",
     },
     ptcheater: {
       title: "PTC Heater Replacement",
