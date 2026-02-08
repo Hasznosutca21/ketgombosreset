@@ -67,7 +67,7 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[] }[] 
       { id: "ac", icon: Fan, vehicleRestriction: [] },
       { id: "heatpump", icon: Thermometer, vehicleRestriction: [] },
       { id: "heating", icon: Flame, vehicleRestriction: [] },
-      { id: "ptcheater", icon: Zap, vehicleRestriction: [], yearRestriction: { from: 2018, to: 2020 } },
+      { id: "ptcheater", icon: Zap, vehicleRestriction: ["model-3"], yearRestriction: { from: 2018, to: 2020 } },
     ],
   },
   {
