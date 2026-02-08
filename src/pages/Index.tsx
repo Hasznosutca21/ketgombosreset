@@ -83,14 +83,19 @@ const Index = () => {
         phone: data.phone,
       });
 
-      if (saved) {
-        setSavedAppointment(saved);
+      if (saved.error === 'slot_taken') {
+        toast.error(t.slotAlreadyTaken || "Ez az időpont már foglalt. Kérjük válasszon másik időpontot.");
+        return;
+      }
+
+      if (saved.appointment) {
+        setSavedAppointment(saved.appointment);
         setAppointmentData(data);
 
         try {
           const { error: emailError } = await supabase.functions.invoke('send-confirmation-email', {
             body: {
-              appointmentId: saved.id,
+              appointmentId: saved.appointment.id,
               customerName: data.name,
               customerEmail: data.email,
               service: selectedService,
@@ -113,7 +118,7 @@ const Index = () => {
 
         if (isSupported && token) {
           const platform = Capacitor.getPlatform() as "ios" | "android";
-          await registerTokenForAppointment(saved.id, platform);
+          await registerTokenForAppointment(saved.appointment.id, platform);
           toast.success(t.pushNotificationsEnabled);
         }
 

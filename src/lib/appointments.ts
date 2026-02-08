@@ -17,8 +17,19 @@ export interface SavedAppointment extends AppointmentData {
   created_at: string;
 }
 
-export const saveAppointment = async (data: AppointmentData): Promise<SavedAppointment | null> => {
+export interface SaveAppointmentResult {
+  appointment: SavedAppointment | null;
+  error?: 'slot_taken' | 'unknown';
+}
+
+export const saveAppointment = async (data: AppointmentData): Promise<SaveAppointmentResult> => {
   try {
+    // Double-check availability before inserting
+    const bookedSlots = await getBookedTimeSlotsForDate(data.date, data.location);
+    if (bookedSlots.includes(data.time)) {
+      return { appointment: null, error: 'slot_taken' };
+    }
+
     const { data: appointment, error } = await supabase
       .from('appointments')
       .insert({
@@ -37,13 +48,17 @@ export const saveAppointment = async (data: AppointmentData): Promise<SavedAppoi
 
     if (error) {
       console.error('Error saving appointment:', error);
-      return null;
+      // Check if it's a unique constraint violation
+      if (error.code === '23505') {
+        return { appointment: null, error: 'slot_taken' };
+      }
+      return { appointment: null, error: 'unknown' };
     }
 
-    return mapAppointment(appointment);
+    return { appointment: mapAppointment(appointment) };
   } catch (error) {
     console.error('Error saving appointment:', error);
-    return null;
+    return { appointment: null, error: 'unknown' };
   }
 };
 
