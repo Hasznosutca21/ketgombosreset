@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, MapPin } from "lucide-react";
+import { ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -107,23 +107,34 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
             <div className="space-y-2">
               {locations.map((loc) => {
                 const locationData = t.locationsList[loc.id as keyof typeof t.locationsList];
+                const mapsUrl = "https://www.google.com/maps/search/?api=1&query=Ganz+%C3%81brah%C3%A1m+utca+3+Nagytarcsa+Hungary";
                 return (
-                  <button
-                    key={loc.id}
-                    onClick={() => setLocation(loc.id)}
-                    className={cn(
-                      "glass-card p-4 w-full text-left transition-all hover:border-primary/50",
-                      location === loc.id && "border-primary bg-primary/10"
-                    )}
-                  >
-                    <div className="flex items-start gap-3">
-                      <MapPin className="w-5 h-5 text-primary mt-0.5" />
-                      <div>
-                        <div className="font-medium">{locationData.name}</div>
-                        <div className="text-sm text-muted-foreground">{locationData.address}</div>
+                  <div key={loc.id} className="flex gap-2">
+                    <button
+                      onClick={() => setLocation(loc.id)}
+                      className={cn(
+                        "glass-card p-4 flex-1 text-left transition-all hover:border-primary/50",
+                        location === loc.id && "border-primary bg-primary/10"
+                      )}
+                    >
+                      <div className="flex items-start gap-3">
+                        <MapPin className="w-5 h-5 text-primary mt-0.5" />
+                        <div>
+                          <div className="font-medium">{locationData.name}</div>
+                          <div className="text-sm text-muted-foreground">{locationData.address}</div>
+                        </div>
                       </div>
-                    </div>
-                  </button>
+                    </button>
+                    <a
+                      href={mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="glass-card p-4 flex items-center justify-center hover:border-primary/50 transition-all"
+                      title={language === "hu" ? "Navigáció" : "Navigate"}
+                    >
+                      <Navigation className="w-5 h-5 text-primary" />
+                    </a>
+                  </div>
                 );
               })}
             </div>
