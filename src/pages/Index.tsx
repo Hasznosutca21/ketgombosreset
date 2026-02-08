@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import heroImage from "@/assets/tesland-hero.jpg";
+import teslandLogo from "@/assets/tesland-logo.png";
 import ServiceSelector from "@/components/ServiceSelector";
 import VehicleSelector from "@/components/VehicleSelector";
 import AppointmentForm from "@/components/AppointmentForm";
@@ -145,8 +146,7 @@ const Index = () => {
         {/* Header */}
         <header className="relative z-10 flex items-center justify-between px-6 py-4 md:px-12">
           <div className="flex items-center gap-2">
-            <Zap className="h-8 w-8 text-primary" />
-            <span className="text-xl font-semibold tracking-tight">{t.teslaService}</span>
+            <img src={teslandLogo} alt="TESLAND" className="h-10 w-auto" />
           </div>
 
           {/* Desktop Navigation */}
@@ -317,8 +317,7 @@ const Index = () => {
       <footer className="border-t border-border py-8 px-6">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-primary" />
-            <span>{t.teslaService}</span>
+            <img src={teslandLogo} alt="TESLAND" className="h-8 w-auto" />
           </div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-foreground transition-colors">
