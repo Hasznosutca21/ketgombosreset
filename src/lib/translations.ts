@@ -11,7 +11,7 @@ export const hu = {
   // Header
   teslaService: "TESLAND",
   scheduleYourService: "Foglalja le szervizét",
-  expertCare: "Szakértői gondoskodás Teslájáról, az Ön kényelmében",
+  expertCare: "Szakértői gondoskodás járművéről, az Ön kényelmében",
 
   // Progress Steps
   service: "Szolgáltatás",
@@ -21,7 +21,7 @@ export const hu = {
 
   // Service Selector
   selectService: "Válasszon szolgáltatást",
-  chooseServiceType: "Válassza ki a Teslájához szükséges szolgáltatás típusát",
+  chooseServiceType: "Válassza ki a járművéhez szükséges szolgáltatás típusát",
   estTime: "Becsült idő",
 
   // Services
@@ -60,7 +60,7 @@ export const hu = {
 
   // Vehicle Selector
   selectVehicle: "Válassza ki járművét",
-  chooseVehicleModel: "Válassza ki Tesla modelljét a pontos szerviz opciókhoz",
+  chooseVehicleModel: "Válassza ki járműmodelljét a pontos szerviz opciókhoz",
 
   // Vehicle Types
   vehicleTypes: {
@@ -86,7 +86,7 @@ export const hu = {
 
   // Locations
   locationsList: {
-    sf: { name: "San Francisco Szervizközpont", address: "123 Tesla Blvd, SF, CA" },
+    sf: { name: "San Francisco Szervizközpont", address: "123 TESLAND Blvd, SF, CA" },
     la: { name: "Los Angeles Szervizközpont", address: "456 Electric Ave, LA, CA" },
     ny: { name: "New York Szervizközpont", address: "789 Innovation St, NY, NY" },
   },
@@ -259,7 +259,7 @@ export const en = {
   // Header
   teslaService: "TESLAND",
   scheduleYourService: "Schedule Your Service",
-  expertCare: "Expert care for your Tesla, at your convenience",
+  expertCare: "Expert care for your vehicle, at your convenience",
 
   // Progress Steps
   service: "Service",
@@ -269,7 +269,7 @@ export const en = {
 
   // Service Selector
   selectService: "Select a Service",
-  chooseServiceType: "Choose the type of service your Tesla needs",
+  chooseServiceType: "Choose the type of service your vehicle needs",
   estTime: "Est. time",
 
   // Services
@@ -308,7 +308,7 @@ export const en = {
 
   // Vehicle Selector
   selectVehicle: "Select Your Vehicle",
-  chooseVehicleModel: "Choose your Tesla model for accurate service options",
+  chooseVehicleModel: "Choose your vehicle model for accurate service options",
 
   // Vehicle Types
   vehicleTypes: {
@@ -334,7 +334,7 @@ export const en = {
 
   // Locations
   locationsList: {
-    sf: { name: "San Francisco Service Center", address: "123 Tesla Blvd, SF, CA" },
+    sf: { name: "San Francisco Service Center", address: "123 TESLAND Blvd, SF, CA" },
     la: { name: "Los Angeles Service Center", address: "456 Electric Ave, LA, CA" },
     ny: { name: "New York Service Center", address: "789 Innovation St, NY, NY" },
   },
