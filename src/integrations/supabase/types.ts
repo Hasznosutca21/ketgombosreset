@@ -166,6 +166,75 @@ export type Database = {
           },
         ]
       }
+      tesla_connections: {
+        Row: {
+          access_token: string
+          created_at: string
+          expires_at: string
+          id: string
+          refresh_token: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token: string
+          created_at?: string
+          expires_at: string
+          id?: string
+          refresh_token: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          refresh_token?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tesla_vehicles: {
+        Row: {
+          charge_state: Json | null
+          climate_state: Json | null
+          created_at: string
+          display_name: string | null
+          drive_state: Json | null
+          id: string
+          last_updated: string
+          user_id: string
+          vehicle_state: Json | null
+          vin: string
+        }
+        Insert: {
+          charge_state?: Json | null
+          climate_state?: Json | null
+          created_at?: string
+          display_name?: string | null
+          drive_state?: Json | null
+          id?: string
+          last_updated?: string
+          user_id: string
+          vehicle_state?: Json | null
+          vin: string
+        }
+        Update: {
+          charge_state?: Json | null
+          climate_state?: Json | null
+          created_at?: string
+          display_name?: string | null
+          drive_state?: Json | null
+          id?: string
+          last_updated?: string
+          user_id?: string
+          vehicle_state?: Json | null
+          vin?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
