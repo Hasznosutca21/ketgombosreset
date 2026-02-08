@@ -25,6 +25,7 @@ interface Appointment {
   phone: string | null;
   service: string;
   vehicle: string;
+  vehicle_vin?: string | null;
   appointment_date: string;
   appointment_time: string;
   location: string;
@@ -336,9 +337,16 @@ const Admin = () => {
                           <Badge variant="outline">{getServiceLabel(appointment.service)}</Badge>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Car className="h-4 w-4 text-muted-foreground" />
-                            {vehicleLabels[appointment.vehicle] || appointment.vehicle}
+                          <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-1">
+                              <Car className="h-4 w-4 text-muted-foreground" />
+                              {vehicleLabels[appointment.vehicle.split('-').slice(0, 2).join('-')] || appointment.vehicle}
+                            </div>
+                            {appointment.vehicle_vin && (
+                              <p className="text-xs text-muted-foreground font-mono">
+                                VIN: {appointment.vehicle_vin}
+                              </p>
+                            )}
                           </div>
                         </TableCell>
                         <TableCell>
