@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,8 @@ import { format } from "date-fns";
 import { hu, enUS } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AppointmentFormProps {
   onSubmit: (data: {
@@ -30,12 +32,47 @@ const timeSlots = ["9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
 
 const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: AppointmentFormProps) => {
   const { t, language } = useLanguage();
+  const { user } = useAuth();
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+
+  // Auto-fill contact information from user profile
+  useEffect(() => {
+    const loadProfileData = async () => {
+      if (!user) return;
+
+      // Set email from auth user
+      if (user.email) {
+        setEmail(user.email);
+      }
+
+      // Fetch profile for name and phone
+      try {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("display_name, phone")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (profile) {
+          if (profile.display_name) {
+            setName(profile.display_name);
+          }
+          if (profile.phone) {
+            setPhone(profile.phone);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading profile:", error);
+      }
+    };
+
+    loadProfileData();
+  }, [user]);
 
   const dateLocale = language === "hu" ? hu : enUS;
   const isValid = date && time && location && name && email && phone;
