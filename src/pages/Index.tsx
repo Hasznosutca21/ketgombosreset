@@ -273,9 +273,9 @@ const Index = () => {
           </p>
           <Dialog>
             <DialogTrigger asChild>
-              <button className="flex items-center gap-2 text-xl md:text-2xl font-semibold text-primary animate-slide-up hover:underline underline-offset-4 transition-all cursor-pointer pointer-events-auto">
+              <button className="flex items-center gap-2 text-sm md:text-base font-extralight tracking-[0.15em] uppercase text-primary animate-slide-up hover:underline underline-offset-4 transition-all cursor-pointer pointer-events-auto">
                 {t.expertCare}
-                <Info className="w-5 h-5" />
+                <Info className="w-4 h-4" />
               </button>
             </DialogTrigger>
             <DialogContent className="max-w-lg">
