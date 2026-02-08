@@ -1,1 +1,4 @@
 project_id = "yjiumsnrmgyfamxkpftk"
+
+[functions.decode-vin]
+verify_jwt = false
