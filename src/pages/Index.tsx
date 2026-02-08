@@ -1,12 +1,181 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Calendar, Car, Clock, MapPin, Wrench, Zap, Battery, Settings, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import heroImage from "@/assets/tesla-hero.jpg";
+import ServiceSelector from "@/components/ServiceSelector";
+import VehicleSelector from "@/components/VehicleSelector";
+import AppointmentForm from "@/components/AppointmentForm";
+import ConfirmationView from "@/components/ConfirmationView";
+
+type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
 const Index = () => {
+  const [currentStep, setCurrentStep] = useState<Step>("service");
+  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
+  const [appointmentData, setAppointmentData] = useState<{
+    date: Date | undefined;
+    time: string;
+    location: string;
+    name: string;
+    email: string;
+    phone: string;
+  } | null>(null);
+
+  const steps = [
+    { id: "service", label: "Service", icon: Wrench },
+    { id: "vehicle", label: "Vehicle", icon: Car },
+    { id: "appointment", label: "Schedule", icon: Calendar },
+    { id: "confirmation", label: "Confirm", icon: ChevronRight },
+  ];
+
+  const currentStepIndex = steps.findIndex((s) => s.id === currentStep);
+
+  const handleServiceSelect = (service: string) => {
+    setSelectedService(service);
+    setCurrentStep("vehicle");
+  };
+
+  const handleVehicleSelect = (vehicle: string) => {
+    setSelectedVehicle(vehicle);
+    setCurrentStep("appointment");
+  };
+
+  const handleAppointmentSubmit = (data: typeof appointmentData) => {
+    setAppointmentData(data);
+    setCurrentStep("confirmation");
+  };
+
+  const handleStartOver = () => {
+    setCurrentStep("service");
+    setSelectedService(null);
+    setSelectedVehicle(null);
+    setAppointmentData(null);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <div className="relative h-[40vh] min-h-[300px] overflow-hidden">
+        <img
+          src={heroImage}
+          alt="Tesla Service Center"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
+        
+        {/* Header */}
+        <header className="relative z-10 flex items-center justify-between px-6 py-4 md:px-12">
+          <div className="flex items-center gap-2">
+            <Zap className="h-8 w-8 text-primary" />
+            <span className="text-xl font-semibold tracking-tight">Tesla Service</span>
+          </div>
+          <Button variant="glass" size="sm">
+            Sign In
+          </Button>
+        </header>
+
+        {/* Hero Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full -mt-16 px-6 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 animate-fade-in">
+            Schedule Your Service
+          </h1>
+          <p className="text-muted-foreground text-lg md:text-xl max-w-2xl animate-slide-up">
+            Expert care for your Tesla, at your convenience
+          </p>
+        </div>
       </div>
+
+      {/* Progress Steps */}
+      <div className="max-w-4xl mx-auto px-6 -mt-8 relative z-20">
+        <div className="glass-card p-4 md:p-6">
+          <div className="flex items-center justify-between">
+            {steps.map((step, index) => {
+              const Icon = step.icon;
+              const isActive = index === currentStepIndex;
+              const isCompleted = index < currentStepIndex;
+
+              return (
+                <div key={step.id} className="flex items-center">
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={cn(
+                        "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300",
+                        isActive && "bg-primary text-primary-foreground shadow-[0_0_20px_-5px_hsl(352_85%_49%/0.5)]",
+                        isCompleted && "bg-primary/20 text-primary",
+                        !isActive && !isCompleted && "bg-muted text-muted-foreground"
+                      )}
+                    >
+                      <Icon className="w-5 h-5 md:w-6 md:h-6" />
+                    </div>
+                    <span
+                      className={cn(
+                        "text-xs md:text-sm mt-2 font-medium transition-colors",
+                        isActive && "text-foreground",
+                        !isActive && "text-muted-foreground"
+                      )}
+                    >
+                      {step.label}
+                    </span>
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div
+                      className={cn(
+                        "hidden md:block w-16 lg:w-24 h-0.5 mx-4 transition-colors",
+                        index < currentStepIndex ? "bg-primary" : "bg-muted"
+                      )}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <main className="max-w-4xl mx-auto px-6 py-12">
+        {currentStep === "service" && (
+          <ServiceSelector onSelect={handleServiceSelect} selected={selectedService} />
+        )}
+        {currentStep === "vehicle" && (
+          <VehicleSelector
+            onSelect={handleVehicleSelect}
+            selected={selectedVehicle}
+            onBack={() => setCurrentStep("service")}
+          />
+        )}
+        {currentStep === "appointment" && (
+          <AppointmentForm
+            onSubmit={handleAppointmentSubmit}
+            onBack={() => setCurrentStep("vehicle")}
+          />
+        )}
+        {currentStep === "confirmation" && (
+          <ConfirmationView
+            service={selectedService!}
+            vehicle={selectedVehicle!}
+            appointment={appointmentData!}
+            onStartOver={handleStartOver}
+          />
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-border py-8 px-6">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <Zap className="h-5 w-5 text-primary" />
+            <span>Tesla Service</span>
+          </div>
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-foreground transition-colors">Support</a>
+            <a href="#" className="hover:text-foreground transition-colors">Locations</a>
+            <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
