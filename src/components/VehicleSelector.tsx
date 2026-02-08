@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, Car, Info, Check } from "lucide-react";
+import { ArrowLeft, Car, Info, Check, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -30,28 +30,32 @@ const vehicles = [
     name: "Model S", 
     image: modelSImage,
     description: "Prémium szedán, nagy hatótáv",
-    info: "Plaid és Long Range változatok"
+    info: "Plaid és Long Range változatok",
+    yearRange: { from: 2012, to: 2026 }
   },
   { 
     id: "model-3", 
     name: "Model 3", 
     image: model3Image,
     description: "Kompakt szedán, népszerű választás",
-    info: "Standard, Long Range és Performance"
+    info: "Standard, Long Range és Performance",
+    yearRange: { from: 2018, to: 2026 }
   },
   { 
     id: "model-x", 
     name: "Model X", 
     image: modelXImage,
     description: "SUV, Falcon Wing ajtók",
-    info: "Plaid és Long Range változatok"
+    info: "Plaid és Long Range változatok",
+    yearRange: { from: 2016, to: 2026 }
   },
   { 
     id: "model-y", 
     name: "Model Y", 
     image: modelYImage,
     description: "Kompakt SUV, családbarát",
-    info: "Long Range és Performance"
+    info: "Long Range és Performance",
+    yearRange: { from: 2020, to: 2026 }
   },
 ];
 
@@ -96,6 +100,8 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
   const { user } = useAuth();
   const [profileVehicle, setProfileVehicle] = useState<ProfileVehicle | null>(null);
   const [hasAutoSelected, setHasAutoSelected] = useState(false);
+  const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
   // Load vehicle from profile
   useEffect(() => {
@@ -120,7 +126,11 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
           if (!selected && !hasAutoSelected) {
             const vehicleId = findVehicleIdFromModel(profile.vehicle_model);
             if (vehicleId) {
-              onSelect(vehicleId);
+              setSelectedVehicleId(vehicleId);
+              if (profile.vehicle_year) {
+                setSelectedYear(profile.vehicle_year);
+                onSelect(`${vehicleId}-${profile.vehicle_year}`);
+              }
               setHasAutoSelected(true);
             }
           }
@@ -132,6 +142,26 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
 
     loadProfileVehicle();
   }, [user, selected, onSelect, hasAutoSelected]);
+
+  const handleVehicleClick = (vehicleId: string) => {
+    setSelectedVehicleId(vehicleId);
+    setSelectedYear(null); // Reset year when changing vehicle
+  };
+
+  const handleYearSelect = (year: number) => {
+    setSelectedYear(year);
+    if (selectedVehicleId) {
+      onSelect(`${selectedVehicleId}-${year}`);
+    }
+  };
+
+  const selectedVehicle = vehicles.find(v => v.id === selectedVehicleId);
+  const yearOptions = selectedVehicle 
+    ? Array.from(
+        { length: selectedVehicle.yearRange.to - selectedVehicle.yearRange.from + 1 }, 
+        (_, i) => selectedVehicle.yearRange.to - i
+      )
+    : [];
 
   return (
     <div className="animate-fade-in">
@@ -169,12 +199,12 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <TooltipProvider>
           {vehicles.map((vehicle) => {
-            const isSelected = selected === vehicle.id;
+            const isSelected = selectedVehicleId === vehicle.id;
 
             return (
               <button
                 key={vehicle.id}
-                onClick={() => onSelect(vehicle.id)}
+                onClick={() => handleVehicleClick(vehicle.id)}
                 className={cn(
                   "relative flex flex-col items-center p-3 md:p-6 rounded-xl md:rounded-2xl border-2 transition-all duration-200 text-left",
                   "bg-card hover:bg-muted/50",
@@ -225,6 +255,40 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
           })}
         </TooltipProvider>
       </div>
+
+      {/* Year selector - shows after vehicle is selected */}
+      {selectedVehicleId && (
+        <div className="mt-8 animate-fade-in">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Calendar className="w-5 h-5 text-muted-foreground" />
+            <h3 className="text-lg md:text-xl font-light text-center">
+              {t.selectYear || "Válaszd ki az évjáratot"}
+            </h3>
+          </div>
+          
+          <div className="flex flex-wrap justify-center gap-2 md:gap-3 max-w-2xl mx-auto">
+            {yearOptions.map((year) => {
+              const isYearSelected = selectedYear === year;
+              
+              return (
+                <button
+                  key={year}
+                  onClick={() => handleYearSelect(year)}
+                  className={cn(
+                    "px-4 py-2 md:px-5 md:py-2.5 rounded-lg border-2 transition-all duration-200 text-sm md:text-base font-medium",
+                    "hover:bg-muted/50",
+                    isYearSelected
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-border bg-card hover:border-foreground/30"
+                  )}
+                >
+                  {year}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

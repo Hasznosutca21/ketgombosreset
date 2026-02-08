@@ -20,6 +20,7 @@ export const hu = {
   vehicle: "Jármű",
   schedule: "Időpont",
   confirm: "Megerősítés",
+  selectYear: "Válaszd ki az évjáratot",
 
   // Service Selector
   selectService: "Válasszon szolgáltatást",
@@ -402,6 +403,7 @@ export const en = {
   vehicle: "Vehicle",
   schedule: "Schedule",
   confirm: "Confirm",
+  selectYear: "Select year",
 
   // Service Selector
   selectService: "Select a Service",
