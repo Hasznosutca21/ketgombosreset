@@ -102,7 +102,8 @@ const ConfirmationView = ({ service, vehicle, appointment, appointmentId, onStar
   };
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat(language === "hu" ? "hu-HU" : "en-US").format(price) + " Ft";
+    // Always use Hungarian format for HUF currency (space as thousands separator)
+    return new Intl.NumberFormat("hu-HU").format(price) + " Ft";
   };
 
   return (
