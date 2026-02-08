@@ -10,7 +10,8 @@ export const hu = {
 
   // Header
   teslaService: "TESLAND",
-  scheduleYourService: "Ha nem elég a kétgombos reset",
+  scheduleYourService: "Egyszerű foglalási rendszer",
+  heroSubtitle: "Kezeld a naptárad online, fogadj el fizetéseket, küldj emlékeztetőket és növeld a bevételed – mindezt egyetlen ingyenes időpontfoglaló alkalmazásban.",
   expertCare: "Miért a Tesland?",
   heroDescription: "Nem csupán Teslákat szervizelünk, hanem a tulajdonosokat is összekapcsoljuk. A Tesland egy Tesla-központú műhely és szolgáltató, ahol a cél nem csak az, hogy megjavítsuk az autót, hanem hogy a Tesla-tulajdonosok biztonságban, magabiztosan és kompromisszumok nélkül használhassák az autójukat. A Teslák világa más: szoftver, elektronika, nagyfeszültségű rendszer, speciális alkatrészek – és ehhez olyan csapat kell, aki nem csak látott már Teslát, hanem ebben él.",
 
@@ -385,7 +386,8 @@ export const en = {
 
   // Header
   teslaService: "TESLAND",
-  scheduleYourService: "When the two-button reset isn't enough",
+  scheduleYourService: "Simple booking system",
+  heroSubtitle: "Manage your calendar online, accept payments, send reminders and increase your revenue – all in one free appointment booking app.",
   expertCare: "Why Tesland?",
   heroDescription: "We don't just service Teslas – we connect owners. Tesland is a Tesla-focused workshop and service provider where the goal isn't just to \"fix the car\", but to help Tesla owners use their vehicles safely, confidently, and without compromise. The Tesla world is different: software, electronics, high-voltage systems, specialized parts – and that requires a team that doesn't just know Teslas, but lives and breathes them.",
 
