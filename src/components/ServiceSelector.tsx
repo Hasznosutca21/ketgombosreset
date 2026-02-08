@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { 
   Wrench, 
   Zap, 
@@ -10,7 +11,8 @@ import {
   Flame,
   Navigation,
   MonitorPlay,
-  CircleDot
+  CircleDot,
+  Info
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -20,6 +22,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ServiceSelectorProps {
   onSelect: (service: string) => void;
@@ -68,6 +76,12 @@ const categories = [
 
 const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
   const { t } = useLanguage();
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [selectedDetails, setSelectedDetails] = useState<{
+    title: string;
+    details: string;
+    duration: string;
+  } | null>(null);
 
   // Find which category contains the selected service
   const getDefaultOpenCategory = () => {
@@ -78,6 +92,24 @@ const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
       }
     }
     return ["maintenance"];
+  };
+
+  const handleInfoClick = (e: React.MouseEvent, serviceId: string) => {
+    e.stopPropagation();
+    const serviceData = t.services[serviceId as keyof typeof t.services] as {
+      title: string;
+      description: string;
+      duration: string;
+      details?: string;
+    };
+    if (serviceData.details) {
+      setSelectedDetails({
+        title: serviceData.title,
+        details: serviceData.details,
+        duration: serviceData.duration,
+      });
+      setDetailsOpen(true);
+    }
   };
 
   return (
@@ -123,20 +155,34 @@ const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
                   {category.services.map((service) => {
                     const Icon = service.icon;
                     const isSelected = selected === service.id;
-                    const serviceData = t.services[service.id as keyof typeof t.services];
+                    const serviceData = t.services[service.id as keyof typeof t.services] as {
+                      title: string;
+                      description: string;
+                      duration: string;
+                      details?: string;
+                    };
+                    const hasDetails = !!serviceData.details;
 
                     return (
                       <button
                         key={service.id}
                         onClick={() => onSelect(service.id)}
                         className={cn(
-                          "p-4 text-left rounded-lg transition-all duration-200 border",
+                          "p-4 text-left rounded-lg transition-all duration-200 border relative",
                           "hover:scale-[1.02] hover:border-primary/50",
                           isSelected 
                             ? "bg-primary/10 border-primary shadow-[0_0_20px_-10px_hsl(352_85%_49%/0.4)]" 
                             : "bg-muted/30 border-border/30 hover:bg-muted/50"
                         )}
                       >
+                        {hasDetails && (
+                          <div
+                            onClick={(e) => handleInfoClick(e, service.id)}
+                            className="absolute top-2 right-2 p-1.5 rounded-full bg-muted/50 hover:bg-primary/20 hover:text-primary transition-colors cursor-pointer"
+                          >
+                            <Info className="w-4 h-4" />
+                          </div>
+                        )}
                         <div className="flex flex-col items-center text-center gap-2">
                           <div
                             className={cn(
@@ -163,6 +209,30 @@ const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
           );
         })}
       </Accordion>
+
+      {/* Details Modal */}
+      <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
+        <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl">{selectedDetails?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="text-sm text-muted-foreground">
+              {t.estTime}: {selectedDetails?.duration}
+            </div>
+            <div className="prose prose-sm dark:prose-invert max-w-none">
+              {selectedDetails?.details?.split('\n').map((line, i) => (
+                <p key={i} className={cn(
+                  "text-sm",
+                  line.startsWith('•') && "ml-2"
+                )}>
+                  {line}
+                </p>
+              ))}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
