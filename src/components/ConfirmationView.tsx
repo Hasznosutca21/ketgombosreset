@@ -1,6 +1,8 @@
 import { CheckCircle, Calendar, Car, MapPin, Clock, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import { hu } from "date-fns/locale";
+import { translations } from "@/lib/translations";
 
 interface ConfirmationViewProps {
   service: string;
@@ -16,15 +18,6 @@ interface ConfirmationViewProps {
   onStartOver: () => void;
 }
 
-const serviceNames: Record<string, string> = {
-  maintenance: "Annual Maintenance",
-  battery: "Battery Service",
-  brake: "Brake Service",
-  software: "Software Update",
-  body: "Body Repair",
-  warranty: "Warranty Service",
-};
-
 const vehicleNames: Record<string, string> = {
   "model-s": "Model S",
   "model-3": "Model 3",
@@ -34,14 +27,9 @@ const vehicleNames: Record<string, string> = {
   roadster: "Roadster",
 };
 
-const locationNames: Record<string, { name: string; address: string }> = {
-  sf: { name: "San Francisco Service Center", address: "123 Tesla Blvd, SF, CA" },
-  la: { name: "Los Angeles Service Center", address: "456 Electric Ave, LA, CA" },
-  ny: { name: "New York Service Center", address: "789 Innovation St, NY, NY" },
-};
-
 const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: ConfirmationViewProps) => {
-  const location = locationNames[appointment.location];
+  const location = translations.locationsList[appointment.location as keyof typeof translations.locationsList];
+  const serviceData = translations.services[service as keyof typeof translations.services];
 
   return (
     <div className="animate-fade-in text-center">
@@ -49,13 +37,13 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
         <CheckCircle className="w-10 h-10 text-primary" />
       </div>
 
-      <h2 className="text-2xl md:text-3xl font-bold mb-2">Appointment Confirmed!</h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-2">{translations.appointmentConfirmed}</h2>
       <p className="text-muted-foreground mb-8">
-        A confirmation email has been sent to {appointment.email}
+        {translations.confirmationEmailSent} {appointment.email}
       </p>
 
       <div className="glass-card p-6 md:p-8 max-w-2xl mx-auto text-left mb-8">
-        <h3 className="text-lg font-semibold mb-6 text-center">Appointment Details</h3>
+        <h3 className="text-lg font-semibold mb-6 text-center">{translations.appointmentDetails}</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex items-start gap-4">
@@ -63,8 +51,8 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
               <Wrench className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">Service</div>
-              <div className="font-medium">{serviceNames[service]}</div>
+              <div className="text-sm text-muted-foreground">{translations.serviceLabel}</div>
+              <div className="font-medium">{serviceData?.title}</div>
             </div>
           </div>
 
@@ -73,7 +61,7 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
               <Car className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">Vehicle</div>
+              <div className="text-sm text-muted-foreground">{translations.vehicleLabel}</div>
               <div className="font-medium">Tesla {vehicleNames[vehicle]}</div>
             </div>
           </div>
@@ -83,9 +71,9 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
               <Calendar className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">Date</div>
+              <div className="text-sm text-muted-foreground">{translations.dateLabel}</div>
               <div className="font-medium">
-                {appointment.date ? format(appointment.date, "EEEE, MMMM d, yyyy") : "N/A"}
+                {appointment.date ? format(appointment.date, "yyyy. MMMM d., EEEE", { locale: hu }) : "N/A"}
               </div>
             </div>
           </div>
@@ -95,7 +83,7 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
               <Clock className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">Time</div>
+              <div className="text-sm text-muted-foreground">{translations.timeLabel}</div>
               <div className="font-medium">{appointment.time}</div>
             </div>
           </div>
@@ -105,7 +93,7 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
               <MapPin className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">Location</div>
+              <div className="text-sm text-muted-foreground">{translations.locationLabel}</div>
               <div className="font-medium">{location?.name}</div>
               <div className="text-sm text-muted-foreground">{location?.address}</div>
             </div>
@@ -115,10 +103,10 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Button variant="teslaOutline" size="lg" onClick={onStartOver}>
-          Schedule Another
+          {translations.scheduleAnother}
         </Button>
         <Button variant="glass" size="lg">
-          Add to Calendar
+          {translations.addToCalendar}
         </Button>
       </div>
     </div>

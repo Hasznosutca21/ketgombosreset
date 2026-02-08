@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Calendar, Car, Clock, MapPin, Wrench, Zap, Battery, Settings, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { Calendar, Car, Clock, MapPin, Wrench, Zap, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import heroImage from "@/assets/tesla-hero.jpg";
@@ -11,6 +11,7 @@ import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { saveAppointment, SavedAppointment } from "@/lib/appointments";
 import { toast } from "sonner";
 import { Capacitor } from "@capacitor/core";
+import { translations } from "@/lib/translations";
 
 type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
@@ -32,10 +33,10 @@ const Index = () => {
   const { token, isSupported, registerTokenForAppointment } = usePushNotifications();
 
   const steps = [
-    { id: "service", label: "Service", icon: Wrench },
-    { id: "vehicle", label: "Vehicle", icon: Car },
-    { id: "appointment", label: "Schedule", icon: Calendar },
-    { id: "confirmation", label: "Confirm", icon: ChevronRight },
+    { id: "service", label: translations.service, icon: Wrench },
+    { id: "vehicle", label: translations.vehicle, icon: Car },
+    { id: "appointment", label: translations.schedule, icon: Calendar },
+    { id: "confirmation", label: translations.confirm, icon: ChevronRight },
   ];
 
   const currentStepIndex = steps.findIndex((s) => s.id === currentStep);
@@ -108,17 +109,17 @@ const Index = () => {
         if (isSupported && token) {
           const platform = Capacitor.getPlatform() as 'ios' | 'android';
           await registerTokenForAppointment(saved.id, platform);
-          toast.success("Push notifications enabled for appointment reminders!");
+          toast.success(translations.pushNotificationsEnabled);
         }
         
         setCurrentStep("confirmation");
-        toast.success("Appointment booked successfully! Check your email for confirmation.");
+        toast.success(translations.appointmentBookedSuccess);
       } else {
-        toast.error("Failed to book appointment. Please try again.");
+        toast.error(translations.failedToBook);
       }
     } catch (error) {
       console.error('Error booking appointment:', error);
-      toast.error("Failed to book appointment. Please try again.");
+      toast.error(translations.failedToBook);
     } finally {
       setIsSubmitting(false);
     }
@@ -147,20 +148,20 @@ const Index = () => {
         <header className="relative z-10 flex items-center justify-between px-6 py-4 md:px-12">
           <div className="flex items-center gap-2">
             <Zap className="h-8 w-8 text-primary" />
-            <span className="text-xl font-semibold tracking-tight">Tesla Service</span>
+            <span className="text-xl font-semibold tracking-tight">{translations.teslaService}</span>
           </div>
           <Button variant="glass" size="sm" onClick={() => window.location.href = '/auth'}>
-            Admin Login
+            {translations.adminLogin}
           </Button>
         </header>
 
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full -mt-16 px-6 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 animate-fade-in">
-            Schedule Your Service
+            {translations.scheduleYourService}
           </h1>
           <p className="text-muted-foreground text-lg md:text-xl max-w-2xl animate-slide-up">
-            Expert care for your Tesla, at your convenience
+            {translations.expertCare}
           </p>
         </div>
       </div>
@@ -246,12 +247,12 @@ const Index = () => {
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
-            <span>Tesla Service</span>
+            <span>{translations.teslaService}</span>
           </div>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground transition-colors">Support</a>
-            <a href="#" className="hover:text-foreground transition-colors">Locations</a>
-            <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+            <a href="#" className="hover:text-foreground transition-colors">{translations.support}</a>
+            <a href="#" className="hover:text-foreground transition-colors">{translations.locations}</a>
+            <a href="#" className="hover:text-foreground transition-colors">{translations.contact}</a>
           </div>
         </div>
       </footer>
