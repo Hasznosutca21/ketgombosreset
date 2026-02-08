@@ -203,11 +203,11 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
                 )}
 
                 {/* Vehicle Image in circle */}
-                <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-muted/50 flex items-center justify-center mb-2 md:mb-4 overflow-hidden">
+                <div className="w-28 h-28 md:w-32 md:h-32 rounded-full bg-muted/50 flex items-center justify-center mb-2 md:mb-4 overflow-hidden">
                   <img 
                     src={vehicle.image} 
                     alt={vehicle.name}
-                    className="w-20 h-20 md:w-24 md:h-24 object-contain"
+                    className="w-24 h-24 md:w-28 md:h-28 object-contain"
                   />
                 </div>
                 
