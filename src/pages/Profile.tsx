@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Zap, ArrowLeft, Loader2, Camera, User, Mail, Phone, MapPin, Settings, Trash2 } from "lucide-react";
+import { Zap, ArrowLeft, Loader2, Camera, User, Mail, Phone, MapPin, Settings, Trash2, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -31,6 +32,11 @@ interface Profile {
   city: string | null;
   postal_code: string | null;
   country: string | null;
+  vehicle_model: string | null;
+  vehicle_type: string | null;
+  vehicle_year: number | null;
+  vehicle_vin: string | null;
+  vehicle_plate: string | null;
   preferences: {
     emailNotifications?: boolean;
     smsNotifications?: boolean;
@@ -55,6 +61,11 @@ const Profile = () => {
     city: z.string().max(100).optional().or(z.literal("")),
     postal_code: z.string().max(20).optional().or(z.literal("")),
     country: z.string().max(100).optional().or(z.literal("")),
+    vehicle_model: z.string().max(50).optional().or(z.literal("")),
+    vehicle_type: z.string().max(100).optional().or(z.literal("")),
+    vehicle_year: z.coerce.number().min(2008).max(new Date().getFullYear() + 1).optional().or(z.literal("")),
+    vehicle_vin: z.string().max(17).optional().or(z.literal("")),
+    vehicle_plate: z.string().max(20).optional().or(z.literal("")),
   });
 
   type ProfileFormData = z.infer<typeof profileSchema>;
@@ -99,6 +110,11 @@ const Profile = () => {
             city: data.city || "",
             postal_code: data.postal_code || "",
             country: data.country || "",
+            vehicle_model: data.vehicle_model || "",
+            vehicle_type: data.vehicle_type || "",
+            vehicle_year: data.vehicle_year || "",
+            vehicle_vin: data.vehicle_vin || "",
+            vehicle_plate: data.vehicle_plate || "",
           });
         }
       } catch (error) {
@@ -127,6 +143,11 @@ const Profile = () => {
         city: data.city || null,
         postal_code: data.postal_code || null,
         country: data.country || null,
+        vehicle_model: data.vehicle_model || null,
+        vehicle_type: data.vehicle_type || null,
+        vehicle_year: data.vehicle_year ? Number(data.vehicle_year) : null,
+        vehicle_vin: data.vehicle_vin || null,
+        vehicle_plate: data.vehicle_plate || null,
       };
 
       if (profile) {
@@ -354,10 +375,14 @@ const Profile = () => {
 
             <CardContent>
               <Tabs defaultValue="personal" className="w-full">
-                <TabsList className="grid w-full grid-cols-3 mb-6">
+                <TabsList className="grid w-full grid-cols-4 mb-6">
                   <TabsTrigger value="personal" className="flex items-center gap-2">
                     <User className="h-4 w-4" />
                     <span className="hidden sm:inline">{t.personalInfo || "Personal"}</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="vehicle" className="flex items-center gap-2">
+                    <Car className="h-4 w-4" />
+                    <span className="hidden sm:inline">{t.vehicle || "Vehicle"}</span>
                   </TabsTrigger>
                   <TabsTrigger value="address" className="flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
@@ -424,6 +449,78 @@ const Profile = () => {
                         {errors.phone && (
                           <p className="text-sm text-destructive">{errors.phone.message}</p>
                         )}
+                      </div>
+
+                      <Button type="submit" variant="tesla" className="w-full" disabled={isSaving}>
+                        {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {t.saveChanges || "Save Changes"}
+                      </Button>
+                    </TabsContent>
+
+                    <TabsContent value="vehicle" className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="vehicle_model">{t.vehicleModel || "Tesla Model"}</Label>
+                        <Select
+                          value={profile?.vehicle_model || ""}
+                          onValueChange={(value) => {
+                            setProfile((prev) => prev ? { ...prev, vehicle_model: value } : null);
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder={t.selectModel || "Select model"} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Model S">Model S</SelectItem>
+                            <SelectItem value="Model 3">Model 3</SelectItem>
+                            <SelectItem value="Model X">Model X</SelectItem>
+                            <SelectItem value="Model Y">Model Y</SelectItem>
+                            <SelectItem value="Cybertruck">Cybertruck</SelectItem>
+                            <SelectItem value="Roadster">Roadster</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="vehicle_type">{t.vehicleType || "Variant/Type"}</Label>
+                        <Input
+                          id="vehicle_type"
+                          placeholder={t.vehicleTypePlaceholder || "e.g., Long Range, Performance, Standard Range"}
+                          {...register("vehicle_type")}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="vehicle_year">{t.vehicleYear || "Year"}</Label>
+                        <Input
+                          id="vehicle_year"
+                          type="number"
+                          min={2008}
+                          max={new Date().getFullYear() + 1}
+                          placeholder={t.vehicleYearPlaceholder || "e.g., 2023"}
+                          {...register("vehicle_year")}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="vehicle_vin">{t.vehicleVin || "VIN"}</Label>
+                        <Input
+                          id="vehicle_vin"
+                          placeholder={t.vehicleVinPlaceholder || "Vehicle Identification Number"}
+                          maxLength={17}
+                          {...register("vehicle_vin")}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          {t.vinHelp || "17 character Vehicle Identification Number"}
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="vehicle_plate">{t.vehiclePlate || "License Plate"}</Label>
+                        <Input
+                          id="vehicle_plate"
+                          placeholder={t.vehiclePlatePlaceholder || "e.g., ABC-123"}
+                          {...register("vehicle_plate")}
+                        />
                       </div>
 
                       <Button type="submit" variant="tesla" className="w-full" disabled={isSaving}>

@@ -74,6 +74,11 @@ export type Database = {
           preferences: Json | null
           updated_at: string
           user_id: string
+          vehicle_model: string | null
+          vehicle_plate: string | null
+          vehicle_type: string | null
+          vehicle_vin: string | null
+          vehicle_year: number | null
         }
         Insert: {
           address_line1?: string | null
@@ -89,6 +94,11 @@ export type Database = {
           preferences?: Json | null
           updated_at?: string
           user_id: string
+          vehicle_model?: string | null
+          vehicle_plate?: string | null
+          vehicle_type?: string | null
+          vehicle_vin?: string | null
+          vehicle_year?: number | null
         }
         Update: {
           address_line1?: string | null
@@ -104,6 +114,11 @@ export type Database = {
           preferences?: Json | null
           updated_at?: string
           user_id?: string
+          vehicle_model?: string | null
+          vehicle_plate?: string | null
+          vehicle_type?: string | null
+          vehicle_vin?: string | null
+          vehicle_year?: number | null
         }
         Relationships: []
       }

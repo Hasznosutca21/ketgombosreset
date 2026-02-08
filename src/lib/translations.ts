@@ -202,6 +202,19 @@ export const hu = {
   failedToDeleteAccount: "Fiók törlése sikertelen",
   accountDeleted: "Fiókja sikeresen törölve",
 
+  // Vehicle Profile
+  vehicleModel: "Tesla modell",
+  selectModel: "Válasszon modellt",
+  vehicleType: "Típus/Variáns",
+  vehicleTypePlaceholder: "pl. Long Range, Performance, Standard Range",
+  vehicleYear: "Évjárat",
+  vehicleYearPlaceholder: "pl. 2023",
+  vehicleVin: "VIN",
+  vehicleVinPlaceholder: "Alvázszám",
+  vinHelp: "17 karakteres alvázszám (Vehicle Identification Number)",
+  vehiclePlate: "Rendszám",
+  vehiclePlatePlaceholder: "pl. ABC-123",
+
   // Admin Dashboard
   admin: "Admin",
   appointmentsDashboard: "Időpont kezelő",
@@ -447,6 +460,19 @@ export const en = {
   notAuthenticated: "Not authenticated",
   failedToDeleteAccount: "Failed to delete account",
   accountDeleted: "Your account has been deleted",
+
+  // Vehicle Profile
+  vehicleModel: "Tesla Model",
+  selectModel: "Select model",
+  vehicleType: "Variant/Type",
+  vehicleTypePlaceholder: "e.g., Long Range, Performance, Standard Range",
+  vehicleYear: "Year",
+  vehicleYearPlaceholder: "e.g., 2023",
+  vehicleVin: "VIN",
+  vehicleVinPlaceholder: "Vehicle Identification Number",
+  vinHelp: "17 character Vehicle Identification Number",
+  vehiclePlate: "License Plate",
+  vehiclePlatePlaceholder: "e.g., ABC-123",
 
   // Admin Dashboard
   admin: "Admin",
