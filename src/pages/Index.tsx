@@ -264,27 +264,29 @@ const Index = () => {
         </header>
 
         {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full pt-16 px-6 text-center">
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.15em] uppercase mb-2 animate-fade-in pointer-events-none">
+        <div className="relative z-10 flex flex-col items-center justify-center h-full pt-16 px-6">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.15em] uppercase mb-2 animate-fade-in pointer-events-none text-center">
             {t.scheduleYourService}
           </h1>
-          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mb-4 animate-slide-up pointer-events-none">
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mb-4 animate-slide-up pointer-events-none text-center">
             {t.heroSubtitle}
           </p>
-          <Dialog>
-            <DialogTrigger asChild>
-              <button className="flex items-center gap-2 text-sm md:text-base font-extralight tracking-[0.15em] uppercase text-primary animate-slide-up hover:underline underline-offset-4 transition-all cursor-pointer pointer-events-auto">
-                {t.expertCare}
-                <Info className="w-4 h-4" />
-              </button>
-            </DialogTrigger>
-            <DialogContent className="max-w-lg">
-              <DialogHeader>
-                <DialogTitle className="text-2xl text-primary">{t.expertCare}</DialogTitle>
-              </DialogHeader>
-              <p className="text-muted-foreground leading-relaxed">{t.heroDescription}</p>
-            </DialogContent>
-          </Dialog>
+          <div className="w-full max-w-2xl">
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="flex items-center gap-2 text-sm md:text-base font-extralight tracking-[0.15em] uppercase text-primary animate-slide-up hover:underline underline-offset-4 transition-all cursor-pointer pointer-events-auto">
+                  {t.expertCare}
+                  <Info className="w-4 h-4" />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-w-lg">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl text-primary">{t.expertCare}</DialogTitle>
+                </DialogHeader>
+                <p className="text-muted-foreground leading-relaxed">{t.heroDescription}</p>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </div>
 
