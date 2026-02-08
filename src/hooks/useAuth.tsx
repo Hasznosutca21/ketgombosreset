@@ -1,13 +1,15 @@
-import { useState, useEffect, createContext, useContext, ReactNode } from "react";
+import { useState, useEffect, createContext, useContext, ReactNode, useCallback } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+
+const REMEMBER_ME_KEY = "auth_remember_me";
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
   isAdmin: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signIn: (email: string, password: string, rememberMe?: boolean) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
@@ -19,6 +21,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+
+  // Handle session cleanup on browser close if "remember me" was not checked
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const rememberMe = localStorage.getItem(REMEMBER_ME_KEY);
+      if (rememberMe === "false" && session) {
+        // Clear the session from storage on browser close
+        // Note: We can't do async operations in beforeunload reliably,
+        // so we just clear the storage
+        localStorage.removeItem("sb-yjiumsnrmgyfamxkpftk-auth-token");
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [session]);
 
   useEffect(() => {
     // Get initial session
@@ -63,13 +81,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = useCallback(async (email: string, password: string, rememberMe: boolean = true) => {
+    // Store the remember me preference
+    localStorage.setItem(REMEMBER_ME_KEY, String(rememberMe));
+    
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     return { error };
-  };
+  }, []);
 
   const signUp = async (email: string, password: string) => {
     const { error } = await supabase.auth.signUp({
@@ -80,6 +101,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    localStorage.removeItem(REMEMBER_ME_KEY);
     await supabase.auth.signOut();
     setIsAdmin(false);
   };

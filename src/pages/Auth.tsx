@@ -36,12 +36,12 @@ const Auth = () => {
 
     try {
       if (isLogin) {
-        const { error } = await signIn(email, password);
+        const { error } = await signIn(email, password, rememberMe);
         if (error) {
           toast.error(error.message);
         } else {
           toast.success(t.welcomeBack);
-          navigate("/admin");
+          navigate("/");
         }
       } else {
         const { error } = await signUp(email, password);
