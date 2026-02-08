@@ -11,10 +11,15 @@ interface VehicleSelectorProps {
 
 const vehicles = [
   { id: "model-s", name: "Model S", type: "Sedan", image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=400&h=250&fit=crop" },
+  { id: "model-s-plaid", name: "Model S Plaid", type: "Sedan", image: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?w=400&h=250&fit=crop" },
   { id: "model-3", name: "Model 3", type: "Sedan", image: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=400&h=250&fit=crop" },
+  { id: "model-3-performance", name: "Model 3 Performance", type: "Sedan", image: "https://images.unsplash.com/photo-1536700503339-1e4b06520771?w=400&h=250&fit=crop" },
   { id: "model-x", name: "Model X", type: "SUV", image: "https://images.unsplash.com/photo-1566055909643-a51b4271aa47?w=400&h=250&fit=crop" },
+  { id: "model-x-plaid", name: "Model X Plaid", type: "SUV", image: "https://images.unsplash.com/photo-1551826152-d7248fa0a961?w=400&h=250&fit=crop" },
   { id: "model-y", name: "Model Y", type: "SUV", image: "https://images.unsplash.com/photo-1619317408004-7d3d48bd4311?w=400&h=250&fit=crop" },
+  { id: "model-y-performance", name: "Model Y Performance", type: "SUV", image: "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=400&h=250&fit=crop" },
   { id: "cybertruck", name: "Cybertruck", type: "Truck", image: "https://images.unsplash.com/photo-1676394635498-c75e1cc59edd?w=400&h=250&fit=crop" },
+  { id: "cybertruck-cyberbeast", name: "Cybertruck Cyberbeast", type: "Truck", image: "https://images.unsplash.com/photo-1707834696823-71c73a8a1c29?w=400&h=250&fit=crop" },
   { id: "roadster", name: "Roadster", type: "Sports", image: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?w=400&h=250&fit=crop" },
 ];
 
