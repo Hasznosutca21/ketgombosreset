@@ -253,7 +253,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
                     onClick={() => !isBooked && setTime(slot)}
                     disabled={isBooked}
                     className={cn(
-                      "tesla-card py-3 px-3 text-sm transition-all",
+                      "tesla-card aspect-square flex items-center justify-center text-sm transition-all",
                       time === slot && "border-foreground bg-foreground text-background",
                       isBooked 
                         ? "opacity-40 cursor-not-allowed line-through text-muted-foreground" 
