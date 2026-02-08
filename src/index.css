@@ -2,10 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap');
 
 @layer base {
   :root {
+    /* Tesla-inspired minimal dark theme for hero/header */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 8%;
+
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 8%;
+
+    --primary: 0 0% 8%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 8%;
+
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 8%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 8%;
+
+    --radius: 0.5rem;
+
+    /* Tesla brand colors */
+    --tesla-red: 0 0% 8%;
+    --tesla-red-glow: 0 0% 20%;
+    
+    /* Dark section variables (for hero) */
+    --dark-bg: 0 0% 4%;
+    --dark-fg: 0 0% 98%;
+    --dark-muted: 0 0% 60%;
+    --dark-border: 0 0% 18%;
+  }
+
+  .dark {
     --background: 0 0% 4%;
     --foreground: 0 0% 98%;
 
@@ -15,8 +58,8 @@
     --popover: 0 0% 7%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 352 85% 49%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 8%;
 
     --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 98%;
@@ -27,24 +70,12 @@
     --accent: 0 0% 15%;
     --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 18%;
     --input: 0 0% 18%;
-    --ring: 352 85% 49%;
-
-    --radius: 0.75rem;
-
-    /* Custom tokens */
-    --tesla-red: 352 85% 49%;
-    --tesla-red-glow: 352 100% 55%;
-    --glass-bg: 0 0% 100% / 0.03;
-    --glass-border: 0 0% 100% / 0.08;
-    --gradient-dark: linear-gradient(180deg, hsl(0 0% 6%) 0%, hsl(0 0% 3%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 10%) 0%, hsl(0 0% 6%) 100%);
-    --shadow-glow: 0 0 60px -15px hsl(352 85% 49% / 0.3);
-    --shadow-card: 0 25px 50px -12px hsl(0 0% 0% / 0.5);
+    --ring: 0 0% 98%;
   }
 
   * {
@@ -53,37 +84,71 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
-    background: var(--gradient-dark);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }
 
 @layer components {
+  /* Dark section styling for hero */
+  .dark-section {
+    background: hsl(var(--dark-bg));
+    color: hsl(var(--dark-fg));
+  }
+
+  .dark-section .text-muted-foreground {
+    color: hsl(var(--dark-muted));
+  }
+
+  /* Tesla-style minimal card */
+  .tesla-card {
+    @apply bg-card border border-border rounded-xl;
+    transition: all 0.3s ease;
+  }
+
+  .tesla-card:hover {
+    @apply border-foreground/20;
+    transform: translateY(-2px);
+  }
+
+  /* Glass card for dark sections */
   .glass-card {
-    @apply bg-card/50 backdrop-blur-xl border border-white/[0.08] rounded-xl;
-    box-shadow: var(--shadow-card);
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl;
+    transition: all 0.3s ease;
   }
 
-  .tesla-glow {
-    box-shadow: var(--shadow-glow);
+  .glass-card:hover {
+    @apply border-white/20 bg-white/10;
   }
 
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70;
+  /* Minimal progress indicator */
+  .progress-step {
+    @apply flex flex-col items-center gap-2;
+  }
+
+  .progress-step-icon {
+    @apply w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300;
+  }
+
+  .progress-step-icon.active {
+    @apply bg-foreground text-background;
+  }
+
+  .progress-step-icon.completed {
+    @apply bg-foreground/10 text-foreground;
+  }
+
+  .progress-step-icon.inactive {
+    @apply bg-muted text-muted-foreground;
   }
 }
 
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
+    animation: fadeIn 0.8s ease-out forwards;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.6s ease-out forwards;
-  }
-
-  .animate-pulse-glow {
-    animation: pulseGlow 2s ease-in-out infinite;
+    animation: slideUp 0.8s ease-out forwards;
   }
 
   @keyframes fadeIn {
@@ -94,7 +159,7 @@
   @keyframes slideUp {
     from { 
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(30px);
     }
     to { 
       opacity: 1;
@@ -102,12 +167,12 @@
     }
   }
 
-  @keyframes pulseGlow {
-    0%, 100% { 
-      box-shadow: 0 0 20px -5px hsl(352 85% 49% / 0.4);
-    }
-    50% { 
-      box-shadow: 0 0 40px -5px hsl(352 85% 49% / 0.6);
-    }
+  /* Tesla-style text utilities */
+  .text-tesla-heading {
+    @apply font-extralight tracking-tight;
+  }
+
+  .text-tesla-body {
+    @apply font-light leading-relaxed;
   }
 }
