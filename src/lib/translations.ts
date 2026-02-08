@@ -86,9 +86,7 @@ export const hu = {
 
   // Locations
   locationsList: {
-    sf: { name: "San Francisco Szervizközpont", address: "123 TESLAND Blvd, SF, CA" },
-    la: { name: "Los Angeles Szervizközpont", address: "456 Electric Ave, LA, CA" },
-    ny: { name: "New York Szervizközpont", address: "789 Innovation St, NY, NY" },
+    nagytarcsa: { name: "TESLAND Nagytarcsa", address: "Ganz Ábrahám utca 3, Nagytarcsa, Magyarország" },
   },
 
   // Confirmation
@@ -334,9 +332,7 @@ export const en = {
 
   // Locations
   locationsList: {
-    sf: { name: "San Francisco Service Center", address: "123 TESLAND Blvd, SF, CA" },
-    la: { name: "Los Angeles Service Center", address: "456 Electric Ave, LA, CA" },
-    ny: { name: "New York Service Center", address: "789 Innovation St, NY, NY" },
+    nagytarcsa: { name: "TESLAND Nagytarcsa", address: "Ganz Ábrahám utca 3, Nagytarcsa, Hungary" },
   },
 
   // Confirmation
