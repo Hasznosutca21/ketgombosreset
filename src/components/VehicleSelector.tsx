@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, Car, Info } from "lucide-react";
+import { ArrowLeft, Car, Info, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Import vehicle images
 import modelSImage from "@/assets/vehicles/model-s.png";
@@ -19,10 +25,34 @@ interface VehicleSelectorProps {
 }
 
 const vehicles = [
-  { id: "model-s", name: "Model S", image: modelSImage },
-  { id: "model-3", name: "Model 3", image: model3Image },
-  { id: "model-x", name: "Model X", image: modelXImage },
-  { id: "model-y", name: "Model Y", image: modelYImage },
+  { 
+    id: "model-s", 
+    name: "Model S", 
+    image: modelSImage,
+    description: "Prémium szedán, nagy hatótáv",
+    info: "Plaid és Long Range változatok"
+  },
+  { 
+    id: "model-3", 
+    name: "Model 3", 
+    image: model3Image,
+    description: "Kompakt szedán, népszerű választás",
+    info: "Standard, Long Range és Performance"
+  },
+  { 
+    id: "model-x", 
+    name: "Model X", 
+    image: modelXImage,
+    description: "SUV, Falcon Wing ajtók",
+    info: "Plaid és Long Range változatok"
+  },
+  { 
+    id: "model-y", 
+    name: "Model Y", 
+    image: modelYImage,
+    description: "Kompakt SUV, családbarát",
+    info: "Long Range és Performance"
+  },
 ];
 
 // Find matching vehicle ID from model name (flexible matching)
@@ -135,50 +165,65 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
         </div>
       )}
 
-      {/* Tesla-style vehicle grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {vehicles.map((vehicle) => {
-          const isSelected = selected === vehicle.id;
+      {/* Card-style vehicle grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <TooltipProvider>
+          {vehicles.map((vehicle) => {
+            const isSelected = selected === vehicle.id;
 
-          return (
-            <button
-              key={vehicle.id}
-              onClick={() => onSelect(vehicle.id)}
-              className={cn(
-                "group relative flex flex-col items-center p-4 md:p-6 rounded-lg transition-all duration-300",
-                "hover:bg-muted/50",
-                isSelected && "bg-muted"
-              )}
-            >
-              {/* Vehicle Image */}
-              <div className="relative w-full aspect-[16/9] mb-4">
-                <img 
-                  src={vehicle.image} 
-                  alt={vehicle.name}
-                  className={cn(
-                    "w-full h-full object-contain transition-transform duration-300",
-                    "group-hover:scale-105",
-                    isSelected && "scale-105"
-                  )}
-                />
-              </div>
-              
-              {/* Vehicle Name */}
-              <h3 className={cn(
-                "text-lg md:text-xl font-medium transition-colors",
-                isSelected ? "text-foreground" : "text-foreground/80"
-              )}>
-                {vehicle.name}
-              </h3>
-              
-              {/* Selection indicator */}
-              <div className={cn(
-                "mt-3 w-8 h-0.5 rounded-full transition-all duration-300",
-                isSelected ? "bg-foreground" : "bg-transparent group-hover:bg-foreground/30"
-              )} />
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={vehicle.id}
+                onClick={() => onSelect(vehicle.id)}
+                className={cn(
+                  "relative flex flex-col items-center p-6 rounded-2xl border-2 transition-all duration-200 text-left",
+                  "bg-card hover:bg-muted/50",
+                  isSelected 
+                    ? "border-foreground shadow-lg" 
+                    : "border-border hover:border-foreground/30"
+                )}
+              >
+                {/* Info tooltip */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="absolute top-4 right-4 p-1 rounded-full hover:bg-muted transition-colors">
+                      <Info className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{vehicle.info}</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                {/* Selected checkmark */}
+                {isSelected && (
+                  <div className="absolute top-4 left-4 w-6 h-6 rounded-full bg-foreground flex items-center justify-center">
+                    <Check className="w-4 h-4 text-background" />
+                  </div>
+                )}
+
+                {/* Vehicle Image in circle */}
+                <div className="w-20 h-20 rounded-full bg-muted/50 flex items-center justify-center mb-4 overflow-hidden">
+                  <img 
+                    src={vehicle.image} 
+                    alt={vehicle.name}
+                    className="w-16 h-16 object-contain"
+                  />
+                </div>
+                
+                {/* Vehicle Name */}
+                <h3 className="text-lg font-semibold text-foreground mb-1">
+                  {vehicle.name}
+                </h3>
+
+                {/* Description */}
+                <p className="text-sm text-muted-foreground text-center">
+                  {vehicle.description}
+                </p>
+              </button>
+            );
+          })}
+        </TooltipProvider>
       </div>
     </div>
   );
