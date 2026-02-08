@@ -301,24 +301,15 @@ const Profile = () => {
         .from("vehicle-images")
         .getPublicUrl(filePath);
 
-      // Update profile with new vehicle image URL
-      if (profile) {
-        const { error } = await supabase
-          .from("profiles")
-          .update({ vehicle_image_url: publicUrl })
-          .eq("user_id", user.id);
+      // Update profile with new vehicle image URL using upsert
+      const { error } = await supabase
+        .from("profiles")
+        .upsert({
+          user_id: user.id,
+          vehicle_image_url: publicUrl,
+        }, { onConflict: 'user_id' });
 
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from("profiles")
-          .insert({
-            user_id: user.id,
-            vehicle_image_url: publicUrl,
-          });
-
-        if (error) throw error;
-      }
+      if (error) throw error;
 
       setProfile((prev) => prev ? { ...prev, vehicle_image_url: publicUrl } : null);
       toast.success(t.vehicleImageUpdated || "Vehicle image updated successfully");
