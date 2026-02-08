@@ -107,7 +107,7 @@ const Contact = () => {
           {/* Map */}
           <div className="glass-card p-2 h-[400px] md:h-full min-h-[300px]">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2693.5!2d19.3!3d47.5!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDfCsDMwJzAwLjAiTiAxOcKwMTgnMDAuMCJF!5e0!3m2!1sen!2shu!4v1234567890"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1347.5!2d19.2896!3d47.5249!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741c5a1c1c1c1c1%3A0x1234567890abcdef!2sGanz%20%C3%81brah%C3%A1m%20utca%203%2C%20Nagytarcsa%2C%202142%20Hungary!5e0!3m2!1sen!2shu!4v1707400000000"
               width="100%"
               height="100%"
               style={{ border: 0, borderRadius: "0.5rem" }}
