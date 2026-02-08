@@ -146,7 +146,7 @@ const Index = () => {
         {/* Header */}
         <header className="relative z-10 flex items-center justify-between px-6 py-4 md:px-12">
           <div className="flex items-center gap-2">
-            <img src={teslandLogo} alt="TESLAND" className="h-10 w-auto invert" />
+            <img src={teslandLogo} alt="TESLAND" className="h-10 w-auto" />
           </div>
 
           {/* Desktop Navigation */}
