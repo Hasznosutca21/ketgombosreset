@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ArrowLeft, Loader2, Camera, User, Mail, Phone, MapPin, Settings, Trash2, Car, ImagePlus, X, Zap } from "lucide-react";
+import { ArrowLeft, Loader2, Camera, User, Mail, Phone, MapPin, Settings, Trash2, Car, ImagePlus, X } from "lucide-react";
 import teslandLogo from "@/assets/tesland-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DeleteAccountDialog from "@/components/DeleteAccountDialog";
-import { TeslaConnect } from "@/components/TeslaConnect";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -545,7 +544,7 @@ const Profile = () => {
 
             <CardContent>
               <Tabs defaultValue="personal" className="w-full">
-                <TabsList className="grid w-full grid-cols-5 mb-6">
+                <TabsList className="grid w-full grid-cols-4 mb-6">
                   <TabsTrigger value="personal" className="flex items-center gap-2">
                     <User className="h-4 w-4" />
                     <span className="hidden sm:inline">{t.personalInfo || "Personal"}</span>
@@ -553,10 +552,6 @@ const Profile = () => {
                   <TabsTrigger value="vehicle" className="flex items-center gap-2">
                     <Car className="h-4 w-4" />
                     <span className="hidden sm:inline">{t.vehicle || "Vehicle"}</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="tesla" className="flex items-center gap-2">
-                    <Zap className="h-4 w-4" />
-                    <span className="hidden sm:inline">Tesla API</span>
                   </TabsTrigger>
                   <TabsTrigger value="address" className="flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
@@ -785,9 +780,6 @@ const Profile = () => {
                       </Button>
                     </TabsContent>
 
-                    <TabsContent value="tesla" className="space-y-4">
-                      <TeslaConnect />
-                    </TabsContent>
 
                     <TabsContent value="address" className="space-y-4">
                       <div className="space-y-2">
