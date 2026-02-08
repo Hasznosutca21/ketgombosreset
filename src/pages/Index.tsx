@@ -339,7 +339,7 @@ const Index = () => {
           <VehicleSelector onSelect={handleVehicleSelect} selected={selectedVehicle} onBack={() => setCurrentStep("service")} />
         )}
         {currentStep === "appointment" && (
-          <AppointmentForm onSubmit={handleAppointmentSubmit} onBack={() => setCurrentStep("vehicle")} isSubmitting={isSubmitting} />
+          <AppointmentForm onSubmit={handleAppointmentSubmit} onBack={() => setCurrentStep("vehicle")} isSubmitting={isSubmitting} selectedService={selectedService || undefined} />
         )}
         {currentStep === "confirmation" && (
           <ConfirmationView

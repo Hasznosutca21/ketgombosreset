@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ArrowLeft, MapPin, Navigation, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ import { CalendarIcon } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { getBookedTimeSlotsForDate } from "@/lib/appointments";
+import { getBookedAppointmentsForDate, getServiceDurationMinutes, getServiceSlotCount } from "@/lib/appointments";
 
 interface AppointmentFormProps {
   onSubmit: (data: {
@@ -25,13 +25,44 @@ interface AppointmentFormProps {
   }) => void;
   onBack: () => void;
   isSubmitting?: boolean;
+  selectedService?: string;
+}
+
+interface BookedAppointment {
+  time: string;
+  service: string;
 }
 
 const locations = [{ id: "nagytarcsa" }];
 
-const timeSlots = ["9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
+// Generate 30-minute time slots from 9:00 to 16:30
+const generateTimeSlots = (): string[] => {
+  const slots: string[] = [];
+  for (let hour = 9; hour <= 16; hour++) {
+    slots.push(`${hour}:00`);
+    if (hour < 16) {
+      slots.push(`${hour}:30`);
+    }
+  }
+  return slots;
+};
 
-const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: AppointmentFormProps) => {
+const timeSlots = generateTimeSlots();
+
+// Convert time string to minutes from midnight
+const timeToMinutes = (timeStr: string): number => {
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  return hours * 60 + minutes;
+};
+
+// Convert minutes from midnight to time string
+const minutesToTime = (minutes: number): string => {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${hours}:${mins.toString().padStart(2, '0')}`;
+};
+
+const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedService }: AppointmentFormProps) => {
   const { t, language } = useLanguage();
   const { user } = useAuth();
   const [date, setDate] = useState<Date>();
@@ -40,8 +71,68 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [bookedSlots, setBookedSlots] = useState<string[]>([]);
+  const [bookedAppointments, setBookedAppointments] = useState<BookedAppointment[]>([]);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
+
+  // Get duration of current selected service
+  const currentServiceDuration = useMemo(() => {
+    if (!selectedService) return 30;
+    const serviceData = t.services[selectedService as keyof typeof t.services];
+    if (!serviceData || !('duration' in serviceData)) return 30;
+    return getServiceDurationMinutes(serviceData.duration as string);
+  }, [selectedService, t.services]);
+
+  // Calculate blocked slots based on booked appointments and their durations
+  const blockedSlots = useMemo(() => {
+    const blocked = new Set<string>();
+    
+    bookedAppointments.forEach(({ time: bookedTime, service }) => {
+      // Get duration of the booked service
+      const serviceData = t.services[service as keyof typeof t.services];
+      let durationMinutes = 30;
+      if (serviceData && 'duration' in serviceData) {
+        durationMinutes = getServiceDurationMinutes(serviceData.duration as string);
+      }
+      
+      const slotCount = getServiceSlotCount(durationMinutes);
+      const startMinutes = timeToMinutes(bookedTime);
+      
+      // Block all slots that overlap with this appointment
+      for (let i = 0; i < slotCount; i++) {
+        const blockedMinutes = startMinutes + (i * 30);
+        const blockedTimeStr = minutesToTime(blockedMinutes);
+        blocked.add(blockedTimeStr);
+      }
+    });
+    
+    // Also check if selecting THIS slot would overlap with an existing appointment
+    // We need to block slots where our service would run into an existing booking
+    const currentSlotCount = getServiceSlotCount(currentServiceDuration);
+    
+    timeSlots.forEach(slot => {
+      const slotMinutes = timeToMinutes(slot);
+      // Check if any of the slots our service would occupy are already blocked
+      for (let i = 0; i < currentSlotCount; i++) {
+        const checkMinutes = slotMinutes + (i * 30);
+        const checkTimeStr = minutesToTime(checkMinutes);
+        
+        // Check if this would go past closing time (17:00)
+        if (checkMinutes >= 17 * 60) {
+          blocked.add(slot);
+          break;
+        }
+        
+        // Check if any booked appointment starts during our service time
+        bookedAppointments.forEach(({ time: bookedTime }) => {
+          if (bookedTime === checkTimeStr) {
+            blocked.add(slot);
+          }
+        });
+      }
+    });
+    
+    return blocked;
+  }, [bookedAppointments, t.services, currentServiceDuration]);
 
   // Auto-fill contact information from user profile
   useEffect(() => {
@@ -77,30 +168,30 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
     loadProfileData();
   }, [user]);
 
-  // Fetch booked slots when date or location changes
+  // Fetch booked appointments when date or location changes
   useEffect(() => {
-    const loadBookedSlots = async () => {
+    const loadBookedAppointments = async () => {
       if (!date || !location) {
-        setBookedSlots([]);
+        setBookedAppointments([]);
         return;
       }
 
       setIsLoadingSlots(true);
       try {
-        const slots = await getBookedTimeSlotsForDate(date, location);
-        setBookedSlots(slots);
-        // Clear selected time if it's now booked
-        if (slots.includes(time)) {
+        const appointments = await getBookedAppointmentsForDate(date, location);
+        setBookedAppointments(appointments);
+        // Clear selected time if it's now blocked
+        if (blockedSlots.has(time)) {
           setTime("");
         }
       } catch (error) {
-        console.error("Error loading booked slots:", error);
+        console.error("Error loading booked appointments:", error);
       } finally {
         setIsLoadingSlots(false);
       }
     };
 
-    loadBookedSlots();
+    loadBookedAppointments();
   }, [date, location]);
 
   const dateLocale = language === "hu" ? hu : enUS;
@@ -157,7 +248,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
             </Label>
             <div className="grid grid-cols-4 gap-2">
               {timeSlots.map((slot) => {
-                const isBooked = bookedSlots.includes(slot);
+                const isBooked = blockedSlots.has(slot);
                 return (
                   <button
                     key={slot}

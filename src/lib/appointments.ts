@@ -103,13 +103,50 @@ export const getAppointmentsByEmail = async (email: string): Promise<SavedAppoin
   }
 };
 
-// Get booked time slots for a specific date
+// Service durations in minutes (parsed from translation strings)
+export const getServiceDurationMinutes = (serviceDuration: string): number => {
+  // Parse duration strings like "45 perc", "1-2 óra", "30 min", "1 hour", etc.
+  const lowerDuration = serviceDuration.toLowerCase();
+  
+  // Handle "Változó" / "Varies" - default to 60 min
+  if (lowerDuration.includes('változó') || lowerDuration.includes('varies')) {
+    return 60;
+  }
+  
+  // Handle range like "1-2 óra" / "1-2 hours" - use the maximum
+  const rangeMatch = lowerDuration.match(/(\d+)-(\d+)\s*(óra|hour)/);
+  if (rangeMatch) {
+    return parseInt(rangeMatch[2]) * 60;
+  }
+  
+  // Handle single hour like "1 óra" / "1 hour"
+  const hourMatch = lowerDuration.match(/(\d+)\s*(óra|hour)/);
+  if (hourMatch) {
+    return parseInt(hourMatch[1]) * 60;
+  }
+  
+  // Handle minutes like "45 perc" / "45 min"
+  const minMatch = lowerDuration.match(/(\d+)\s*(perc|min)/);
+  if (minMatch) {
+    return parseInt(minMatch[1]);
+  }
+  
+  // Default to 30 minutes
+  return 30;
+};
+
+// Calculate how many 30-minute slots a service occupies
+export const getServiceSlotCount = (durationMinutes: number): number => {
+  return Math.ceil(durationMinutes / 30);
+};
+
+// Get booked time slots for a specific date, considering service durations
 export const getBookedTimeSlotsForDate = async (date: Date, location: string): Promise<string[]> => {
   try {
     const dateString = date.toISOString().split('T')[0];
     const { data: appointments, error } = await supabase
       .from('appointments')
-      .select('appointment_time')
+      .select('appointment_time, service')
       .eq('appointment_date', dateString)
       .eq('location', location)
       .neq('status', 'cancelled');
@@ -119,9 +156,33 @@ export const getBookedTimeSlotsForDate = async (date: Date, location: string): P
       return [];
     }
 
+    // Return raw booked times - the component will handle duration-based blocking
     return appointments?.map(a => a.appointment_time) || [];
   } catch (error) {
     console.error('Error fetching booked slots:', error);
+    return [];
+  }
+};
+
+// Get full appointment data for a date (including service info for duration calculation)
+export const getBookedAppointmentsForDate = async (date: Date, location: string): Promise<{ time: string; service: string }[]> => {
+  try {
+    const dateString = date.toISOString().split('T')[0];
+    const { data: appointments, error } = await supabase
+      .from('appointments')
+      .select('appointment_time, service')
+      .eq('appointment_date', dateString)
+      .eq('location', location)
+      .neq('status', 'cancelled');
+
+    if (error) {
+      console.error('Error fetching booked appointments:', error);
+      return [];
+    }
+
+    return appointments?.map(a => ({ time: a.appointment_time, service: a.service })) || [];
+  } catch (error) {
+    console.error('Error fetching booked appointments:', error);
     return [];
   }
 };
