@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Zap, Lock, ArrowLeft, Loader2 } from "lucide-react";
+import { Zap, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/hooks/useLanguage";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -12,6 +11,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { createAuthSchemas, ResetPasswordFormData } from "@/lib/validation";
 import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
+import PasswordInput from "@/components/PasswordInput";
 
 const ResetPassword = () => {
   const { t } = useLanguage();
@@ -88,30 +88,22 @@ const ResetPassword = () => {
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-1">
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="password"
-                    placeholder={t.newPassword}
-                    {...register("password")}
-                    className={`pl-10 ${errors.password ? "border-destructive" : ""}`}
-                  />
-                </div>
+                <PasswordInput
+                  placeholder={t.newPassword}
+                  {...register("password")}
+                  error={!!errors.password}
+                />
                 {errors.password && (
                   <p className="text-sm text-destructive">{errors.password.message}</p>
                 )}
                 <PasswordStrengthIndicator password={passwordValue} />
               </div>
               <div className="space-y-1">
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="password"
-                    placeholder={t.confirmPassword}
-                    {...register("confirmPassword")}
-                    className={`pl-10 ${errors.confirmPassword ? "border-destructive" : ""}`}
-                  />
-                </div>
+                <PasswordInput
+                  placeholder={t.confirmPassword}
+                  {...register("confirmPassword")}
+                  error={!!errors.confirmPassword}
+                />
                 {errors.confirmPassword && (
                   <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
                 )}
