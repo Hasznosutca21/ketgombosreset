@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, MapPin, Navigation } from "lucide-react";
+import { ArrowLeft, MapPin, Navigation, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,7 @@ import { CalendarIcon } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { getBookedTimeSlotsForDate } from "@/lib/appointments";
 
 interface AppointmentFormProps {
   onSubmit: (data: {
@@ -39,6 +40,8 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [bookedSlots, setBookedSlots] = useState<string[]>([]);
+  const [isLoadingSlots, setIsLoadingSlots] = useState(false);
 
   // Auto-fill contact information from user profile
   useEffect(() => {
@@ -73,6 +76,32 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
 
     loadProfileData();
   }, [user]);
+
+  // Fetch booked slots when date or location changes
+  useEffect(() => {
+    const loadBookedSlots = async () => {
+      if (!date || !location) {
+        setBookedSlots([]);
+        return;
+      }
+
+      setIsLoadingSlots(true);
+      try {
+        const slots = await getBookedTimeSlotsForDate(date, location);
+        setBookedSlots(slots);
+        // Clear selected time if it's now booked
+        if (slots.includes(time)) {
+          setTime("");
+        }
+      } catch (error) {
+        console.error("Error loading booked slots:", error);
+      } finally {
+        setIsLoadingSlots(false);
+      }
+    };
+
+    loadBookedSlots();
+  }, [date, location]);
 
   const dateLocale = language === "hu" ? hu : enUS;
   const isValid = date && time && location && name && email && phone;
@@ -122,20 +151,31 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
           </div>
 
           <div>
-            <Label className="text-base font-semibold mb-3 block">{t.selectTime}</Label>
+            <Label className="text-base font-semibold mb-3 block">
+              {t.selectTime}
+              {isLoadingSlots && <Loader2 className="inline-block w-4 h-4 ml-2 animate-spin" />}
+            </Label>
             <div className="grid grid-cols-4 gap-2">
-              {timeSlots.map((slot) => (
-                <button
-                  key={slot}
-                  onClick={() => setTime(slot)}
-                  className={cn(
-                    "glass-card py-2 px-3 text-sm transition-all hover:border-primary/50",
-                    time === slot && "border-primary bg-primary/10"
-                  )}
-                >
-                  {slot}
-                </button>
-              ))}
+              {timeSlots.map((slot) => {
+                const isBooked = bookedSlots.includes(slot);
+                return (
+                  <button
+                    key={slot}
+                    onClick={() => !isBooked && setTime(slot)}
+                    disabled={isBooked}
+                    className={cn(
+                      "glass-card py-2 px-3 text-sm transition-all",
+                      time === slot && "border-primary bg-primary/10",
+                      isBooked 
+                        ? "opacity-40 cursor-not-allowed line-through text-muted-foreground" 
+                        : "hover:border-primary/50"
+                    )}
+                    title={isBooked ? (language === "hu" ? "Foglalt" : "Booked") : undefined}
+                  >
+                    {slot}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

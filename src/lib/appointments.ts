@@ -88,6 +88,29 @@ export const getAppointmentsByEmail = async (email: string): Promise<SavedAppoin
   }
 };
 
+// Get booked time slots for a specific date
+export const getBookedTimeSlotsForDate = async (date: Date, location: string): Promise<string[]> => {
+  try {
+    const dateString = date.toISOString().split('T')[0];
+    const { data: appointments, error } = await supabase
+      .from('appointments')
+      .select('appointment_time')
+      .eq('appointment_date', dateString)
+      .eq('location', location)
+      .neq('status', 'cancelled');
+
+    if (error) {
+      console.error('Error fetching booked slots:', error);
+      return [];
+    }
+
+    return appointments?.map(a => a.appointment_time) || [];
+  } catch (error) {
+    console.error('Error fetching booked slots:', error);
+    return [];
+  }
+};
+
 export const cancelAppointment = async (
   id: string,
   sendEmail: boolean = true,
