@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Calendar, Car, Wrench, Zap, ChevronRight, Menu, LogOut, User } from "lucide-react";
+import { Calendar, Car, Wrench, ChevronRight, Menu, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -320,14 +320,19 @@ const Index = () => {
             <img src={teslandLogo} alt="TESLAND" className="h-8 w-auto dark:invert" />
           </div>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground transition-colors">
-              {t.support}
-            </a>
-            <a href="#" className="hover:text-foreground transition-colors">
-              {t.locations}
-            </a>
-            <a href="#" className="hover:text-foreground transition-colors">
+            <Link to="/about" className="hover:text-foreground transition-colors">
+              {language === "hu" ? "Rólunk" : "About"}
+            </Link>
+            <Link to="/contact" className="hover:text-foreground transition-colors">
               {t.contact}
+            </Link>
+            <a 
+              href="https://www.google.com/maps/search/?api=1&query=Ganz+%C3%81brah%C3%A1m+utca+3+Nagytarcsa+Hungary" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              {t.locations}
             </a>
           </div>
         </div>
