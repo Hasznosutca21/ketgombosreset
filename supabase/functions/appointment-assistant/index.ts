@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -37,10 +38,15 @@ const SYSTEM_PROMPT = `Te egy segítőkész Tesla szerviz asszisztens vagy. Magy
 
 Légy kedves, segítőkész és informatív. Ha a felhasználó időpontot szeretne foglalni, irányítsd az online foglalási rendszerhez. Rövid, tömör válaszokat adj, de legyél barátságos.`;
 
-interface Message {
-  role: "user" | "assistant" | "system";
-  content: string;
-}
+// Input validation schema
+const MessageSchema = z.object({
+  role: z.enum(["user", "assistant", "system"]),
+  content: z.string().max(10000, "Message content too long"),
+});
+
+const RequestSchema = z.object({
+  messages: z.array(MessageSchema).max(50, "Too many messages in conversation"),
+});
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -48,7 +54,19 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json() as { messages: Message[] };
+    const rawData = await req.json();
+    
+    // Validate input
+    const validationResult = RequestSchema.safeParse(rawData);
+    if (!validationResult.success) {
+      console.error("Validation error:", validationResult.error.issues);
+      return new Response(
+        JSON.stringify({ error: "Invalid request data" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const { messages } = validationResult.data;
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
