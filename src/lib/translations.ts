@@ -117,7 +117,7 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
     software: {
       title: "Boombox aktiválás",
       description: "Egyedi hangok és dallamok külső hangszóróra",
-      duration: "30 perc",
+      duration: "10 perc",
       price: "10 000 Ft",
     },
     autopilot: {
@@ -496,7 +496,7 @@ The price includes a personal consultation where we discuss the results and answ
     software: {
       title: "Boombox Activation",
       description: "Custom sounds and melodies for external speaker",
-      duration: "30 mins",
+      duration: "10 min",
       price: "10 000 Ft",
     },
     autopilot: {
