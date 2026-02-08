@@ -367,6 +367,7 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
   // Toast Messages
   appointmentBookedSuccess: "Időpont sikeresen lefoglalva! Ellenőrizze e-mailjét a visszaigazolásért.",
   failedToBook: "Időpont foglalása sikertelen. Kérjük, próbálja újra.",
+  slotAlreadyTaken: "Ez az időpont már foglalt. Kérjük válasszon másik időpontot.",
   pushNotificationsEnabled: "Push értesítések engedélyezve az időpont emlékeztetőkhöz!",
   appointmentDeleted: "Időpont törölve",
   failedToDelete: "Időpont törlése sikertelen",
@@ -743,6 +744,7 @@ The price includes a personal consultation where we discuss the results and answ
   // Toast Messages
   appointmentBookedSuccess: "Appointment booked successfully! Check your email for confirmation.",
   failedToBook: "Failed to book appointment. Please try again.",
+  slotAlreadyTaken: "This time slot is already booked. Please choose a different time.",
   pushNotificationsEnabled: "Push notifications enabled for appointment reminders!",
   appointmentDeleted: "Appointment deleted",
   failedToDelete: "Failed to delete appointment",
