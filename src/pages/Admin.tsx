@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Zap, ArrowLeft, Calendar, Car, MapPin, Clock, Trash2, Loader2, RefreshCw, LogOut, Shield, X, CalendarClock, Bell, BellOff, Check } from "lucide-react";
+import { Zap, ArrowLeft, Calendar, Car, MapPin, Clock, Trash2, Loader2, RefreshCw, LogOut, Shield, X, CalendarClock, Bell, BellOff, Check, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import AdminRescheduleDialog from "@/components/AdminRescheduleDialog";
+import AdminCustomers from "@/components/AdminCustomers";
 import { supabase } from "@/integrations/supabase/client";
 import { cancelAppointment, rescheduleAppointment } from "@/lib/appointments";
 import { toast } from "sonner";
@@ -310,158 +312,177 @@ const Admin = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
-        <Card className="glass-card">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-2xl flex items-center gap-2">
-                <Calendar className="h-6 w-6 text-primary" />
-                {t.appointmentsDashboard}
-              </CardTitle>
-              <CardDescription>{t.viewManageAppointments}</CardDescription>
-            </div>
-            <Button variant="outline" onClick={fetchAppointments} disabled={isLoading}>
-              <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-              {t.refresh}
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            ) : appointments.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>{t.noAppointments}</p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t.customer}</TableHead>
-                      <TableHead>{t.serviceLabel}</TableHead>
-                      <TableHead>{t.vehicleLabel}</TableHead>
-                      <TableHead>
-                        {t.dateLabel} & {t.timeLabel}
-                      </TableHead>
-                      <TableHead>{t.locationLabel}</TableHead>
-                      <TableHead>{t.status}</TableHead>
-                      {isAdmin && <TableHead className="w-[150px]">{t.actions}</TableHead>}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {appointments.map((appointment) => (
-                      <TableRow key={appointment.id}>
-                        <TableCell>
-                          <div>
-                            <p className="font-medium">{appointment.name}</p>
-                            <p className="text-sm text-muted-foreground">{appointment.email}</p>
-                            {appointment.phone && <p className="text-sm text-muted-foreground">{appointment.phone}</p>}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{getServiceLabel(appointment.service)}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-col gap-1">
-                            <div className="flex items-center gap-1">
-                              <Car className="h-4 w-4 text-muted-foreground" />
-                              {vehicleLabels[appointment.vehicle.split('-').slice(0, 2).join('-')] || appointment.vehicle}
-                            </div>
-                            {appointment.vehicle_vin && (
-                              <p className="text-xs text-muted-foreground font-mono">
-                                VIN: {appointment.vehicle_vin}
-                              </p>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-col gap-1">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4 text-muted-foreground" />
-                              {format(new Date(appointment.appointment_date), language === "hu" ? "yyyy. MMM d." : "MMM d, yyyy", {
-                                locale: dateLocale,
-                              })}
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="h-4 w-4 text-muted-foreground" />
-                              {appointment.appointment_time}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4 text-muted-foreground" />
-                            {getLocationLabel(appointment.location)}
-                          </div>
-                        </TableCell>
-                        <TableCell>{getStatusBadge(appointment.status)}</TableCell>
-                        {isAdmin && (
-                          <TableCell>
-                            <div className="flex gap-1">
-                              {appointment.status === "pending" && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => handleApproveAppointment(appointment.id)}
-                                  disabled={approvingId === appointment.id}
-                                  title={t.approveAppointment}
-                                  className="text-green-600 hover:text-green-700 hover:bg-green-500/10"
-                                >
-                                  {approvingId === appointment.id ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                  ) : (
-                                    <Check className="h-4 w-4" />
-                                  )}
-                                </Button>
-                              )}
-                              {appointment.status !== "cancelled" && (
-                                <>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => handleRescheduleClick(appointment)}
-                                    title={t.reschedule}
-                                  >
-                                    <CalendarClock className="h-4 w-4" />
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => handleCancelClick(appointment)}
-                                    title={t.cancel}
-                                    className="text-orange-500 hover:text-orange-600 hover:bg-orange-500/10"
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </Button>
-                                </>
-                              )}
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleDelete(appointment.id)}
-                                disabled={deletingId === appointment.id}
-                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                title={t.appointmentDeleted}
-                              >
-                                {deletingId === appointment.id ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <Trash2 className="h-4 w-4" />
+        <Tabs defaultValue="appointments" className="space-y-6">
+          <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="appointments" className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              {t.appointmentsDashboard || "Időpontok"}
+            </TabsTrigger>
+            <TabsTrigger value="customers" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              {language === "hu" ? "Ügyfelek" : "Customers"}
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="appointments">
+            <Card className="glass-card">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Calendar className="h-6 w-6 text-primary" />
+                    {t.appointmentsDashboard}
+                  </CardTitle>
+                  <CardDescription>{t.viewManageAppointments}</CardDescription>
+                </div>
+                <Button variant="outline" onClick={fetchAppointments} disabled={isLoading}>
+                  <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+                  {t.refresh}
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  </div>
+                ) : appointments.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>{t.noAppointments}</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>{t.customer}</TableHead>
+                          <TableHead>{t.serviceLabel}</TableHead>
+                          <TableHead>{t.vehicleLabel}</TableHead>
+                          <TableHead>
+                            {t.dateLabel} & {t.timeLabel}
+                          </TableHead>
+                          <TableHead>{t.locationLabel}</TableHead>
+                          <TableHead>{t.status}</TableHead>
+                          {isAdmin && <TableHead className="w-[150px]">{t.actions}</TableHead>}
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {appointments.map((appointment) => (
+                          <TableRow key={appointment.id}>
+                            <TableCell>
+                              <div>
+                                <p className="font-medium">{appointment.name}</p>
+                                <p className="text-sm text-muted-foreground">{appointment.email}</p>
+                                {appointment.phone && <p className="text-sm text-muted-foreground">{appointment.phone}</p>}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{getServiceLabel(appointment.service)}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-1">
+                                  <Car className="h-4 w-4 text-muted-foreground" />
+                                  {vehicleLabels[appointment.vehicle.split('-').slice(0, 2).join('-')] || appointment.vehicle}
+                                </div>
+                                {appointment.vehicle_vin && (
+                                  <p className="text-xs text-muted-foreground font-mono">
+                                    VIN: {appointment.vehicle_vin}
+                                  </p>
                                 )}
-                              </Button>
-                            </div>
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-1">
+                                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                                  {format(new Date(appointment.appointment_date), language === "hu" ? "yyyy. MMM d." : "MMM d, yyyy", {
+                                    locale: dateLocale,
+                                  })}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <Clock className="h-4 w-4 text-muted-foreground" />
+                                  {appointment.appointment_time}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-1">
+                                <MapPin className="h-4 w-4 text-muted-foreground" />
+                                {getLocationLabel(appointment.location)}
+                              </div>
+                            </TableCell>
+                            <TableCell>{getStatusBadge(appointment.status)}</TableCell>
+                            {isAdmin && (
+                              <TableCell>
+                                <div className="flex gap-1">
+                                  {appointment.status === "pending" && (
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() => handleApproveAppointment(appointment.id)}
+                                      disabled={approvingId === appointment.id}
+                                      title={t.approveAppointment}
+                                      className="text-green-600 hover:text-green-700 hover:bg-green-500/10"
+                                    >
+                                      {approvingId === appointment.id ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                      ) : (
+                                        <Check className="h-4 w-4" />
+                                      )}
+                                    </Button>
+                                  )}
+                                  {appointment.status !== "cancelled" && (
+                                    <>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => handleRescheduleClick(appointment)}
+                                        title={t.reschedule}
+                                      >
+                                        <CalendarClock className="h-4 w-4" />
+                                      </Button>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => handleCancelClick(appointment)}
+                                        title={t.cancel}
+                                        className="text-orange-500 hover:text-orange-600 hover:bg-orange-500/10"
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </Button>
+                                    </>
+                                  )}
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => handleDelete(appointment.id)}
+                                    disabled={deletingId === appointment.id}
+                                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                    title={t.appointmentDeleted}
+                                  >
+                                    {deletingId === appointment.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <Trash2 className="h-4 w-4" />
+                                    )}
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            )}
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="customers">
+            <AdminCustomers language={language} />
+          </TabsContent>
+        </Tabs>
       </main>
 
       {/* Cancel Confirmation Dialog */}
