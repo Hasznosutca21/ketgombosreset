@@ -116,6 +116,7 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
       title: "Pollen szűrő csere",
       description: "Utastér szűrő csere a tiszta levegőért",
       duration: "30 perc",
+      price: "19 900 Ft",
     },
     hepa: {
       title: "HEPA szűrő csere",
@@ -514,6 +515,7 @@ The price includes a personal consultation where we discuss the results and answ
       title: "Pollen Filter Replacement",
       description: "Cabin air filter replacement for clean air",
       duration: "30 min",
+      price: "19 900 Ft",
     },
     hepa: {
       title: "HEPA Filter Replacement",
