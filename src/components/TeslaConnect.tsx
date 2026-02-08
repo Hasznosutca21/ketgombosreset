@@ -48,37 +48,29 @@ export function TeslaConnect() {
   const registerPartner = async () => {
     try {
       setRegisterLoading(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) {
-        toast.error("Nincs bejelentkezve");
+
+      const domain = window.location.hostname;
+      const { data, error } = await supabase.functions.invoke("tesla-register-partner", {
+        body: { region: "eu", domain },
+      });
+
+      if (error) {
+        console.error("Partner registration error:", error);
+        toast.error("Nem sikerült a Fleet API regisztráció");
         return;
       }
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tesla-register-partner`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({ region: "eu" }),
-        }
-      );
-
-      const data = await response.json();
       console.log("Partner registration response:", data);
 
-      if (data.success) {
-        toast.success("Partner regisztráció sikeres!");
-        // Try loading vehicles again
+      if (data?.success) {
+        toast.success("Fleet API regisztráció sikeres!");
         await listVehicles();
       } else {
-        toast.error(`Regisztráció sikertelen: ${data.error || "Ismeretlen hiba"}`);
+        toast.error(`Regisztráció sikertelen: ${data?.error || "Ismeretlen hiba"}`);
       }
     } catch (err) {
       console.error("Partner registration error:", err);
-      toast.error("Hiba a partner regisztráció során");
+      toast.error("Hiba a Fleet API regisztráció során");
     } finally {
       setRegisterLoading(false);
     }
@@ -241,9 +233,7 @@ export function TeslaConnect() {
             <Car className="w-5 h-5" />
             {t.title}
           </CardTitle>
-          <Badge variant="default" className="bg-green-600">
-            {t.connected}
-          </Badge>
+          <Badge variant="default">{t.connected}</Badge>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -266,15 +256,13 @@ export function TeslaConnect() {
             
             {/* Partner Registration Button for 412 errors */}
             {error?.includes("412") && (
-              <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-2">
-                <p className="text-sm text-amber-600 dark:text-amber-400">
-                  {t.registerHint}
-                </p>
+              <div className="p-3 rounded-lg bg-muted/50 border border-border space-y-2">
+                <p className="text-sm text-muted-foreground">{t.registerHint}</p>
                 <Button
                   onClick={registerPartner}
                   disabled={registerLoading}
                   variant="outline"
-                  className="w-full border-amber-500/50"
+                  className="w-full"
                 >
                   {registerLoading ? (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />

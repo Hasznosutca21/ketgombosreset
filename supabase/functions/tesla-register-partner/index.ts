@@ -1,8 +1,10 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 // Tesla Fleet API regions
@@ -12,13 +14,16 @@ const FLEET_API_REGIONS = {
 };
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
     const TESLA_CLIENT_ID = Deno.env.get("TESLA_CLIENT_ID");
     const TESLA_CLIENT_SECRET = Deno.env.get("TESLA_CLIENT_SECRET");
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
 
     if (!TESLA_CLIENT_ID || !TESLA_CLIENT_SECRET) {
       return new Response(
@@ -27,10 +32,65 @@ serve(async (req) => {
       );
     }
 
-    const { region = "eu", domain = "ketgombosreset.lovable.app" } = await req.json().catch(() => ({}));
-    const fleetApiUrl = FLEET_API_REGIONS[region as keyof typeof FLEET_API_REGIONS] || FLEET_API_REGIONS.eu;
+    const authHeader = req.headers.get("authorization") ?? req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-    console.log(`Starting partner registration for domain: ${domain} in region: ${region}`);
+    const supabase = createClient(SUPABASE_URL!, SUPABASE_ANON_KEY!, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: userData, error: userError } = await supabase.auth.getUser(token);
+    if (userError || !userData?.user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const body = await req.json().catch(() => ({} as any));
+
+    const region: string = body.region ?? "eu";
+    const requestedDomain: string | undefined = body.domain;
+
+    const originOrReferer = req.headers.get("origin") ?? req.headers.get("referer") ?? "";
+    let originHostname: string | null = null;
+    try {
+      if (originOrReferer) originHostname = new URL(originOrReferer).hostname;
+    } catch {
+      originHostname = null;
+    }
+
+    const domain = (originHostname ?? requestedDomain ?? "").trim();
+    if (!domain) {
+      return new Response(JSON.stringify({ error: "Missing domain" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (requestedDomain && originHostname && requestedDomain !== originHostname) {
+      return new Response(
+        JSON.stringify({
+          error: "Domain mismatch",
+          requestedDomain,
+          originHostname,
+        }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const fleetApiUrl =
+      FLEET_API_REGIONS[region as keyof typeof FLEET_API_REGIONS] ?? FLEET_API_REGIONS.eu;
+
+    console.log(
+      `Partner registration request user=${userData.user.id} domain=${domain} region=${region} origin=${originHostname ?? "(none)"}`
+    );
 
     // Step 1: Generate Partner Token using client_credentials grant
     console.log("Step 1: Generating partner token...");
