@@ -121,6 +121,7 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
       title: "HEPA szűrő csere",
       description: "Prémium HEPA szűrő csere Model Y-hoz",
       duration: "30 perc",
+      price: "58 000 Ft",
     },
     ptcheater: {
       title: "PTC heater csere",
@@ -518,6 +519,7 @@ The price includes a personal consultation where we discuss the results and answ
       title: "HEPA Filter Replacement",
       description: "Premium HEPA filter replacement for Model Y",
       duration: "30 min",
+      price: "58 000 Ft",
     },
     ptcheater: {
       title: "PTC Heater Replacement",
