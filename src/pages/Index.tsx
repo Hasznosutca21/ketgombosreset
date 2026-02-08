@@ -180,8 +180,12 @@ const Index = () => {
                 </Button>
               </div>
             ) : (
-              <Button variant="tesla" size="sm" asChild>
-                <Link to="/auth">{t.login}</Link>
+              <Button
+                variant="tesla"
+                size="sm"
+                onClick={() => navigate("/auth")}
+              >
+                {t.login}
               </Button>
             )}
           </div>
@@ -227,9 +231,9 @@ const Index = () => {
                     <Button
                       variant="tesla"
                       className="justify-start"
-                      asChild
+                      onClick={() => navigate("/auth")}
                     >
-                      <Link to="/auth">{t.login}</Link>
+                      {t.login}
                     </Button>
                   )}
                 </nav>
