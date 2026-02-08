@@ -6,11 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { hu } from "date-fns/locale";
-import { translations } from "@/lib/translations";
+import { hu, enUS } from "date-fns/locale";
 
 interface Appointment {
   id: string;
@@ -38,9 +39,12 @@ const vehicleLabels: Record<string, string> = {
 const Admin = () => {
   const navigate = useNavigate();
   const { user, isAdmin, isLoading: authLoading, signOut } = useAuth();
+  const { t, language } = useLanguage();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const dateLocale = language === "hu" ? hu : enUS;
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -67,7 +71,7 @@ const Admin = () => {
       setAppointments(data || []);
     } catch (error) {
       console.error("Error fetching appointments:", error);
-      toast.error(translations.failedToLoad);
+      toast.error(t.failedToLoad);
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +79,7 @@ const Admin = () => {
 
   const handleDelete = async (id: string) => {
     if (!isAdmin) {
-      toast.error(translations.onlyAdminsCanDelete);
+      toast.error(t.onlyAdminsCanDelete);
       return;
     }
 
@@ -84,10 +88,10 @@ const Admin = () => {
       const { error } = await supabase.from("appointments").delete().eq("id", id);
       if (error) throw error;
       setAppointments((prev) => prev.filter((a) => a.id !== id));
-      toast.success(translations.appointmentDeleted);
+      toast.success(t.appointmentDeleted);
     } catch (error) {
       console.error("Error deleting appointment:", error);
-      toast.error(translations.failedToDelete);
+      toast.error(t.failedToDelete);
     } finally {
       setDeletingId(null);
     }
@@ -99,12 +103,12 @@ const Admin = () => {
   };
 
   const getServiceLabel = (serviceId: string) => {
-    const serviceData = translations.services[serviceId as keyof typeof translations.services];
+    const serviceData = t.services[serviceId as keyof typeof t.services];
     return serviceData?.title || serviceId;
   };
 
   const getLocationLabel = (locationId: string) => {
-    const locationData = translations.locationsList[locationId as keyof typeof translations.locationsList];
+    const locationData = t.locationsList[locationId as keyof typeof t.locationsList];
     return locationData?.name || locationId;
   };
 
@@ -122,20 +126,21 @@ const Admin = () => {
       <header className="flex items-center justify-between px-6 py-4 md:px-12 border-b border-border">
         <div className="flex items-center gap-2">
           <Zap className="h-8 w-8 text-primary" />
-          <span className="text-xl font-semibold tracking-tight">{translations.teslaService}</span>
+          <span className="text-xl font-semibold tracking-tight">{t.teslaService}</span>
           <Badge variant="secondary" className="ml-2">
             <Shield className="h-3 w-3 mr-1" />
-            {translations.admin}
+            {t.admin}
           </Badge>
         </div>
         <div className="flex items-center gap-2">
+          <LanguageSwitcher />
           <Button variant="ghost" onClick={() => navigate("/")}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            {translations.backToHome}
+            {t.backToHome}
           </Button>
           <Button variant="outline" onClick={handleSignOut}>
             <LogOut className="mr-2 h-4 w-4" />
-            {translations.signOut}
+            {t.signOut}
           </Button>
         </div>
       </header>
@@ -147,15 +152,13 @@ const Admin = () => {
             <div>
               <CardTitle className="text-2xl flex items-center gap-2">
                 <Calendar className="h-6 w-6 text-primary" />
-                {translations.appointmentsDashboard}
+                {t.appointmentsDashboard}
               </CardTitle>
-              <CardDescription>
-                {translations.viewManageAppointments}
-              </CardDescription>
+              <CardDescription>{t.viewManageAppointments}</CardDescription>
             </div>
             <Button variant="outline" onClick={fetchAppointments} disabled={isLoading}>
               <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-              {translations.refresh}
+              {t.refresh}
             </Button>
           </CardHeader>
           <CardContent>
@@ -166,20 +169,22 @@ const Admin = () => {
             ) : appointments.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>{translations.noAppointments}</p>
+                <p>{t.noAppointments}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{translations.customer}</TableHead>
-                      <TableHead>{translations.serviceLabel}</TableHead>
-                      <TableHead>{translations.vehicleLabel}</TableHead>
-                      <TableHead>{translations.dateLabel} & {translations.timeLabel}</TableHead>
-                      <TableHead>{translations.locationLabel}</TableHead>
-                      <TableHead>{translations.status}</TableHead>
-                      {isAdmin && <TableHead className="w-[80px]">{translations.actions}</TableHead>}
+                      <TableHead>{t.customer}</TableHead>
+                      <TableHead>{t.serviceLabel}</TableHead>
+                      <TableHead>{t.vehicleLabel}</TableHead>
+                      <TableHead>
+                        {t.dateLabel} & {t.timeLabel}
+                      </TableHead>
+                      <TableHead>{t.locationLabel}</TableHead>
+                      <TableHead>{t.status}</TableHead>
+                      {isAdmin && <TableHead className="w-[80px]">{t.actions}</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -189,15 +194,11 @@ const Admin = () => {
                           <div>
                             <p className="font-medium">{appointment.name}</p>
                             <p className="text-sm text-muted-foreground">{appointment.email}</p>
-                            {appointment.phone && (
-                              <p className="text-sm text-muted-foreground">{appointment.phone}</p>
-                            )}
+                            {appointment.phone && <p className="text-sm text-muted-foreground">{appointment.phone}</p>}
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline">
-                            {getServiceLabel(appointment.service)}
-                          </Badge>
+                          <Badge variant="outline">{getServiceLabel(appointment.service)}</Badge>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1">
@@ -209,7 +210,9 @@ const Admin = () => {
                           <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-1">
                               <Calendar className="h-4 w-4 text-muted-foreground" />
-                              {format(new Date(appointment.appointment_date), "yyyy. MMM d.", { locale: hu })}
+                              {format(new Date(appointment.appointment_date), language === "hu" ? "yyyy. MMM d." : "MMM d, yyyy", {
+                                locale: dateLocale,
+                              })}
                             </div>
                             <div className="flex items-center gap-1">
                               <Clock className="h-4 w-4 text-muted-foreground" />
@@ -224,10 +227,8 @@ const Admin = () => {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge
-                            variant={appointment.status === "confirmed" ? "default" : "secondary"}
-                          >
-                            {appointment.status === "confirmed" ? translations.confirmed : appointment.status}
+                          <Badge variant={appointment.status === "confirmed" ? "default" : "secondary"}>
+                            {appointment.status === "confirmed" ? t.confirmed : appointment.status}
                           </Badge>
                         </TableCell>
                         {isAdmin && (

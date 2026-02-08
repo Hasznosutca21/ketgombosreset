@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, MapPin, Clock } from "lucide-react";
+import { ArrowLeft, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,9 +7,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { hu } from "date-fns/locale";
+import { hu, enUS } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { translations } from "@/lib/translations";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface AppointmentFormProps {
   onSubmit: (data: {
@@ -24,18 +24,12 @@ interface AppointmentFormProps {
   isSubmitting?: boolean;
 }
 
-const locations = [
-  { id: "sf" },
-  { id: "la" },
-  { id: "ny" },
-];
+const locations = [{ id: "sf" }, { id: "la" }, { id: "ny" }];
 
-const timeSlots = [
-  "9:00", "10:00", "11:00", "12:00",
-  "13:00", "14:00", "15:00", "16:00",
-];
+const timeSlots = ["9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
 
 const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: AppointmentFormProps) => {
+  const { t, language } = useLanguage();
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
@@ -43,6 +37,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
+  const dateLocale = language === "hu" ? hu : enUS;
   const isValid = date && time && location && name && email && phone;
 
   const handleSubmit = () => {
@@ -55,30 +50,25 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
     <div className="animate-fade-in">
       <Button variant="ghost" onClick={onBack} className="mb-6 -ml-2">
         <ArrowLeft className="w-4 h-4 mr-2" />
-        {translations.back}
+        {t.back}
       </Button>
 
-      <h2 className="text-2xl md:text-3xl font-bold mb-2">{translations.scheduleAppointment}</h2>
-      <p className="text-muted-foreground mb-8">
-        {translations.chooseDateTimeLocation}
-      </p>
+      <h2 className="text-2xl md:text-3xl font-bold mb-2">{t.scheduleAppointment}</h2>
+      <p className="text-muted-foreground mb-8">{t.chooseDateTimeLocation}</p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Column - Date & Time */}
         <div className="space-y-6">
           <div>
-            <Label className="text-base font-semibold mb-3 block">{translations.selectDate}</Label>
+            <Label className="text-base font-semibold mb-3 block">{t.selectDate}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="glass"
-                  className={cn(
-                    "w-full justify-start text-left font-normal h-12",
-                    !date && "text-muted-foreground"
-                  )}
+                  className={cn("w-full justify-start text-left font-normal h-12", !date && "text-muted-foreground")}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP", { locale: hu }) : translations.pickDate}
+                  {date ? format(date, "PPP", { locale: dateLocale }) : t.pickDate}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0 bg-card border-border" align="start">
@@ -95,7 +85,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
           </div>
 
           <div>
-            <Label className="text-base font-semibold mb-3 block">{translations.selectTime}</Label>
+            <Label className="text-base font-semibold mb-3 block">{t.selectTime}</Label>
             <div className="grid grid-cols-4 gap-2">
               {timeSlots.map((slot) => (
                 <button
@@ -113,10 +103,10 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
           </div>
 
           <div>
-            <Label className="text-base font-semibold mb-3 block">{translations.selectLocation}</Label>
+            <Label className="text-base font-semibold mb-3 block">{t.selectLocation}</Label>
             <div className="space-y-2">
               {locations.map((loc) => {
-                const locationData = translations.locationsList[loc.id as keyof typeof translations.locationsList];
+                const locationData = t.locationsList[loc.id as keyof typeof t.locationsList];
                 return (
                   <button
                     key={loc.id}
@@ -143,52 +133,46 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
         {/* Right Column - Contact Info */}
         <div className="space-y-6">
           <div className="glass-card p-6 space-y-4">
-            <h3 className="text-lg font-semibold mb-4">{translations.contactInformation}</h3>
-            
+            <h3 className="text-lg font-semibold mb-4">{t.contactInformation}</h3>
+
             <div className="space-y-2">
-              <Label htmlFor="name">{translations.fullName}</Label>
+              <Label htmlFor="name">{t.fullName}</Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Kovács János"
+                placeholder={language === "hu" ? "Kovács János" : "John Doe"}
                 className="bg-muted/50 border-border"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">{translations.email}</Label>
+              <Label htmlFor="email">{t.email}</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="kovacs.janos@example.com"
+                placeholder={language === "hu" ? "kovacs.janos@example.com" : "john@example.com"}
                 className="bg-muted/50 border-border"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">{translations.phone}</Label>
+              <Label htmlFor="phone">{t.phone}</Label>
               <Input
                 id="phone"
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="+36 30 123 4567"
+                placeholder={language === "hu" ? "+36 30 123 4567" : "(555) 123-4567"}
                 className="bg-muted/50 border-border"
               />
             </div>
           </div>
 
-          <Button
-            variant="tesla"
-            size="xl"
-            className="w-full"
-            disabled={!isValid || isSubmitting}
-            onClick={handleSubmit}
-          >
-            {isSubmitting ? translations.booking : translations.confirmAppointment}
+          <Button variant="tesla" size="xl" className="w-full" disabled={!isValid || isSubmitting} onClick={handleSubmit}>
+            {isSubmitting ? t.booking : t.confirmAppointment}
           </Button>
         </div>
       </div>

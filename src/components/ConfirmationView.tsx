@@ -1,8 +1,8 @@
 import { CheckCircle, Calendar, Car, MapPin, Clock, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { hu } from "date-fns/locale";
-import { translations } from "@/lib/translations";
+import { hu, enUS } from "date-fns/locale";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface ConfirmationViewProps {
   service: string;
@@ -28,8 +28,10 @@ const vehicleNames: Record<string, string> = {
 };
 
 const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: ConfirmationViewProps) => {
-  const location = translations.locationsList[appointment.location as keyof typeof translations.locationsList];
-  const serviceData = translations.services[service as keyof typeof translations.services];
+  const { t, language } = useLanguage();
+  const dateLocale = language === "hu" ? hu : enUS;
+  const location = t.locationsList[appointment.location as keyof typeof t.locationsList];
+  const serviceData = t.services[service as keyof typeof t.services];
 
   return (
     <div className="animate-fade-in text-center">
@@ -37,13 +39,13 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
         <CheckCircle className="w-10 h-10 text-primary" />
       </div>
 
-      <h2 className="text-2xl md:text-3xl font-bold mb-2">{translations.appointmentConfirmed}</h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-2">{t.appointmentConfirmed}</h2>
       <p className="text-muted-foreground mb-8">
-        {translations.confirmationEmailSent} {appointment.email}
+        {t.confirmationEmailSent} {appointment.email}
       </p>
 
       <div className="glass-card p-6 md:p-8 max-w-2xl mx-auto text-left mb-8">
-        <h3 className="text-lg font-semibold mb-6 text-center">{translations.appointmentDetails}</h3>
+        <h3 className="text-lg font-semibold mb-6 text-center">{t.appointmentDetails}</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex items-start gap-4">
@@ -51,7 +53,7 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
               <Wrench className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">{translations.serviceLabel}</div>
+              <div className="text-sm text-muted-foreground">{t.serviceLabel}</div>
               <div className="font-medium">{serviceData?.title}</div>
             </div>
           </div>
@@ -61,7 +63,7 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
               <Car className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">{translations.vehicleLabel}</div>
+              <div className="text-sm text-muted-foreground">{t.vehicleLabel}</div>
               <div className="font-medium">Tesla {vehicleNames[vehicle]}</div>
             </div>
           </div>
@@ -71,9 +73,13 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
               <Calendar className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">{translations.dateLabel}</div>
+              <div className="text-sm text-muted-foreground">{t.dateLabel}</div>
               <div className="font-medium">
-                {appointment.date ? format(appointment.date, "yyyy. MMMM d., EEEE", { locale: hu }) : "N/A"}
+                {appointment.date
+                  ? format(appointment.date, language === "hu" ? "yyyy. MMMM d., EEEE" : "EEEE, MMMM d, yyyy", {
+                      locale: dateLocale,
+                    })
+                  : "N/A"}
               </div>
             </div>
           </div>
@@ -83,7 +89,7 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
               <Clock className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">{translations.timeLabel}</div>
+              <div className="text-sm text-muted-foreground">{t.timeLabel}</div>
               <div className="font-medium">{appointment.time}</div>
             </div>
           </div>
@@ -93,7 +99,7 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
               <MapPin className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">{translations.locationLabel}</div>
+              <div className="text-sm text-muted-foreground">{t.locationLabel}</div>
               <div className="font-medium">{location?.name}</div>
               <div className="text-sm text-muted-foreground">{location?.address}</div>
             </div>
@@ -103,10 +109,10 @@ const ConfirmationView = ({ service, vehicle, appointment, onStartOver }: Confir
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Button variant="teslaOutline" size="lg" onClick={onStartOver}>
-          {translations.scheduleAnother}
+          {t.scheduleAnother}
         </Button>
         <Button variant="glass" size="lg">
-          {translations.addToCalendar}
+          {t.addToCalendar}
         </Button>
       </div>
     </div>
