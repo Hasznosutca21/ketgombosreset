@@ -149,8 +149,8 @@ const Index = () => {
             <Zap className="h-8 w-8 text-primary" />
             <span className="text-xl font-semibold tracking-tight">Tesla Service</span>
           </div>
-          <Button variant="glass" size="sm">
-            Sign In
+          <Button variant="glass" size="sm" onClick={() => window.location.href = '/auth'}>
+            Admin Login
           </Button>
         </header>
 
