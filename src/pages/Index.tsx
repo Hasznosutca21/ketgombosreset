@@ -257,9 +257,12 @@ const Index = () => {
 
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full pt-16 px-6 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-4 animate-fade-in pointer-events-none">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-2 animate-fade-in pointer-events-none">
             {t.scheduleYourService}
           </h1>
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mb-4 animate-slide-up pointer-events-none">
+            {t.heroSubtitle}
+          </p>
           <Dialog>
             <DialogTrigger asChild>
               <button className="flex items-center gap-2 text-xl md:text-2xl font-semibold text-primary animate-slide-up hover:underline underline-offset-4 transition-all cursor-pointer pointer-events-auto">
