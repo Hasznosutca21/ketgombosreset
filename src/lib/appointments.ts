@@ -88,8 +88,19 @@ export const getAppointmentsByEmail = async (email: string): Promise<SavedAppoin
   }
 };
 
-export const cancelAppointment = async (id: string): Promise<boolean> => {
+export const cancelAppointment = async (
+  id: string,
+  sendEmail: boolean = true,
+  language: 'hu' | 'en' = 'hu'
+): Promise<boolean> => {
   try {
+    // First get the appointment details for the email
+    const appointment = await getAppointmentById(id);
+    if (!appointment) {
+      console.error('Appointment not found');
+      return false;
+    }
+
     const { error } = await supabase
       .from('appointments')
       .update({ status: 'cancelled' })
@@ -98,6 +109,34 @@ export const cancelAppointment = async (id: string): Promise<boolean> => {
     if (error) {
       console.error('Error cancelling appointment:', error);
       return false;
+    }
+
+    // Send cancellation email
+    if (sendEmail) {
+      try {
+        await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-appointment-update-email`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            type: 'cancellation',
+            appointmentId: id,
+            customerName: appointment.name,
+            customerEmail: appointment.email,
+            service: appointment.service,
+            vehicle: appointment.vehicle,
+            originalDate: appointment.date.toISOString(),
+            originalTime: appointment.time,
+            location: appointment.location,
+            language,
+          }),
+        });
+      } catch (emailError) {
+        console.error('Error sending cancellation email:', emailError);
+        // Don't fail the cancellation if email fails
+      }
     }
 
     return true;
@@ -110,9 +149,18 @@ export const cancelAppointment = async (id: string): Promise<boolean> => {
 export const rescheduleAppointment = async (
   id: string,
   newDate: Date,
-  newTime: string
+  newTime: string,
+  sendEmail: boolean = true,
+  language: 'hu' | 'en' = 'hu'
 ): Promise<SavedAppointment | null> => {
   try {
+    // First get the original appointment details
+    const originalAppointment = await getAppointmentById(id);
+    if (!originalAppointment) {
+      console.error('Appointment not found');
+      return null;
+    }
+
     const { data: appointment, error } = await supabase
       .from('appointments')
       .update({
@@ -127,6 +175,36 @@ export const rescheduleAppointment = async (
     if (error) {
       console.error('Error rescheduling appointment:', error);
       return null;
+    }
+
+    // Send reschedule email
+    if (sendEmail) {
+      try {
+        await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-appointment-update-email`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            type: 'reschedule',
+            appointmentId: id,
+            customerName: originalAppointment.name,
+            customerEmail: originalAppointment.email,
+            service: originalAppointment.service,
+            vehicle: originalAppointment.vehicle,
+            originalDate: originalAppointment.date.toISOString(),
+            originalTime: originalAppointment.time,
+            newDate: newDate.toISOString(),
+            newTime: newTime,
+            location: originalAppointment.location,
+            language,
+          }),
+        });
+      } catch (emailError) {
+        console.error('Error sending reschedule email:', emailError);
+        // Don't fail the reschedule if email fails
+      }
     }
 
     return mapAppointment(appointment);

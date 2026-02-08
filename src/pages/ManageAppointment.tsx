@@ -91,7 +91,7 @@ const ManageAppointment = () => {
   const handleConfirmCancel = async () => {
     if (!appointmentToCancel) return;
     setIsCancelling(true);
-    const success = await cancelAppointment(appointmentToCancel.id);
+    const success = await cancelAppointment(appointmentToCancel.id, true, language);
     if (success) {
       toast.success(t.appointmentCancelled);
       setAppointments((prev) => prev.filter((a) => a.id !== appointmentToCancel.id));
@@ -113,7 +113,7 @@ const ManageAppointment = () => {
   const handleConfirmReschedule = async () => {
     if (!appointmentToReschedule || !newDate || !newTime) return;
     setIsRescheduling(true);
-    const updated = await rescheduleAppointment(appointmentToReschedule.id, newDate, newTime);
+    const updated = await rescheduleAppointment(appointmentToReschedule.id, newDate, newTime, true, language);
     if (updated) {
       toast.success(t.appointmentRescheduled);
       setAppointments((prev) =>
