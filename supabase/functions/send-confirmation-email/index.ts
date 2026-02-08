@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "npm:resend@2.0.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -8,10 +10,33 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+// Input validation schema
+const AppointmentEmailSchema = z.object({
+  appointmentId: z.string().uuid('Invalid appointment ID'),
+  customerName: z.string().min(1).max(100),
+  customerEmail: z.string().email('Invalid email address').max(255),
+  service: z.string().max(50),
+  vehicle: z.string().max(50),
+  appointmentDate: z.string(),
+  appointmentTime: z.string().max(20),
+  location: z.string().max(100),
+  language: z.enum(['hu', 'en']).optional(),
+  manageUrl: z.string().url().optional(),
+});
+
+// Sanitize text for email content
+function sanitizeForEmail(text: string): string {
+  return text
+    .replace(/[<>]/g, '') // Remove angle brackets
+    .replace(/[\r\n]/g, ' ') // Replace newlines with spaces
+    .trim()
+    .substring(0, 100); // Limit length
+}
+
 // Translations
 const translations = {
   hu: {
-    teslaService: "Tesla Szerviz",
+    teslaService: "TESLAND",
     appointmentConfirmed: "Időpont megerősítve!",
     greeting: (name: string) => `Kedves ${name}, szerviz időpontja sikeresen lefoglalva.`,
     service: "Szolgáltatás",
@@ -35,13 +60,11 @@ const translations = {
       warranty: "Garanciális szerviz",
     },
     locationsList: {
-      sf: { name: "San Francisco Szervizközpont", address: "123 Tesla Blvd, SF, CA" },
-      la: { name: "Los Angeles Szervizközpont", address: "456 Electric Ave, LA, CA" },
-      ny: { name: "New York Szervizközpont", address: "789 Innovation St, NY, NY" },
+      nagytarcsa: { name: "TESLAND Nagytarcsa", address: "Ganz Ábrahám utca 3, Nagytarcsa, Magyarország" },
     },
   },
   en: {
-    teslaService: "Tesla Service",
+    teslaService: "TESLAND",
     appointmentConfirmed: "Appointment Confirmed!",
     greeting: (name: string) => `Hi ${name}, your service appointment has been scheduled.`,
     service: "Service",
@@ -65,34 +88,24 @@ const translations = {
       warranty: "Warranty Service",
     },
     locationsList: {
-      sf: { name: "San Francisco Service Center", address: "123 Tesla Blvd, SF, CA" },
-      la: { name: "Los Angeles Service Center", address: "456 Electric Ave, LA, CA" },
-      ny: { name: "New York Service Center", address: "789 Innovation St, NY, NY" },
+      nagytarcsa: { name: "TESLAND Nagytarcsa", address: "Ganz Ábrahám utca 3, Nagytarcsa, Hungary" },
     },
   },
 };
 
 const vehicleNames: Record<string, string> = {
   "model-s": "Model S",
+  "model-s-plaid": "Model S Plaid",
   "model-3": "Model 3",
+  "model-3-performance": "Model 3 Performance",
   "model-x": "Model X",
+  "model-x-plaid": "Model X Plaid",
   "model-y": "Model Y",
+  "model-y-performance": "Model Y Performance",
   cybertruck: "Cybertruck",
+  "cybertruck-cyberbeast": "Cybertruck Cyberbeast",
   roadster: "Roadster",
 };
-
-interface AppointmentEmailRequest {
-  appointmentId: string;
-  customerName: string;
-  customerEmail: string;
-  service: string;
-  vehicle: string;
-  appointmentDate: string;
-  appointmentTime: string;
-  location: string;
-  language?: "hu" | "en";
-  manageUrl?: string;
-}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -100,15 +113,57 @@ serve(async (req) => {
   }
 
   try {
-    const data: AppointmentEmailRequest = await req.json();
-    console.log('Sending confirmation email for appointment:', data.appointmentId, 'language:', data.language);
+    // Parse and validate input
+    const rawData = await req.json();
+    const validationResult = AppointmentEmailSchema.safeParse(rawData);
+    
+    if (!validationResult.success) {
+      console.error('Validation error:', validationResult.error.issues);
+      return new Response(
+        JSON.stringify({ error: 'Invalid request data' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const data = validationResult.data;
+    console.log('Sending confirmation email for appointment:', data.appointmentId);
+
+    // Verify the appointment exists in the database
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    const { data: appointment, error: appointmentError } = await supabase
+      .from('appointments')
+      .select('id, email')
+      .eq('id', data.appointmentId)
+      .maybeSingle();
+
+    if (appointmentError || !appointment) {
+      console.error('Appointment not found:', data.appointmentId);
+      return new Response(
+        JSON.stringify({ error: 'Appointment not found' }),
+        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Verify the email matches the appointment
+    if (appointment.email !== data.customerEmail) {
+      console.error('Email mismatch for appointment:', data.appointmentId);
+      return new Response(
+        JSON.stringify({ error: 'Invalid request' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     const lang = data.language === "en" ? "en" : "hu";
     const t = translations[lang];
 
-    const serviceName = t.services[data.service as keyof typeof t.services] || data.service;
-    const vehicleName = vehicleNames[data.vehicle] || data.vehicle;
-    const locationData = t.locationsList[data.location as keyof typeof t.locationsList] || { name: data.location, address: '' };
+    // Sanitize user-provided content
+    const safeName = sanitizeForEmail(data.customerName);
+    const serviceName = t.services[data.service as keyof typeof t.services] || sanitizeForEmail(data.service);
+    const vehicleName = vehicleNames[data.vehicle] || sanitizeForEmail(data.vehicle);
+    const locationData = t.locationsList[data.location as keyof typeof t.locationsList] || { name: sanitizeForEmail(data.location), address: '' };
 
     const dateObj = new Date(data.appointmentDate);
     const formattedDate = dateObj.toLocaleDateString(lang === "hu" ? "hu-HU" : "en-US", {
@@ -149,7 +204,7 @@ serve(async (req) => {
             <!-- Main Content -->
             <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 32px; margin-bottom: 32px;">
               <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 700; text-align: center;">${t.appointmentConfirmed}</h1>
-              <p style="margin: 0 0 32px 0; color: #a1a1aa; text-align: center;">${t.greeting(data.customerName)}</p>
+              <p style="margin: 0 0 32px 0; color: #a1a1aa; text-align: center;">${t.greeting(safeName)}</p>
 
               <!-- Appointment Details -->
               <div style="display: grid; gap: 24px;">
@@ -242,7 +297,7 @@ serve(async (req) => {
     `;
 
     const { data: emailResult, error } = await resend.emails.send({
-      from: 'Tesla Service <onboarding@resend.dev>',
+      from: 'TESLAND <onboarding@resend.dev>',
       to: [data.customerEmail],
       subject: t.subject(serviceName, formattedDate),
       html: emailHtml,
@@ -250,26 +305,23 @@ serve(async (req) => {
 
     if (error) {
       console.error('Error sending email:', error);
-      throw error;
+      return new Response(
+        JSON.stringify({ error: 'Failed to send confirmation email. Please try again later.' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    console.log('Email sent successfully:', emailResult);
+    console.log('Email sent successfully:', emailResult?.id);
 
     return new Response(
-      JSON.stringify({ success: true, emailId: emailResult?.id }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
+      JSON.stringify({ success: true }),
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('Error in send-confirmation-email:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
+      JSON.stringify({ error: 'Failed to send confirmation email. Please try again later.' }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });
