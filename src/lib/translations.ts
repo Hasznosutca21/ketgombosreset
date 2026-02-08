@@ -106,9 +106,10 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
       duration: "1-2 óra",
     },
     heatpump: {
-      title: "Hőszivattyú szerviz",
-      description: "Hőszivattyú rendszer ellenőrzés és karbantartás",
+      title: "Supermanifold hiba",
+      description: "Hőszivattyú rendszer diagnosztika és javítás",
       duration: "1-2 óra",
+      price: "Előzetes felmérés alapján",
     },
     heating: {
       title: "Fűtésrendszer",
@@ -496,9 +497,10 @@ The price includes a personal consultation where we discuss the results and answ
       duration: "1-2 hours",
     },
     heatpump: {
-      title: "Heat Pump Service",
-      description: "Heat pump system check and maintenance",
+      title: "Supermanifold Issue",
+      description: "Heat pump system diagnostics and repair",
       duration: "1-2 hours",
+      price: "Based on preliminary assessment",
     },
     heating: {
       title: "Heating System",
