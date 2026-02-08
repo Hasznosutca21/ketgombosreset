@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { CheckCircle, Calendar, Car, MapPin, Clock, Wrench, CalendarClock, CreditCard, Loader2 } from "lucide-react";
+import { Clock as ClockIcon, Calendar, Car, MapPin, Clock, Wrench, CalendarClock, CreditCard, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { hu, enUS } from "date-fns/locale";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -108,13 +109,17 @@ const ConfirmationView = ({ service, vehicle, appointment, appointmentId, onStar
 
   return (
     <div className="animate-fade-in text-center">
-      <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-6">
-        <CheckCircle className="w-10 h-10 text-primary" />
+      <div className="w-20 h-20 rounded-full bg-yellow-500/20 flex items-center justify-center mx-auto mb-6">
+        <ClockIcon className="w-10 h-10 text-yellow-500" />
       </div>
 
+      <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-600 border-yellow-500/30 mb-4">
+        {t.pending}
+      </Badge>
+      
       <h2 className="text-2xl md:text-3xl font-bold mb-2">{t.appointmentConfirmed}</h2>
       <p className="text-muted-foreground mb-8">
-        {t.confirmationEmailSent} {appointment.email}
+        {t.appointmentPendingMessage}
       </p>
 
       <div className="glass-card p-6 md:p-8 max-w-2xl mx-auto text-left mb-8">

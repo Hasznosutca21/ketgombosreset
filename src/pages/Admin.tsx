@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Zap, ArrowLeft, Calendar, Car, MapPin, Clock, Trash2, Loader2, RefreshCw, LogOut, Shield, X, CalendarClock, Bell, BellOff } from "lucide-react";
+import { Zap, ArrowLeft, Calendar, Car, MapPin, Clock, Trash2, Loader2, RefreshCw, LogOut, Shield, X, CalendarClock, Bell, BellOff, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -61,6 +61,9 @@ const Admin = () => {
   // Reschedule dialog state
   const [rescheduleDialogOpen, setRescheduleDialogOpen] = useState(false);
   const [appointmentToReschedule, setAppointmentToReschedule] = useState<Appointment | null>(null);
+
+  // Approve state
+  const [approvingId, setApprovingId] = useState<string | null>(null);
 
   const dateLocale = language === "hu" ? hu : enUS;
 
@@ -200,6 +203,28 @@ const Admin = () => {
     setAppointmentToReschedule(null);
   };
 
+  const handleApproveAppointment = async (id: string) => {
+    setApprovingId(id);
+    try {
+      const { error } = await supabase
+        .from("appointments")
+        .update({ status: "confirmed" })
+        .eq("id", id);
+      
+      if (error) throw error;
+      
+      setAppointments((prev) =>
+        prev.map((a) => (a.id === id ? { ...a, status: "confirmed" } : a))
+      );
+      toast.success(t.appointmentApprovedSuccess);
+    } catch (error) {
+      console.error("Error approving appointment:", error);
+      toast.error(t.failedToApprove);
+    } finally {
+      setApprovingId(null);
+    }
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
@@ -219,6 +244,8 @@ const Admin = () => {
     switch (status) {
       case "confirmed":
         return <Badge variant="default">{t.confirmed}</Badge>;
+      case "pending":
+        return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-600 border-yellow-500/30">{t.pending}</Badge>;
       case "rescheduled":
         return <Badge variant="secondary">{t.rescheduled}</Badge>;
       case "cancelled":
@@ -373,6 +400,22 @@ const Admin = () => {
                         {isAdmin && (
                           <TableCell>
                             <div className="flex gap-1">
+                              {appointment.status === "pending" && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => handleApproveAppointment(appointment.id)}
+                                  disabled={approvingId === appointment.id}
+                                  title={t.approveAppointment}
+                                  className="text-green-600 hover:text-green-700 hover:bg-green-500/10"
+                                >
+                                  {approvingId === appointment.id ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <Check className="h-4 w-4" />
+                                  )}
+                                </Button>
+                              )}
                               {appointment.status !== "cancelled" && (
                                 <>
                                   <Button
