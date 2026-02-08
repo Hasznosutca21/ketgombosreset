@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { vehicleSilhouettes } from "./TeslaSilhouettes";
 
 interface VehicleSelectorProps {
   onSelect: (vehicle: string) => void;
@@ -142,7 +143,14 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
                 isSelected && "border-primary shadow-[0_0_30px_-10px_hsl(352_85%_49%/0.4)]"
               )}
             >
-              <Car className="w-8 h-8 mx-auto mb-3 text-primary" />
+              {vehicleSilhouettes[vehicle.id] ? (
+                (() => {
+                  const SilhouetteComponent = vehicleSilhouettes[vehicle.id];
+                  return <SilhouetteComponent className="w-24 h-12 mx-auto mb-3 text-primary" />;
+                })()
+              ) : (
+                <Car className="w-8 h-8 mx-auto mb-3 text-primary" />
+              )}
               <h3 className="text-lg font-semibold">{vehicle.name}</h3>
             </button>
           );
