@@ -165,6 +165,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      count_recent_appointments_by_email: {
+        Args: { check_email: string; hours_ago?: number }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
