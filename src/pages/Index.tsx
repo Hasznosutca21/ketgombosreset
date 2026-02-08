@@ -146,7 +146,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background pointer-events-none" />
 
         {/* Header */}
-        <header className="relative z-20 flex items-center justify-between px-6 py-4 md:px-12">
+        <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 bg-background/30 backdrop-blur-md border-b border-border/40">
           <div className="flex items-center gap-2">
             <img src={teslandLogo} alt="TESLAND" className="h-10 w-auto" />
           </div>
@@ -257,7 +257,7 @@ const Index = () => {
         </header>
 
         {/* Hero Content */}
-        <div className="relative z-10 pointer-events-none flex flex-col items-center justify-center h-full -mt-16 px-6 text-center">
+        <div className="relative z-10 pointer-events-none flex flex-col items-center justify-center h-full pt-16 px-6 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 animate-fade-in">
             {t.scheduleYourService}
           </h1>
