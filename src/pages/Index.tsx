@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Calendar, Car, Wrench, Zap, ChevronRight, Menu, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -174,8 +174,8 @@ const Index = () => {
                 </Button>
               </div>
             ) : (
-              <Button variant="tesla" size="sm" onClick={() => navigate("/auth")}>
-                {t.login}
+              <Button variant="tesla" size="sm" asChild>
+                <Link to="/auth">{t.login}</Link>
               </Button>
             )}
           </div>
@@ -219,9 +219,9 @@ const Index = () => {
                     <Button
                       variant="tesla"
                       className="justify-start"
-                      onClick={() => navigate("/auth")}
+                      asChild
                     >
-                      {t.login}
+                      <Link to="/auth">{t.login}</Link>
                     </Button>
                   )}
                 </nav>
