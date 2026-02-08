@@ -6,6 +6,12 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
+// Import vehicle images
+import modelSImage from "@/assets/vehicles/model-s.png";
+import model3Image from "@/assets/vehicles/model-3.png";
+import modelXImage from "@/assets/vehicles/model-x.png";
+import modelYImage from "@/assets/vehicles/model-y.png";
+
 interface VehicleSelectorProps {
   onSelect: (vehicle: string) => void;
   selected: string | null;
@@ -13,10 +19,10 @@ interface VehicleSelectorProps {
 }
 
 const vehicles = [
-  { id: "model-s", name: "Model S" },
-  { id: "model-3", name: "Model 3" },
-  { id: "model-x", name: "Model X" },
-  { id: "model-y", name: "Model Y" },
+  { id: "model-s", name: "Model S", image: modelSImage },
+  { id: "model-3", name: "Model 3", image: model3Image },
+  { id: "model-x", name: "Model X", image: modelXImage },
+  { id: "model-y", name: "Model Y", image: modelYImage },
 ];
 
 // Find matching vehicle ID from model name (flexible matching)
@@ -106,12 +112,12 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
         </Button>
       )}
 
-      <h2 className="text-2xl md:text-4xl font-extralight tracking-tight mb-2">{t.selectVehicle}</h2>
-      <p className="text-muted-foreground font-light mb-8">{t.chooseVehicleModel}</p>
+      <h2 className="text-2xl md:text-4xl font-extralight tracking-tight mb-2 text-center">{t.selectVehicle}</h2>
+      <p className="text-muted-foreground font-light mb-10 text-center">{t.chooseVehicleModel}</p>
 
       {/* Profile vehicle banner */}
       {profileVehicle && (
-        <div className="tesla-card p-4 mb-8 flex items-center gap-3 border-foreground/20">
+        <div className="tesla-card p-4 mb-8 flex items-center gap-3 border-foreground/20 max-w-md mx-auto">
           <Car className="w-5 h-5 text-foreground/60 flex-shrink-0" />
           <div className="flex-1">
             <div className="font-medium">
@@ -129,7 +135,8 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4 md:gap-6">
+      {/* Tesla-style vehicle grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {vehicles.map((vehicle) => {
           const isSelected = selected === vehicle.id;
 
@@ -138,24 +145,37 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
               key={vehicle.id}
               onClick={() => onSelect(vehicle.id)}
               className={cn(
-                "tesla-card p-8 md:p-10 text-center transition-all duration-200",
-                isSelected 
-                  ? "border-foreground bg-foreground text-background" 
-                  : "hover:border-foreground/30"
+                "group relative flex flex-col items-center p-4 md:p-6 rounded-lg transition-all duration-300",
+                "hover:bg-muted/50",
+                isSelected && "bg-muted"
               )}
             >
-              <div className="flex flex-col items-center justify-center">
-                <span className={cn(
-                  "text-xs uppercase tracking-[0.25em] mb-2",
-                  isSelected ? "text-background/70" : "text-muted-foreground"
-                )}>
-                  Tesla
-                </span>
-                <span className="text-2xl md:text-3xl font-extralight tracking-wide">
-                  <span className="text-base md:text-lg font-light mr-1">Model</span>
-                  {vehicle.name.replace("Model ", "")}
-                </span>
+              {/* Vehicle Image */}
+              <div className="relative w-full aspect-[16/9] mb-4">
+                <img 
+                  src={vehicle.image} 
+                  alt={vehicle.name}
+                  className={cn(
+                    "w-full h-full object-contain transition-transform duration-300",
+                    "group-hover:scale-105",
+                    isSelected && "scale-105"
+                  )}
+                />
               </div>
+              
+              {/* Vehicle Name */}
+              <h3 className={cn(
+                "text-lg md:text-xl font-medium transition-colors",
+                isSelected ? "text-foreground" : "text-foreground/80"
+              )}>
+                {vehicle.name}
+              </h3>
+              
+              {/* Selection indicator */}
+              <div className={cn(
+                "mt-3 w-8 h-0.5 rounded-full transition-all duration-300",
+                isSelected ? "bg-foreground" : "bg-transparent group-hover:bg-foreground/30"
+              )} />
             </button>
           );
         })}
