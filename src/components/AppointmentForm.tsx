@@ -231,7 +231,15 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
                   mode="single"
                   selected={date}
                   onSelect={setDate}
-                  disabled={(date) => date < new Date()}
+                  disabled={(date) => {
+                    // Disable past dates
+                    if (date < new Date()) return true;
+                    // Disable Saturdays (day 6) - closed on Saturdays
+                    if (date.getDay() === 6) return true;
+                    // Disable Sundays (day 0)
+                    if (date.getDay() === 0) return true;
+                    return false;
+                  }}
                   initialFocus
                   className="pointer-events-auto"
                 />
