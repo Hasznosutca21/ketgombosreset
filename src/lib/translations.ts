@@ -115,6 +115,9 @@ export const hu = {
   checkEmailVerify: "Ellenőrizze e-mailjét a fiók megerősítéséhez!",
   welcomeBack: "Üdvözöljük újra!",
   backToHome: "Vissza a főoldalra",
+  continueWithGoogle: "Folytatás Google fiókkal",
+  continueWithApple: "Folytatás Apple fiókkal",
+  orContinueWith: "vagy folytatás e-maillel",
 
   // Admin Dashboard
   admin: "Admin",
@@ -275,6 +278,9 @@ export const en = {
   checkEmailVerify: "Check your email to verify your account!",
   welcomeBack: "Welcome back!",
   backToHome: "Back to Home",
+  continueWithGoogle: "Continue with Google",
+  continueWithApple: "Continue with Apple",
+  orContinueWith: "or continue with email",
 
   // Admin Dashboard
   admin: "Admin",
