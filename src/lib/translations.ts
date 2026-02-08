@@ -109,7 +109,7 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
       title: "Supermanifold hiba",
       description: "Hőszivattyú rendszer diagnosztika és javítás",
       duration: "1-2 óra",
-      price: "Előzetes felmérés alapján",
+      price: "Javítási költség előzetes felmérés alapján",
     },
     heating: {
       title: "Fűtésrendszer",
@@ -500,7 +500,7 @@ The price includes a personal consultation where we discuss the results and answ
       title: "Supermanifold Issue",
       description: "Heat pump system diagnostics and repair",
       duration: "1-2 hours",
-      price: "Based on preliminary assessment",
+      price: "Repair cost based on preliminary assessment",
     },
     heating: {
       title: "Heating System",
