@@ -265,11 +265,10 @@ const Index = () => {
 
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-start justify-center h-full pt-16 px-6 max-w-4xl mx-auto w-full">
-          <div className="flex items-center gap-3 mb-2 animate-fade-in">
-            <h1 className="text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.15em] uppercase pointer-events-none">
-              {t.scheduleYourService}
-            </h1>
-            <Dialog>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.15em] uppercase mb-2 animate-fade-in pointer-events-none">
+            {t.scheduleYourService}
+          </h1>
+          <Dialog>
               <DialogTrigger asChild>
                 <button className="flex items-center gap-2 text-sm md:text-base font-extralight tracking-[0.15em] uppercase text-primary animate-slide-up hover:underline underline-offset-4 transition-all cursor-pointer pointer-events-auto">
                   {t.expertCare}
@@ -283,7 +282,6 @@ const Index = () => {
                 <p className="text-muted-foreground leading-relaxed">{t.heroDescription}</p>
               </DialogContent>
             </Dialog>
-          </div>
           <p className="text-base md:text-lg text-muted-foreground max-w-2xl mb-4 animate-slide-up pointer-events-none">
             {t.heroSubtitle}
           </p>
