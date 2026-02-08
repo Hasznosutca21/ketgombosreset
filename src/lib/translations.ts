@@ -10,7 +10,7 @@ export const hu = {
 
   // Header
   teslaService: "TESLAND",
-  scheduleYourService: "Foglalja le szervizét",
+  scheduleYourService: "Ha nem elég a kétgombos reset",
   expertCare: "Szakértői gondoskodás járművéről, az Ön kényelmében",
 
   // Progress Steps
@@ -376,7 +376,7 @@ export const en = {
 
   // Header
   teslaService: "TESLAND",
-  scheduleYourService: "Schedule Your Service",
+  scheduleYourService: "When the two-button reset isn't enough",
   expertCare: "Expert care for your vehicle, at your convenience",
 
   // Progress Steps
