@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Calendar, Car, Wrench, Zap, ChevronRight, Menu, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -19,6 +20,7 @@ import { Capacitor } from "@capacitor/core";
 type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
 const Index = () => {
+  const navigate = useNavigate();
   const { t, language } = useLanguage();
   const { user, isLoading: authLoading, signOut } = useAuth();
   const [currentStep, setCurrentStep] = useState<Step>("service");
@@ -149,7 +151,7 @@ const Index = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => (window.location.href = "/manage")}>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/manage")}>
               {t.manageMyAppointment}
             </Button>
             <LanguageSwitcher variant="glass" />
@@ -172,7 +174,7 @@ const Index = () => {
                 </Button>
               </div>
             ) : (
-              <Button variant="tesla" size="sm" onClick={() => (window.location.href = "/auth")}>
+              <Button variant="tesla" size="sm" onClick={() => navigate("/auth")}>
                 {t.login}
               </Button>
             )}
@@ -200,7 +202,7 @@ const Index = () => {
                   <Button
                     variant="ghost"
                     className="justify-start"
-                    onClick={() => (window.location.href = "/manage")}
+                    onClick={() => navigate("/manage")}
                   >
                     {t.manageMyAppointment}
                   </Button>
@@ -217,7 +219,7 @@ const Index = () => {
                     <Button
                       variant="tesla"
                       className="justify-start"
-                      onClick={() => (window.location.href = "/auth")}
+                      onClick={() => navigate("/auth")}
                     >
                       {t.login}
                     </Button>
