@@ -24,6 +24,22 @@ export const hu = {
   chooseServiceType: "Válassza ki a járművéhez szükséges szolgáltatás típusát",
   estTime: "Becsült idő",
 
+  // Service Categories
+  serviceCategories: {
+    maintenance: {
+      title: "Karbantartás",
+      description: "Időszakos ellenőrzések és frissítések",
+    },
+    repair: {
+      title: "Javítás",
+      description: "Fék, karosszéria és egyéb javítások",
+    },
+    warranty: {
+      title: "Garancia",
+      description: "Garanciális javítások és cserék",
+    },
+  },
+
   // Services
   services: {
     maintenance: {
@@ -303,6 +319,22 @@ export const en = {
   selectService: "Select a Service",
   chooseServiceType: "Choose the type of service your vehicle needs",
   estTime: "Est. time",
+
+  // Service Categories
+  serviceCategories: {
+    maintenance: {
+      title: "Maintenance",
+      description: "Regular inspections and updates",
+    },
+    repair: {
+      title: "Repair",
+      description: "Brake, body and other repairs",
+    },
+    warranty: {
+      title: "Warranty",
+      description: "Covered repairs and replacements",
+    },
+  },
 
   // Services
   services: {
