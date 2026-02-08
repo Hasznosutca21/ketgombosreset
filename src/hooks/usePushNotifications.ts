@@ -119,8 +119,91 @@ export const usePushNotifications = () => {
     }
   };
 
+  const registerAdminPushToken = async (userId: string, platform: 'ios' | 'android' | 'web') => {
+    if (!state.token) {
+      console.error('No push token available');
+      return false;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('admin_push_subscriptions')
+        .upsert({
+          user_id: userId,
+          device_token: state.token,
+          platform,
+        }, {
+          onConflict: 'user_id,device_token'
+        });
+
+      if (error) {
+        console.error('Error registering admin push token:', error);
+        return false;
+      }
+
+      console.log('Admin push token registered successfully');
+      return true;
+    } catch (error) {
+      console.error('Error registering admin push token:', error);
+      return false;
+    }
+  };
+
+  const unregisterAdminPushToken = async (userId: string) => {
+    if (!state.token) {
+      return false;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('admin_push_subscriptions')
+        .delete()
+        .eq('user_id', userId)
+        .eq('device_token', state.token);
+
+      if (error) {
+        console.error('Error unregistering admin push token:', error);
+        return false;
+      }
+
+      console.log('Admin push token unregistered successfully');
+      return true;
+    } catch (error) {
+      console.error('Error unregistering admin push token:', error);
+      return false;
+    }
+  };
+
+  const checkAdminPushRegistration = async (userId: string): Promise<boolean> => {
+    if (!state.token) {
+      return false;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('admin_push_subscriptions')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('device_token', state.token)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error checking admin push registration:', error);
+        return false;
+      }
+
+      return !!data;
+    } catch (error) {
+      console.error('Error checking admin push registration:', error);
+      return false;
+    }
+  };
+
   return {
     ...state,
     registerTokenForAppointment,
+    registerAdminPushToken,
+    unregisterAdminPushToken,
+    checkAdminPushRegistration,
   };
 };

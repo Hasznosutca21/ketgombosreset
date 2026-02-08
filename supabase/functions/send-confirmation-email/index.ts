@@ -332,6 +332,62 @@ serve(async (req) => {
 
     console.log('Email sent successfully:', emailResult?.id);
 
+    // Send push notifications to admins
+    const fcmServerKey = Deno.env.get('FCM_SERVER_KEY');
+    if (fcmServerKey) {
+      try {
+        // Get all admin push subscriptions
+        const { data: adminSubscriptions, error: subError } = await supabase
+          .from('admin_push_subscriptions')
+          .select('device_token, platform');
+
+        if (subError) {
+          console.error('Error fetching admin push subscriptions:', subError);
+        } else if (adminSubscriptions && adminSubscriptions.length > 0) {
+          console.log(`Sending push notifications to ${adminSubscriptions.length} admin devices`);
+          
+          for (const subscription of adminSubscriptions) {
+            try {
+              if (subscription.platform === 'android') {
+                const response = await fetch('https://fcm.googleapis.com/fcm/send', {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `key=${fcmServerKey}`,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    to: subscription.device_token,
+                    notification: {
+                      title: '🔔 Új időpontfoglalás!',
+                      body: `${safeName} - ${serviceName} (${vehicleName}) - ${formattedDate} ${data.appointmentTime}`,
+                    },
+                    data: {
+                      appointmentId: data.appointmentId,
+                      type: 'new_appointment',
+                    },
+                  }),
+                });
+                console.log(`Admin push notification sent, status: ${response.status}`);
+              }
+              
+              if (subscription.platform === 'ios') {
+                // iOS APNs notification would be sent here
+                console.log('iOS admin push notification would be sent');
+              }
+            } catch (pushError) {
+              console.error('Error sending admin push notification:', pushError);
+            }
+          }
+        } else {
+          console.log('No admin push subscriptions found');
+        }
+      } catch (pushError) {
+        console.error('Error processing admin push notifications:', pushError);
+      }
+    } else {
+      console.log('FCM_SERVER_KEY not configured, skipping admin push notifications');
+    }
+
     return new Response(
       JSON.stringify({ success: true }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

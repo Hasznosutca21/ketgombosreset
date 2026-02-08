@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Zap, ArrowLeft, Calendar, Car, MapPin, Clock, Trash2, Loader2, RefreshCw, LogOut, Shield, X, CalendarClock } from "lucide-react";
+import { Zap, ArrowLeft, Calendar, Car, MapPin, Clock, Trash2, Loader2, RefreshCw, LogOut, Shield, X, CalendarClock, Bell, BellOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import AdminRescheduleDialog from "@/components/AdminRescheduleDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,6 +16,7 @@ import { cancelAppointment, rescheduleAppointment } from "@/lib/appointments";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { hu, enUS } from "date-fns/locale";
+import { Capacitor } from "@capacitor/core";
 
 interface Appointment {
   id: string;
@@ -43,9 +45,12 @@ const Admin = () => {
   const navigate = useNavigate();
   const { user, isAdmin, isLoading: authLoading, signOut } = useAuth();
   const { t, language } = useLanguage();
+  const pushNotifications = usePushNotifications();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [isPushEnabled, setIsPushEnabled] = useState(false);
+  const [isTogglingPush, setIsTogglingPush] = useState(false);
 
   // Cancel dialog state
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
@@ -69,6 +74,45 @@ const Admin = () => {
       fetchAppointments();
     }
   }, [user]);
+
+  // Check admin push registration status
+  useEffect(() => {
+    const checkPushStatus = async () => {
+      if (user && isAdmin && pushNotifications.isSupported && pushNotifications.token) {
+        const isRegistered = await pushNotifications.checkAdminPushRegistration(user.id);
+        setIsPushEnabled(isRegistered);
+      }
+    };
+    checkPushStatus();
+  }, [user, isAdmin, pushNotifications.isSupported, pushNotifications.token]);
+
+  const handleTogglePush = async () => {
+    if (!user || !pushNotifications.token) return;
+    
+    setIsTogglingPush(true);
+    const platform = Capacitor.getPlatform() as 'ios' | 'android' | 'web';
+    
+    try {
+      if (isPushEnabled) {
+        const success = await pushNotifications.unregisterAdminPushToken(user.id);
+        if (success) {
+          setIsPushEnabled(false);
+          toast.success(language === "hu" ? "Push értesítések kikapcsolva" : "Push notifications disabled");
+        }
+      } else {
+        const success = await pushNotifications.registerAdminPushToken(user.id, platform);
+        if (success) {
+          setIsPushEnabled(true);
+          toast.success(language === "hu" ? "Push értesítések bekapcsolva" : "Push notifications enabled");
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling push:", error);
+      toast.error(language === "hu" ? "Hiba történt" : "An error occurred");
+    } finally {
+      setIsTogglingPush(false);
+    }
+  };
 
   const fetchAppointments = async () => {
     setIsLoading(true);
@@ -204,6 +248,26 @@ const Admin = () => {
           </Badge>
         </div>
         <div className="flex items-center gap-2">
+          {pushNotifications.isSupported && isAdmin && (
+            <Button
+              variant={isPushEnabled ? "default" : "outline"}
+              size="sm"
+              onClick={handleTogglePush}
+              disabled={isTogglingPush || !pushNotifications.token}
+              title={language === "hu" 
+                ? (isPushEnabled ? "Push értesítések kikapcsolása" : "Push értesítések bekapcsolása")
+                : (isPushEnabled ? "Disable push notifications" : "Enable push notifications")
+              }
+            >
+              {isTogglingPush ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : isPushEnabled ? (
+                <Bell className="h-4 w-4" />
+              ) : (
+                <BellOff className="h-4 w-4" />
+              )}
+            </Button>
+          )}
           <LanguageSwitcher />
           <Button variant="ghost" onClick={() => navigate("/")}>
             <ArrowLeft className="mr-2 h-4 w-4" />
