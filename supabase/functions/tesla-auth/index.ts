@@ -24,6 +24,35 @@ serve(async (req) => {
       throw new Error("Tesla API credentials not configured");
     }
 
+    const body = await req.json();
+    const { action, code, redirect_uri } = body;
+
+    // Public action: Generate OAuth URL for Tesla login (no auth required)
+    if (action === "get_auth_url_public") {
+      const state = crypto.randomUUID();
+      const scopes = [
+        "openid",
+        "offline_access",
+        "user_data",
+        "vehicle_device_data",
+        "vehicle_cmds",
+        "vehicle_charging_cmds",
+      ].join(" ");
+
+      const authUrl = new URL(`${TESLA_AUTH_URL}/authorize`);
+      authUrl.searchParams.set("client_id", TESLA_CLIENT_ID);
+      authUrl.searchParams.set("redirect_uri", redirect_uri);
+      authUrl.searchParams.set("response_type", "code");
+      authUrl.searchParams.set("scope", scopes);
+      authUrl.searchParams.set("state", state);
+
+      return new Response(
+        JSON.stringify({ auth_url: authUrl.toString(), state }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // All other actions require authentication
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -46,9 +75,8 @@ serve(async (req) => {
     }
 
     const userId = claimsData.user.id;
-    const { action, code, redirect_uri } = await req.json();
 
-    // Generate OAuth URL for Tesla login
+    // Generate OAuth URL for Tesla login (authenticated user)
     if (action === "get_auth_url") {
       const state = crypto.randomUUID();
       const scopes = [
