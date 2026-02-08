@@ -157,12 +157,17 @@ const Index = () => {
             <LanguageSwitcher variant="glass" />
             {authLoading ? null : user ? (
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate("/profile")}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10"
+                >
                   <User className="h-4 w-4 text-primary" />
                   <span className="text-sm font-medium truncate max-w-[150px]">
                     {user.email}
                   </span>
-                </div>
+                </Button>
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -192,12 +197,14 @@ const Index = () => {
               <SheetContent side="right" className="w-72 bg-background border-border">
                 <nav className="flex flex-col gap-4 mt-8">
                   {user && (
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/50 border border-border mb-2">
-                      <User className="h-4 w-4 text-primary" />
-                      <span className="text-sm font-medium truncate">
-                        {user.email}
-                      </span>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      className="justify-start"
+                      onClick={() => navigate("/profile")}
+                    >
+                      <User className="h-4 w-4 mr-2" />
+                      {t.myProfile || "My Profile"}
+                    </Button>
                   )}
                   <Button
                     variant="ghost"
