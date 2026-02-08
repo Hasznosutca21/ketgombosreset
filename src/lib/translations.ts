@@ -4,7 +4,7 @@ export const hu = {
   signIn: "Bejelentkezés",
   signOut: "Kijelentkezés",
   adminLogin: "Admin bejelentkezés",
-  support: "Támogatás",
+  support: "TESLAND",
   locations: "Helyszínek",
   contact: "Kapcsolat",
 
@@ -252,7 +252,7 @@ export const en = {
   signIn: "Sign In",
   signOut: "Sign Out",
   adminLogin: "Admin Login",
-  support: "Support",
+  support: "TESLAND",
   locations: "Locations",
   contact: "Contact",
 
