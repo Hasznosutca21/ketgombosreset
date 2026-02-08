@@ -55,6 +55,7 @@ export type Database = {
           status: string
           updated_at: string
           vehicle: string
+          vehicle_vin: string | null
         }
         Insert: {
           appointment_date: string
@@ -69,6 +70,7 @@ export type Database = {
           status?: string
           updated_at?: string
           vehicle: string
+          vehicle_vin?: string | null
         }
         Update: {
           appointment_date?: string
@@ -83,6 +85,7 @@ export type Database = {
           status?: string
           updated_at?: string
           vehicle?: string
+          vehicle_vin?: string | null
         }
         Relationships: []
       }
