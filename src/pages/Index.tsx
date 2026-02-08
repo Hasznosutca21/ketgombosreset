@@ -17,7 +17,7 @@ import { Capacitor } from "@capacitor/core";
 type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
 const Index = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [currentStep, setCurrentStep] = useState<Step>("service");
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
@@ -90,6 +90,7 @@ const Index = () => {
               appointmentDate: data.date.toISOString(),
               appointmentTime: data.time,
               location: data.location,
+              language: language,
             }),
           });
 

@@ -8,13 +8,66 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-const serviceNames: Record<string, string> = {
-  maintenance: "Annual Maintenance",
-  battery: "Battery Service",
-  brake: "Brake Service",
-  software: "Software Update",
-  body: "Body Repair",
-  warranty: "Warranty Service",
+// Translations
+const translations = {
+  hu: {
+    teslaService: "Tesla Szerviz",
+    appointmentConfirmed: "Időpont megerősítve!",
+    greeting: (name: string) => `Kedves ${name}, szerviz időpontja sikeresen lefoglalva.`,
+    service: "Szolgáltatás",
+    vehicle: "Jármű",
+    date: "Dátum",
+    time: "Időpont",
+    location: "Helyszín",
+    reminder: "📱 Emlékeztetőt küldünk 1 órával az időpont előtt.",
+    needChanges: "Módosítani szeretné? Írjon nekünk: support@tesla-service.com",
+    support: "Támogatás",
+    locations: "Helyszínek",
+    contact: "Kapcsolat",
+    subject: (service: string, date: string) => `Időpont megerősítve - ${service}, ${date}`,
+    services: {
+      maintenance: "Éves karbantartás",
+      battery: "Akkumulátor szerviz",
+      brake: "Fékszerviz",
+      software: "Software frissítés",
+      body: "Karosszéria javítás",
+      warranty: "Garanciális szerviz",
+    },
+    locationsList: {
+      sf: { name: "San Francisco Szervizközpont", address: "123 Tesla Blvd, SF, CA" },
+      la: { name: "Los Angeles Szervizközpont", address: "456 Electric Ave, LA, CA" },
+      ny: { name: "New York Szervizközpont", address: "789 Innovation St, NY, NY" },
+    },
+  },
+  en: {
+    teslaService: "Tesla Service",
+    appointmentConfirmed: "Appointment Confirmed!",
+    greeting: (name: string) => `Hi ${name}, your service appointment has been scheduled.`,
+    service: "Service",
+    vehicle: "Vehicle",
+    date: "Date",
+    time: "Time",
+    location: "Location",
+    reminder: "📱 You'll receive a reminder notification 1 hour before your appointment.",
+    needChanges: "Need to make changes? Contact us at support@tesla-service.com",
+    support: "Support",
+    locations: "Locations",
+    contact: "Contact",
+    subject: (service: string, date: string) => `Appointment Confirmed - ${service} on ${date}`,
+    services: {
+      maintenance: "Annual Maintenance",
+      battery: "Battery Service",
+      brake: "Brake Service",
+      software: "Software Update",
+      body: "Body Repair",
+      warranty: "Warranty Service",
+    },
+    locationsList: {
+      sf: { name: "San Francisco Service Center", address: "123 Tesla Blvd, SF, CA" },
+      la: { name: "Los Angeles Service Center", address: "456 Electric Ave, LA, CA" },
+      ny: { name: "New York Service Center", address: "789 Innovation St, NY, NY" },
+    },
+  },
 };
 
 const vehicleNames: Record<string, string> = {
@@ -26,12 +79,6 @@ const vehicleNames: Record<string, string> = {
   roadster: "Roadster",
 };
 
-const locationInfo: Record<string, { name: string; address: string }> = {
-  sf: { name: "San Francisco Service Center", address: "123 Tesla Blvd, SF, CA" },
-  la: { name: "Los Angeles Service Center", address: "456 Electric Ave, LA, CA" },
-  ny: { name: "New York Service Center", address: "789 Innovation St, NY, NY" },
-};
-
 interface AppointmentEmailRequest {
   appointmentId: string;
   customerName: string;
@@ -41,25 +88,27 @@ interface AppointmentEmailRequest {
   appointmentDate: string;
   appointmentTime: string;
   location: string;
+  language?: "hu" | "en";
 }
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
     const data: AppointmentEmailRequest = await req.json();
-    console.log('Sending confirmation email for appointment:', data.appointmentId);
+    console.log('Sending confirmation email for appointment:', data.appointmentId, 'language:', data.language);
 
-    const serviceName = serviceNames[data.service] || data.service;
+    const lang = data.language === "en" ? "en" : "hu";
+    const t = translations[lang];
+
+    const serviceName = t.services[data.service as keyof typeof t.services] || data.service;
     const vehicleName = vehicleNames[data.vehicle] || data.vehicle;
-    const locationData = locationInfo[data.location] || { name: data.location, address: '' };
+    const locationData = t.locationsList[data.location as keyof typeof t.locationsList] || { name: data.location, address: '' };
 
-    // Format the date nicely
     const dateObj = new Date(data.appointmentDate);
-    const formattedDate = dateObj.toLocaleDateString('en-US', {
+    const formattedDate = dateObj.toLocaleDateString(lang === "hu" ? "hu-HU" : "en-US", {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -72,7 +121,7 @@ serve(async (req) => {
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Appointment Confirmation</title>
+          <title>${t.appointmentConfirmed}</title>
         </head>
         <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0a0a; color: #ffffff;">
           <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
@@ -80,7 +129,7 @@ serve(async (req) => {
             <div style="text-align: center; margin-bottom: 40px;">
               <div style="display: inline-flex; align-items: center; gap: 8px;">
                 <span style="font-size: 32px;">⚡</span>
-                <span style="font-size: 24px; font-weight: 600; color: #e11d48;">Tesla Service</span>
+                <span style="font-size: 24px; font-weight: 600; color: #e11d48;">${t.teslaService}</span>
               </div>
             </div>
 
@@ -93,8 +142,8 @@ serve(async (req) => {
 
             <!-- Main Content -->
             <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 32px; margin-bottom: 32px;">
-              <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 700; text-align: center;">Appointment Confirmed!</h1>
-              <p style="margin: 0 0 32px 0; color: #a1a1aa; text-align: center;">Hi ${data.customerName}, your service appointment has been scheduled.</p>
+              <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 700; text-align: center;">${t.appointmentConfirmed}</h1>
+              <p style="margin: 0 0 32px 0; color: #a1a1aa; text-align: center;">${t.greeting(data.customerName)}</p>
 
               <!-- Appointment Details -->
               <div style="display: grid; gap: 24px;">
@@ -104,7 +153,7 @@ serve(async (req) => {
                     <span>🔧</span>
                   </div>
                   <div>
-                    <div style="color: #a1a1aa; font-size: 14px;">Service</div>
+                    <div style="color: #a1a1aa; font-size: 14px;">${t.service}</div>
                     <div style="font-weight: 500; font-size: 16px;">${serviceName}</div>
                   </div>
                 </div>
@@ -115,7 +164,7 @@ serve(async (req) => {
                     <span>🚗</span>
                   </div>
                   <div>
-                    <div style="color: #a1a1aa; font-size: 14px;">Vehicle</div>
+                    <div style="color: #a1a1aa; font-size: 14px;">${t.vehicle}</div>
                     <div style="font-weight: 500; font-size: 16px;">Tesla ${vehicleName}</div>
                   </div>
                 </div>
@@ -126,7 +175,7 @@ serve(async (req) => {
                     <span>📅</span>
                   </div>
                   <div>
-                    <div style="color: #a1a1aa; font-size: 14px;">Date</div>
+                    <div style="color: #a1a1aa; font-size: 14px;">${t.date}</div>
                     <div style="font-weight: 500; font-size: 16px;">${formattedDate}</div>
                   </div>
                 </div>
@@ -137,7 +186,7 @@ serve(async (req) => {
                     <span>🕐</span>
                   </div>
                   <div>
-                    <div style="color: #a1a1aa; font-size: 14px;">Time</div>
+                    <div style="color: #a1a1aa; font-size: 14px;">${t.time}</div>
                     <div style="font-weight: 500; font-size: 16px;">${data.appointmentTime}</div>
                   </div>
                 </div>
@@ -148,7 +197,7 @@ serve(async (req) => {
                     <span>📍</span>
                   </div>
                   <div>
-                    <div style="color: #a1a1aa; font-size: 14px;">Location</div>
+                    <div style="color: #a1a1aa; font-size: 14px;">${t.location}</div>
                     <div style="font-weight: 500; font-size: 16px;">${locationData.name}</div>
                     <div style="color: #a1a1aa; font-size: 14px;">${locationData.address}</div>
                   </div>
@@ -159,19 +208,19 @@ serve(async (req) => {
             <!-- Reminder Note -->
             <div style="background: rgba(225, 29, 72, 0.1); border: 1px solid rgba(225, 29, 72, 0.2); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 32px;">
               <p style="margin: 0; color: #fca5a5; font-size: 14px;">
-                📱 You'll receive a reminder notification 1 hour before your appointment.
+                ${t.reminder}
               </p>
             </div>
 
             <!-- Footer -->
             <div style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 32px;">
               <p style="margin: 0 0 16px 0; color: #a1a1aa; font-size: 14px;">
-                Need to make changes? Contact us at support@tesla-service.com
+                ${t.needChanges}
               </p>
               <div style="display: flex; justify-content: center; gap: 24px; color: #71717a; font-size: 12px;">
-                <span>Support</span>
-                <span>Locations</span>
-                <span>Contact</span>
+                <span>${t.support}</span>
+                <span>${t.locations}</span>
+                <span>${t.contact}</span>
               </div>
             </div>
           </div>
@@ -182,7 +231,7 @@ serve(async (req) => {
     const { data: emailResult, error } = await resend.emails.send({
       from: 'Tesla Service <onboarding@resend.dev>',
       to: [data.customerEmail],
-      subject: `Appointment Confirmed - ${serviceName} on ${formattedDate}`,
+      subject: t.subject(serviceName, formattedDate),
       html: emailHtml,
     });
 
