@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { saveAppointment, SavedAppointment } from "@/lib/appointments";
 import { toast } from "sonner";
 import { Capacitor } from "@capacitor/core";
+import AppointmentAssistant from "@/components/AppointmentAssistant";
 
 type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
@@ -312,6 +313,9 @@ const Index = () => {
           />
         )}
       </main>
+
+      {/* AI Assistant */}
+      <AppointmentAssistant />
 
       {/* Footer */}
       <footer className="border-t border-border py-8 px-6">
