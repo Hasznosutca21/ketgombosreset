@@ -444,7 +444,7 @@ Using factory-level diagnostics and targeted technical inspection, we review you
       title: "Annual Inspection",
       description: "Mandatory annual battery and system check",
       duration: "1-2 hours",
-      price: "31,750 Ft",
+      price: "31 750 Ft",
       details: `The annual Tesla inspection ensures your vehicle's long-term reliability and value retention. This service is especially important before buying a used Tesla, after warranty expiration, or simply for peace of mind.
 
 Why is the annual inspection important?
