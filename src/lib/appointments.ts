@@ -41,7 +41,7 @@ export const saveAppointment = async (data: AppointmentData): Promise<SaveAppoin
         name: data.name,
         email: data.email,
         phone: data.phone,
-        status: 'confirmed',
+        status: 'pending',
       })
       .select()
       .single();

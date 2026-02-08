@@ -199,7 +199,8 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
   },
 
   // Confirmation
-  appointmentConfirmed: "Időpont megerősítve!",
+  appointmentConfirmed: "Foglalás rögzítve!",
+  appointmentPendingMessage: "Időpontod jóváhagyásra vár. Amint visszaigazoljuk, e-mailben értesítünk.",
   confirmationEmailSent: "Visszaigazoló e-mailt küldtünk a következő címre:",
   appointmentDetails: "Időpont részletei",
   serviceLabel: "Szolgáltatás",
@@ -364,6 +365,10 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
   status: "Státusz",
   actions: "Műveletek",
   confirmed: "Megerősítve",
+  pending: "Függőben",
+  approveAppointment: "Jóváhagyás",
+  appointmentApprovedSuccess: "Időpont sikeresen jóváhagyva",
+  failedToApprove: "Időpont jóváhagyása sikertelen",
 
   // Manage Appointment
   manageAppointment: "Időpont kezelése",
@@ -598,7 +603,8 @@ The price includes a personal consultation where we discuss the results and answ
   },
 
   // Confirmation
-  appointmentConfirmed: "Appointment Confirmed!",
+  appointmentConfirmed: "Appointment Submitted!",
+  appointmentPendingMessage: "Your appointment is pending approval. We will notify you by email once confirmed.",
   confirmationEmailSent: "A confirmation email has been sent to",
   appointmentDetails: "Appointment Details",
   serviceLabel: "Service",
@@ -763,6 +769,10 @@ The price includes a personal consultation where we discuss the results and answ
   status: "Status",
   actions: "Actions",
   confirmed: "Confirmed",
+  pending: "Pending",
+  approveAppointment: "Approve",
+  appointmentApprovedSuccess: "Appointment approved successfully",
+  failedToApprove: "Failed to approve appointment",
 
   // Manage Appointment
   manageAppointment: "Manage Appointment",
