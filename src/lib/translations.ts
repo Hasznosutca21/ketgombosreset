@@ -5,7 +5,7 @@ export const hu = {
   signOut: "Kijelentkezés",
   adminLogin: "Admin bejelentkezés",
   support: "TESLAND",
-  locations: "Helyszínek",
+  locations: "TESLAND Locations",
   contact: "Kapcsolat",
 
   // Header
@@ -253,8 +253,8 @@ export const en = {
   signOut: "Sign Out",
   adminLogin: "Admin Login",
   support: "TESLAND",
-  locations: "Locations",
-  contact: "Contact",
+  locations: "TESLAND Locations",
+  contact: "Kapcsolat",
 
   // Header
   teslaService: "Tesla Service",
