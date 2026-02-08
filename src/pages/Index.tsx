@@ -4,7 +4,7 @@ import { Calendar, Car, Wrench, Zap, ChevronRight, Menu, LogOut, User } from "lu
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import heroImage from "@/assets/tesla-hero.jpg";
+import heroImage from "@/assets/tesland-hero.jpg";
 import ServiceSelector from "@/components/ServiceSelector";
 import VehicleSelector from "@/components/VehicleSelector";
 import AppointmentForm from "@/components/AppointmentForm";
