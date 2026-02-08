@@ -69,7 +69,7 @@ Gyári szintű diagnosztikával és célzott műszaki vizsgálattal átnézzük 
     battery: {
       title: "Éves felülvizsgálat",
       description: "Kötelező éves akkumulátor és rendszer ellenőrzés",
-      duration: "1-2 óra",
+      duration: "45 perc",
       price: "31 750 Ft",
       details: `Az éves Tesla felülvizsgálat célja, hogy biztosítsd járműved hosszú távú megbízhatóságát és értékállóságát. Ez a szolgáltatás különösen fontos használt Tesla vásárlás előtt, garancia lejárta után, vagy egyszerűen a nyugalom érdekében.
 
@@ -446,7 +446,7 @@ Using factory-level diagnostics and targeted technical inspection, we review you
     battery: {
       title: "Annual Inspection",
       description: "Mandatory annual battery and system check",
-      duration: "1-2 hours",
+      duration: "45 min",
       price: "31 750 Ft",
       details: `The annual Tesla inspection ensures your vehicle's long-term reliability and value retention. This service is especially important before buying a used Tesla, after warranty expiration, or simply for peace of mind.
 
