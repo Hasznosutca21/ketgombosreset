@@ -27,6 +27,7 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isAppleLoading, setIsAppleLoading] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const navigate = useNavigate();
   const { user, isLoading: authLoading, signIn, signUp } = useAuth();
 
@@ -61,6 +62,15 @@ const Auth = () => {
     clearErrors();
   }, [mode, reset, clearErrors]);
 
+  // Countdown timer for resend cooldown
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
+
   // Redirect authenticated users to home page
   useEffect(() => {
     if (!authLoading && user) {
@@ -91,7 +101,7 @@ const Auth = () => {
           toast.error(error.message);
         } else {
           toast.success(t.verificationEmailResent);
-          setMode("login");
+          setResendCooldown(60); // Start 60 second cooldown
         }
       } else if (mode === "login") {
         const loginData = data as LoginFormData;
@@ -317,12 +327,17 @@ const Auth = () => {
                 </div>
               )}
               
-              <Button type="submit" variant="tesla" className="w-full" disabled={isLoading}>
+              <Button 
+                type="submit" 
+                variant="tesla" 
+                className="w-full" 
+                disabled={isLoading || (mode === "resend" && resendCooldown > 0)}
+              >
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {mode === "forgot" 
                   ? (isLoading ? t.sending : t.sendResetLink)
                   : mode === "resend"
-                    ? (isLoading ? t.resending : t.resendEmail)
+                    ? (isLoading ? t.resending : resendCooldown > 0 ? `${t.resendEmail} (${resendCooldown}s)` : t.resendEmail)
                     : mode === "login" 
                       ? t.signIn 
                       : t.createAccount}
