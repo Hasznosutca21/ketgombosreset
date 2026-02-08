@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const TESLA_AUTH_URL = "https://auth.tesla.com/oauth2/v3";
-const TESLA_API_URL = "https://owner-api.teslamotors.com";
+const TESLA_FLEET_API_URL = "https://fleet-api.prd.eu.vn.cloud.tesla.com";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -66,9 +66,10 @@ serve(async (req) => {
     const tokenData = await tokenResponse.json();
     console.log("Tesla token exchange successful");
 
-    // Get user info from Tesla
+    // Get user info from Tesla Fleet API
     let teslaUserInfo = null;
     try {
+      // First try the userinfo endpoint
       const userInfoResponse = await fetch(`${TESLA_AUTH_URL}/userinfo`, {
         headers: {
           Authorization: `Bearer ${tokenData.access_token}`,
@@ -77,18 +78,45 @@ serve(async (req) => {
 
       if (userInfoResponse.ok) {
         teslaUserInfo = await userInfoResponse.json();
-        console.log("Tesla user info retrieved:", teslaUserInfo?.email);
+        console.log("Tesla userinfo response:", JSON.stringify(teslaUserInfo));
+      }
+
+      // If no email from userinfo, try the Fleet API /users/me endpoint
+      if (!teslaUserInfo?.email) {
+        console.log("No email from userinfo, trying Fleet API /users/me...");
+        const fleetUserResponse = await fetch(`${TESLA_FLEET_API_URL}/api/1/users/me`, {
+          headers: {
+            Authorization: `Bearer ${tokenData.access_token}`,
+          },
+        });
+
+        if (fleetUserResponse.ok) {
+          const fleetUserData = await fleetUserResponse.json();
+          console.log("Fleet API /users/me response:", JSON.stringify(fleetUserData));
+          if (fleetUserData?.response?.email) {
+            teslaUserInfo = {
+              email: fleetUserData.response.email,
+              name: fleetUserData.response.full_name || fleetUserData.response.email,
+              sub: fleetUserData.response.vault_uuid,
+            };
+          }
+        } else {
+          console.warn("Fleet API /users/me failed:", fleetUserResponse.status, await fleetUserResponse.text());
+        }
       }
     } catch (err) {
       console.warn("Could not fetch Tesla user info:", err);
     }
 
     if (!teslaUserInfo?.email) {
+      console.error("No email found in Tesla user info");
       return new Response(
-        JSON.stringify({ error: "Could not retrieve Tesla user email" }),
+        JSON.stringify({ error: "Could not retrieve Tesla user email. Please ensure your Tesla account has a verified email." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+    
+    console.log("Tesla user email retrieved:", teslaUserInfo.email);
 
     // Create Supabase admin client
     const supabaseAdmin = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY);
