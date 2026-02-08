@@ -12,7 +12,8 @@ import {
   Navigation,
   MonitorPlay,
   CircleDot,
-  Info
+  Info,
+  Donut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -58,7 +59,7 @@ const categories = [
     id: "extras",
     icon: Settings,
     services: [
-      { id: "software", icon: Settings },
+      { id: "software", icon: Donut },
       { id: "autopilot", icon: Navigation },
       { id: "multimedia", icon: MonitorPlay },
     ],
