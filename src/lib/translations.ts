@@ -21,6 +21,7 @@ export const hu = {
   schedule: "Időpont",
   confirm: "Megerősítés",
   selectYear: "Válaszd ki az évjáratot",
+  change: "Módosítás",
 
   // Service Selector
   selectService: "Válasszon szolgáltatást",
@@ -404,6 +405,7 @@ export const en = {
   schedule: "Schedule",
   confirm: "Confirm",
   selectYear: "Select year",
+  change: "Change",
 
   // Service Selector
   selectService: "Select a Service",
