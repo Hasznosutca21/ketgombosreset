@@ -103,9 +103,7 @@ const Auth = () => {
         // Clean URL
         window.history.replaceState({}, document.title, window.location.pathname);
 
-        const redirectUri = window.location.hostname.endsWith("lovableproject.com")
-          ? "https://id-preview--46f1625c-18b5-4b37-9aff-6f33712907d1.lovable.app/auth"
-          : `${window.location.origin}/auth`;
+        const redirectUri = `${window.location.origin}/auth`;
         
         const response = await supabase.functions.invoke("tesla-login", {
           body: { code, redirect_uri: redirectUri },
@@ -235,10 +233,8 @@ const Auth = () => {
       const { data: session } = await supabase.auth.getSession();
       
       // For Tesla login, we need to redirect to our Tesla OAuth flow
-      // IMPORTANT: in preview, use the public *.lovable.app URL (not the internal *.lovableproject.com URL)
-      const redirectUri = window.location.hostname.endsWith("lovableproject.com")
-        ? "https://id-preview--46f1625c-18b5-4b37-9aff-6f33712907d1.lovable.app/auth"
-        : `${window.location.origin}/auth`;
+      // Use the current origin for the redirect (works for any domain)
+      const redirectUri = `${window.location.origin}/auth`;
       
       const response = await supabase.functions.invoke("tesla-auth", {
         body: {
