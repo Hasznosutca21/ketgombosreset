@@ -48,8 +48,8 @@ const Contact = () => {
                     {language === "hu" ? "Cím" : "Address"}
                   </h3>
                   <p className="text-muted-foreground">
-                    Pesti út 36<br />
-                    2119 Pécel, Hungary
+                    Ganz Ábrahám utca 3<br />
+                    Nagytarcsa, Hungary
                   </p>
                 </div>
               </div>
@@ -107,7 +107,7 @@ const Contact = () => {
           {/* Map */}
           <div className="glass-card p-2 h-[400px] md:h-full min-h-[300px]">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2693.5!2d19.3541!3d47.4992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741c3f8e8d7b7c5%3A0x1234567890abcdef!2sPesti%20%C3%BAt%2036%2C%20P%C3%A9cel%2C%202119%20Hungary!5e0!3m2!1sen!2shu!4v1234567890"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2693.5!2d19.3!3d47.5!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDfCsDMwJzAwLjAiTiAxOcKwMTgnMDAuMCJF!5e0!3m2!1sen!2shu!4v1234567890"
               width="100%"
               height="100%"
               style={{ border: 0, borderRadius: "0.5rem" }}

@@ -178,7 +178,7 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
 
   // Locations
   locationsList: {
-    nagytarcsa: { name: "TESLAND Pécel", address: "Pesti út 36, 2119 Pécel, Magyarország" },
+    nagytarcsa: { name: "TESLAND Nagytarcsa", address: "Ganz Ábrahám utca 3, Nagytarcsa, Magyarország" },
   },
 
   // Confirmation
@@ -558,7 +558,7 @@ The price includes a personal consultation where we discuss the results and answ
 
   // Locations
   locationsList: {
-    nagytarcsa: { name: "TESLAND Pécel", address: "Pesti út 36, 2119 Pécel, Hungary" },
+    nagytarcsa: { name: "TESLAND Nagytarcsa", address: "Ganz Ábrahám utca 3, Nagytarcsa, Hungary" },
   },
 
   // Confirmation
