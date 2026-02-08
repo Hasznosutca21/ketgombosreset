@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Zap, ArrowLeft, Loader2, Camera, User, Mail, Phone, MapPin, Settings } from "lucide-react";
+import { Zap, ArrowLeft, Loader2, Camera, User, Mail, Phone, MapPin, Settings, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,9 +12,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import DeleteAccountDialog from "@/components/DeleteAccountDialog";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -509,6 +511,27 @@ const Profile = () => {
                     <Switch
                       checked={profile?.preferences?.smsNotifications ?? false}
                       onCheckedChange={(checked) => handlePreferenceChange("smsNotifications", checked)}
+                    />
+                  </div>
+
+                  {/* Danger Zone */}
+                  <Separator className="my-6" />
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <h3 className="text-lg font-semibold text-destructive">
+                        {t.dangerZone || "Danger Zone"}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {t.dangerZoneDesc || "Irreversible and destructive actions"}
+                      </p>
+                    </div>
+                    <DeleteAccountDialog
+                      trigger={
+                        <Button variant="destructive" className="w-full">
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          {t.deleteAccount || "Delete Account"}
+                        </Button>
+                      }
                     />
                   </div>
                 </TabsContent>
