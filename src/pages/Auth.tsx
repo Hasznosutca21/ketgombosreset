@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Zap, Mail, Lock, ArrowLeft, Loader2 } from "lucide-react";
+import { Zap, Mail, ArrowLeft, Loader2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ import { lovable } from "@/integrations/lovable";
 import { supabase } from "@/integrations/supabase/client";
 import { createAuthSchemas, LoginFormData, SignupFormData, ForgotFormData } from "@/lib/validation";
 import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
+import PasswordInput from "@/components/PasswordInput";
 
 type AuthMode = "login" | "signup" | "forgot";
 
@@ -262,15 +263,11 @@ const Auth = () => {
               {/* Password field - hide for forgot password mode */}
               {mode !== "forgot" && (
                 <div className="space-y-1">
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="password"
-                      placeholder={t.password}
-                      {...register("password")}
-                      className={`pl-10 ${"password" in errors && errors.password ? "border-destructive" : ""}`}
-                    />
-                  </div>
+                  <PasswordInput
+                    placeholder={t.password}
+                    {...register("password")}
+                    error={"password" in errors && !!errors.password}
+                  />
                   {"password" in errors && errors.password && (
                     <p className="text-sm text-destructive">{errors.password.message}</p>
                   )}
