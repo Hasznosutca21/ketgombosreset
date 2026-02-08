@@ -52,7 +52,8 @@ export const hu = {
     maintenance: {
       title: "Általános átvizsgálás",
       description: "Pontos kép Teslád állapotáról – meglepetések nélkül",
-      duration: "2-3 óra",
+      duration: "45 perc",
+      price: "31 750 Ft",
       details: `A Tesland általános átvizsgálás egy átfogó ellenőrzési szolgáltatás Tesla modellekhez (Model 3 / Y / S / X), amely segít feltárni az autó aktuális műszaki állapotát, és időben felismerni az esetleges hibákat.
 
 Gyári szintű diagnosztikával és célzott műszaki vizsgálattal átnézzük a jármű legfontosabb rendszereit, hogy átlátható, érthető képet kapj Teslád állapotáról – még azelőtt, hogy komolyabb problémák jelentkeznének.
@@ -429,7 +430,8 @@ export const en = {
     maintenance: {
       title: "General Inspection",
       description: "A clear picture of your Tesla's condition – no surprises",
-      duration: "2-3 hours",
+      duration: "45 min",
+      price: "31 750 Ft",
       details: `Tesland General Inspection is a comprehensive checkup service for Tesla models (Model 3 / Y / S / X), helping to reveal your car's current technical condition and identify potential issues early.
 
 Using factory-level diagnostics and targeted technical inspection, we review your vehicle's most important systems to give you a clear, understandable picture of your Tesla's condition – before any major problems arise.
