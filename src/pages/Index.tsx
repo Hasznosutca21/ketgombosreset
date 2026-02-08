@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Car, Wrench, Zap, ChevronRight, Menu } from "lucide-react";
+import { Calendar, Car, Wrench, Zap, ChevronRight, Menu, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ import ConfirmationView from "@/components/ConfirmationView";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useAuth } from "@/hooks/useAuth";
 import { saveAppointment, SavedAppointment } from "@/lib/appointments";
 import { toast } from "sonner";
 import { Capacitor } from "@capacitor/core";
@@ -19,6 +20,7 @@ type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
 const Index = () => {
   const { t, language } = useLanguage();
+  const { user, isLoading: authLoading, signOut } = useAuth();
   const [currentStep, setCurrentStep] = useState<Step>("service");
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
@@ -151,9 +153,29 @@ const Index = () => {
               {t.manageMyAppointment}
             </Button>
             <LanguageSwitcher variant="glass" />
-            <Button variant="tesla" size="sm" onClick={() => (window.location.href = "/auth")}>
-              {t.login}
-            </Button>
+            {authLoading ? null : user ? (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
+                  <User className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium truncate max-w-[150px]">
+                    {user.email}
+                  </span>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => signOut()}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <LogOut className="h-4 w-4 mr-1" />
+                  {t.signOut}
+                </Button>
+              </div>
+            ) : (
+              <Button variant="tesla" size="sm" onClick={() => (window.location.href = "/auth")}>
+                {t.login}
+              </Button>
+            )}
           </div>
 
           {/* Mobile Navigation */}
@@ -167,6 +189,14 @@ const Index = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-72 bg-background border-border">
                 <nav className="flex flex-col gap-4 mt-8">
+                  {user && (
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/50 border border-border mb-2">
+                      <User className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-medium truncate">
+                        {user.email}
+                      </span>
+                    </div>
+                  )}
                   <Button
                     variant="ghost"
                     className="justify-start"
@@ -174,13 +204,24 @@ const Index = () => {
                   >
                     {t.manageMyAppointment}
                   </Button>
-                  <Button
-                    variant="tesla"
-                    className="justify-start"
-                    onClick={() => (window.location.href = "/auth")}
-                  >
-                    {t.login}
-                  </Button>
+                  {authLoading ? null : user ? (
+                    <Button
+                      variant="ghost"
+                      className="justify-start text-muted-foreground"
+                      onClick={() => signOut()}
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      {t.signOut}
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="tesla"
+                      className="justify-start"
+                      onClick={() => (window.location.href = "/auth")}
+                    >
+                      {t.login}
+                    </Button>
+                  )}
                 </nav>
               </SheetContent>
             </Sheet>
