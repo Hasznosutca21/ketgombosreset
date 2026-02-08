@@ -217,7 +217,13 @@ const Index = () => {
           <AppointmentForm onSubmit={handleAppointmentSubmit} onBack={() => setCurrentStep("vehicle")} isSubmitting={isSubmitting} />
         )}
         {currentStep === "confirmation" && (
-          <ConfirmationView service={selectedService!} vehicle={selectedVehicle!} appointment={appointmentData!} onStartOver={handleStartOver} />
+          <ConfirmationView
+            service={selectedService!}
+            vehicle={selectedVehicle!}
+            appointment={appointmentData!}
+            appointmentId={savedAppointment?.id}
+            onStartOver={handleStartOver}
+          />
         )}
       </main>
 
