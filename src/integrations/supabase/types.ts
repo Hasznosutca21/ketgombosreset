@@ -89,6 +89,51 @@ export type Database = {
         }
         Relationships: []
       }
+      customers: {
+        Row: {
+          address: string | null
+          birthday: string | null
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          marketing_notifications_accepted_at: string | null
+          note: string | null
+          phone: string | null
+          privacy_policy_accepted_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          birthday?: string | null
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          marketing_notifications_accepted_at?: string | null
+          note?: string | null
+          phone?: string | null
+          privacy_policy_accepted_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          birthday?: string | null
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          marketing_notifications_accepted_at?: string | null
+          note?: string | null
+          phone?: string | null
+          privacy_policy_accepted_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address_line1: string | null
