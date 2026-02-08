@@ -65,7 +65,7 @@ const Contact = () => {
                     {language === "hu" ? "Telefon" : "Phone"}
                   </h3>
                   <p className="text-muted-foreground">
-                    +36 1 234 5678
+                    +36 20 935 5355
                   </p>
                 </div>
               </div>
