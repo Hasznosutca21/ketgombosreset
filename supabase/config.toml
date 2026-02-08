@@ -2,3 +2,9 @@ project_id = "yjiumsnrmgyfamxkpftk"
 
 [functions.decode-vin]
 verify_jwt = false
+
+[functions.tesla-auth]
+verify_jwt = false
+
+[functions.tesla-api]
+verify_jwt = false
