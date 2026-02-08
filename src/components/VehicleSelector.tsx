@@ -22,6 +22,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 // Import vehicle images
 import modelSImage from "@/assets/vehicles/model-s.png";
 import model3Image from "@/assets/vehicles/model-3.png";
+import model3ChromeImage from "@/assets/vehicles/model-3-chrome.png";
 import modelXImage from "@/assets/vehicles/model-x.png";
 import modelYImage from "@/assets/vehicles/model-y.png";
 
@@ -44,6 +45,8 @@ const vehicles = [
     id: "model-3", 
     name: "Model 3", 
     image: model3Image,
+    chromeImage: model3ChromeImage,
+    chromeYearRange: { from: 2018, to: 2020 },
     description: "Kompakt szedán, népszerű választás",
     info: "Standard, Long Range és Performance",
     yearRange: { from: 2018, to: 2026 }
@@ -169,6 +172,16 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
         (_, i) => selectedVehicle.yearRange.to - i
       )
     : [];
+
+  // Get the appropriate image based on year (for Model 3 chrome trim)
+  const getVehicleImage = (vehicle: typeof vehicles[0], year: number | null) => {
+    if (vehicle.chromeImage && vehicle.chromeYearRange && year) {
+      if (year >= vehicle.chromeYearRange.from && year <= vehicle.chromeYearRange.to) {
+        return vehicle.chromeImage;
+      }
+    }
+    return vehicle.image;
+  };
 
   return (
     <div className="animate-fade-in">
@@ -316,7 +329,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
             {selectedVehicle && (
               <>
                 <img 
-                  src={selectedVehicle.image} 
+                  src={getVehicleImage(selectedVehicle, selectedYear)} 
                   alt={selectedVehicle.name}
                   className="w-20 h-14 object-contain"
                 />
