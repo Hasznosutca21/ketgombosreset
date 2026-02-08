@@ -440,10 +440,14 @@ const Profile = () => {
       }
 
       // Update profile state with decoded data
+      // Model now includes variant (e.g., "Model S Plaid")
       if (data.model) {
         setProfile((prev) => prev ? { ...prev, vehicle_model: data.model } : null);
       }
-      if (data.type) {
+      // Type/drive info (e.g., "All-Wheel Drive")
+      if (data.drive) {
+        setProfile((prev) => prev ? { ...prev, vehicle_type: data.drive } : null);
+      } else if (data.type) {
         setProfile((prev) => prev ? { ...prev, vehicle_type: data.type } : null);
       }
       if (data.year) {
