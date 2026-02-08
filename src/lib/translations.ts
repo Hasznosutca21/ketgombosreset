@@ -121,9 +121,10 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
       price: "10 000 Ft",
     },
     autopilot: {
-      title: "Autopilot kalibrálás",
-      description: "Kamera és szenzor kalibrálás",
-      duration: "1-2 óra",
+      title: "Belső világítás aktiválás",
+      description: "Egyedi ambient világítás beállítása",
+      duration: "10 perc",
+      price: "10 000 Ft",
     },
     multimedia: {
       title: "Multimédia frissítés",
@@ -500,9 +501,10 @@ The price includes a personal consultation where we discuss the results and answ
       price: "10 000 Ft",
     },
     autopilot: {
-      title: "Autopilot Calibration",
-      description: "Camera and sensor calibration",
-      duration: "1-2 hours",
+      title: "Interior Lighting Activation",
+      description: "Custom ambient lighting setup",
+      duration: "10 min",
+      price: "10 000 Ft",
     },
     multimedia: {
       title: "Multimedia Update",

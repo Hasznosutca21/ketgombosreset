@@ -9,7 +9,7 @@ import {
   Thermometer, 
   Fan, 
   Flame,
-  Navigation,
+  Lightbulb,
   MonitorPlay,
   CircleDot,
   Info,
@@ -60,7 +60,7 @@ const categories = [
     icon: Settings,
     services: [
       { id: "software", icon: Donut },
-      { id: "autopilot", icon: Navigation },
+      { id: "autopilot", icon: Lightbulb },
       { id: "multimedia", icon: MonitorPlay },
     ],
   },
