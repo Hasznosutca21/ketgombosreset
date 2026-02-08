@@ -160,8 +160,10 @@ const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
                       description: string;
                       duration: string;
                       details?: string;
+                      price?: string;
                     };
                     const hasDetails = !!serviceData.details;
+                    const hasPrice = !!serviceData.price;
 
                     return (
                       <button
@@ -195,8 +197,15 @@ const ServiceSelector = ({ onSelect, selected }: ServiceSelectorProps) => {
                           <div>
                             <h4 className="font-medium text-sm mb-0.5">{serviceData.title}</h4>
                             <p className="text-xs text-muted-foreground mb-1 line-clamp-2">{serviceData.description}</p>
-                            <div className="text-xs text-muted-foreground/70">
-                              {t.estTime}: {serviceData.duration}
+                            <div className="flex flex-col gap-0.5">
+                              <div className="text-xs text-muted-foreground/70">
+                                {t.estTime}: {serviceData.duration}
+                              </div>
+                              {hasPrice && (
+                                <div className="text-sm font-semibold text-primary">
+                                  {serviceData.price}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>

@@ -65,9 +65,10 @@ Gyári szintű diagnosztikával és célzott műszaki vizsgálattal átnézzük 
 • Rövid állapotjelentés + javaslatok`,
     },
     battery: {
-      title: "Akkumulátor szerviz",
-      description: "Akkumulátor állapotfelmérés és optimalizálás",
+      title: "Éves felülvizsgálat",
+      description: "Kötelező éves akkumulátor és rendszer ellenőrzés",
       duration: "1-2 óra",
+      price: "31 750 Ft",
     },
     brake: {
       title: "Fékszerviz",
@@ -411,9 +412,10 @@ Using factory-level diagnostics and targeted technical inspection, we review you
 • Brief condition report + recommendations`,
     },
     battery: {
-      title: "Battery Service",
-      description: "Battery health check and optimization",
+      title: "Annual Inspection",
+      description: "Mandatory annual battery and system check",
       duration: "1-2 hours",
+      price: "31,750 Ft",
     },
     brake: {
       title: "Brake Service",
