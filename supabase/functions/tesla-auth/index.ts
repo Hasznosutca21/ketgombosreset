@@ -32,6 +32,7 @@ serve(async (req) => {
       const state = crypto.randomUUID();
       const scopes = [
         "openid",
+        "email",
         "offline_access",
         "user_data",
         "vehicle_device_data",
@@ -45,6 +46,9 @@ serve(async (req) => {
       authUrl.searchParams.set("response_type", "code");
       authUrl.searchParams.set("scope", scopes);
       authUrl.searchParams.set("state", state);
+      // If the user previously granted fewer scopes, prompt to approve the missing ones
+      authUrl.searchParams.set("prompt_missing_scopes", "true");
+      authUrl.searchParams.set("require_requested_scopes", "true");
 
       return new Response(
         JSON.stringify({ auth_url: authUrl.toString(), state }),
@@ -81,6 +85,7 @@ serve(async (req) => {
       const state = crypto.randomUUID();
       const scopes = [
         "openid",
+        "email",
         "offline_access",
         "user_data",
         "vehicle_device_data",
@@ -94,6 +99,9 @@ serve(async (req) => {
       authUrl.searchParams.set("response_type", "code");
       authUrl.searchParams.set("scope", scopes);
       authUrl.searchParams.set("state", state);
+      // If the user previously granted fewer scopes, prompt to approve the missing ones
+      authUrl.searchParams.set("prompt_missing_scopes", "true");
+      authUrl.searchParams.set("require_requested_scopes", "true");
 
       return new Response(
         JSON.stringify({ auth_url: authUrl.toString(), state }),
