@@ -1,4 +1,3 @@
-// Trigger fresh build
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Calendar, Car, Wrench, ChevronRight, Menu, LogOut, User } from "lucide-react";
@@ -18,7 +17,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { saveAppointment, SavedAppointment } from "@/lib/appointments";
 import { toast } from "sonner";
 import { Capacitor } from "@capacitor/core";
-import AppointmentAssistant from "@/components/AppointmentAssistant";
+// AI Assistant temporarily disabled for debugging
+// import AppointmentAssistant from "@/components/AppointmentAssistant";
 
 type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
@@ -318,9 +318,7 @@ const Index = () => {
           />
         )}
       </main>
-
-      {/* AI Assistant */}
-      <AppointmentAssistant />
+      {/* AI Assistant temporarily disabled */}
 
       {/* Footer */}
       <footer className="border-t border-border py-8 px-6">
