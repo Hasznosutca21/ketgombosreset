@@ -11,6 +11,8 @@ import Admin from "./pages/Admin";
 import ManageAppointment from "./pages/ManageAppointment";
 import ResetPassword from "./pages/ResetPassword";
 import Profile from "./pages/Profile";
+import Contact from "./pages/Contact";
+import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,8 @@ const App = () => (
               <Route path="/manage" element={<ManageAppointment />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about" element={<About />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
