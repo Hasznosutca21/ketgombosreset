@@ -106,13 +106,13 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
         </Button>
       )}
 
-      <h2 className="text-2xl md:text-3xl font-bold mb-2">{t.selectVehicle}</h2>
-      <p className="text-muted-foreground mb-4">{t.chooseVehicleModel}</p>
+      <h2 className="text-2xl md:text-4xl font-extralight tracking-tight mb-2">{t.selectVehicle}</h2>
+      <p className="text-muted-foreground font-light mb-8">{t.chooseVehicleModel}</p>
 
       {/* Profile vehicle banner */}
       {profileVehicle && (
-        <div className="glass-card p-4 mb-6 flex items-center gap-3 border-primary/30 bg-primary/5">
-          <Car className="w-5 h-5 text-primary flex-shrink-0" />
+        <div className="tesla-card p-4 mb-8 flex items-center gap-3 border-foreground/20">
+          <Car className="w-5 h-5 text-foreground/60 flex-shrink-0" />
           <div className="flex-1">
             <div className="font-medium">
               {profileVehicle.model}
@@ -129,7 +129,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 md:gap-6">
         {vehicles.map((vehicle) => {
           const isSelected = selected === vehicle.id;
 
@@ -138,14 +138,21 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
               key={vehicle.id}
               onClick={() => onSelect(vehicle.id)}
               className={cn(
-                "glass-card p-8 text-center transition-all duration-300 hover:scale-[1.02] hover:border-primary/50",
-                isSelected && "border-primary shadow-[0_0_30px_-10px_hsl(352_85%_49%/0.4)]"
+                "tesla-card p-8 md:p-10 text-center transition-all duration-200",
+                isSelected 
+                  ? "border-foreground bg-foreground text-background" 
+                  : "hover:border-foreground/30"
               )}
             >
               <div className="flex flex-col items-center justify-center">
-                <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-1">Tesla</span>
-                <span className="text-xl font-light tracking-wide">
-                  <span className="text-sm font-normal mr-1">Model</span>
+                <span className={cn(
+                  "text-xs uppercase tracking-[0.25em] mb-2",
+                  isSelected ? "text-background/70" : "text-muted-foreground"
+                )}>
+                  Tesla
+                </span>
+                <span className="text-2xl md:text-3xl font-extralight tracking-wide">
+                  <span className="text-base md:text-lg font-light mr-1">Model</span>
                   {vehicle.name.replace("Model ", "")}
                 </span>
               </div>

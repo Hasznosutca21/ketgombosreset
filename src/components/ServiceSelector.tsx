@@ -14,7 +14,8 @@ import {
   CircleDot,
   Info,
   Donut,
-  ArrowLeft
+  ArrowLeft,
+  ChevronDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -140,13 +141,13 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
         </Button>
       )}
       
-      <h2 className="text-2xl md:text-3xl font-bold mb-2">{t.selectService}</h2>
-      <p className="text-muted-foreground mb-8">{t.chooseServiceType}</p>
+      <h2 className="text-2xl md:text-4xl font-extralight tracking-tight mb-2">{t.selectService}</h2>
+      <p className="text-muted-foreground font-light mb-8">{t.chooseServiceType}</p>
 
       <Accordion 
         type="multiple" 
         defaultValue={getDefaultOpenCategory()}
-        className="space-y-4"
+        className="space-y-3"
       >
         {filteredCategories.map((category) => {
           const categoryData = t.serviceCategories[category.id as keyof typeof t.serviceCategories];
@@ -158,25 +159,26 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               key={category.id} 
               value={category.id}
               className={cn(
-                "glass-card border-border/50 rounded-xl overflow-hidden",
-                hasSelectedService && "border-primary/50 shadow-[0_0_20px_-10px_hsl(352_85%_49%/0.3)]"
+                "tesla-card border overflow-hidden",
+                hasSelectedService && "border-foreground"
               )}
             >
-              <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-muted/30 transition-colors">
-                <div className="flex items-center gap-3">
+              <AccordionTrigger className="px-6 py-5 hover:no-underline hover:bg-muted/50 transition-colors [&[data-state=open]>div>.chevron]:rotate-180">
+                <div className="flex items-center gap-4 w-full">
                   <div className={cn(
-                    "w-10 h-10 rounded-lg flex items-center justify-center transition-colors",
-                    hasSelectedService ? "bg-primary text-primary-foreground" : "bg-muted"
+                    "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
+                    hasSelectedService ? "bg-foreground text-background" : "bg-muted"
                   )}>
                     <CategoryIcon className="w-5 h-5" />
                   </div>
-                  <div className="text-left">
-                    <h3 className="text-lg font-semibold">{categoryData.title}</h3>
-                    <p className="text-sm text-muted-foreground">{categoryData.description}</p>
+                  <div className="text-left flex-1">
+                    <h3 className="text-lg font-medium">{categoryData.title}</h3>
+                    <p className="text-sm text-muted-foreground font-light">{categoryData.description}</p>
                   </div>
+                  <ChevronDown className="chevron w-5 h-5 text-muted-foreground transition-transform duration-200" />
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="px-6 pb-4">
+              <AccordionContent className="px-6 pb-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
                   {category.services.map((service) => {
                     const Icon = service.icon;
@@ -196,39 +198,54 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                         key={service.id}
                         onClick={() => onSelect(service.id)}
                         className={cn(
-                          "p-4 text-left rounded-lg transition-all duration-200 border relative",
-                          "hover:scale-[1.02] hover:border-primary/50",
+                          "p-5 text-left rounded-lg transition-all duration-200 border relative",
                           isSelected 
-                            ? "bg-primary/10 border-primary shadow-[0_0_20px_-10px_hsl(352_85%_49%/0.4)]" 
-                            : "bg-muted/30 border-border/30 hover:bg-muted/50"
+                            ? "bg-foreground text-background border-foreground" 
+                            : "bg-muted/30 border-border hover:border-foreground/30 hover:bg-muted/50"
                         )}
                       >
                         {hasDetails && (
                           <div
                             onClick={(e) => handleInfoClick(e, service.id)}
-                            className="absolute top-2 right-2 p-1.5 rounded-full bg-muted/50 hover:bg-primary/20 hover:text-primary transition-colors cursor-pointer"
+                            className={cn(
+                              "absolute top-3 right-3 p-1.5 rounded-full transition-colors cursor-pointer",
+                              isSelected 
+                                ? "bg-background/20 hover:bg-background/30 text-background" 
+                                : "bg-muted hover:bg-foreground/10"
+                            )}
                           >
                             <Info className="w-4 h-4" />
                           </div>
                         )}
-                        <div className="flex flex-col items-center text-center gap-2">
+                        <div className="flex flex-col items-center text-center gap-3">
                           <div
                             className={cn(
-                              "w-12 h-12 rounded-lg flex items-center justify-center transition-colors",
-                              isSelected ? "bg-primary text-primary-foreground" : "bg-muted"
+                              "w-12 h-12 rounded-full flex items-center justify-center transition-colors",
+                              isSelected ? "bg-background/20 text-background" : "bg-muted"
                             )}
                           >
-                            <Icon className="w-6 h-6" />
+                            <Icon className="w-5 h-5" />
                           </div>
                           <div>
-                            <h4 className="font-medium text-sm mb-0.5">{serviceData.title}</h4>
-                            <p className="text-xs text-muted-foreground mb-1 line-clamp-2">{serviceData.description}</p>
+                            <h4 className="font-medium text-sm mb-1">{serviceData.title}</h4>
+                            <p className={cn(
+                              "text-xs mb-2 line-clamp-2",
+                              isSelected ? "text-background/70" : "text-muted-foreground"
+                            )}>
+                              {serviceData.description}
+                            </p>
                             <div className="flex flex-col gap-0.5">
-                              <div className="text-xs text-muted-foreground/70">
+                              <div className={cn(
+                                "text-xs",
+                                isSelected ? "text-background/60" : "text-muted-foreground"
+                              )}>
                                 {t.estTime}: {serviceData.duration}
                               </div>
                               {hasPrice && (
-                                <div className="text-sm font-semibold text-primary">
+                                <div className={cn(
+                                  "text-sm font-medium mt-1",
+                                  isSelected ? "text-background" : "text-foreground"
+                                )}>
                                   {serviceData.price}
                                 </div>
                               )}
@@ -249,7 +266,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
         <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl">{selectedDetails?.title}</DialogTitle>
+            <DialogTitle className="text-xl font-medium">{selectedDetails?.title}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="text-sm text-muted-foreground">
@@ -258,7 +275,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             <div className="prose prose-sm dark:prose-invert max-w-none">
               {selectedDetails?.details?.split('\n').map((line, i) => (
                 <p key={i} className={cn(
-                  "text-sm",
+                  "text-sm leading-relaxed",
                   line.startsWith('•') && "ml-2"
                 )}>
                   {line}

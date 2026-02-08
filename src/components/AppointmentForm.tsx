@@ -208,19 +208,19 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
         {t.back}
       </Button>
 
-      <h2 className="text-2xl md:text-3xl font-bold mb-2">{t.scheduleAppointment}</h2>
-      <p className="text-muted-foreground mb-8">{t.chooseDateTimeLocation}</p>
+      <h2 className="text-2xl md:text-4xl font-extralight tracking-tight mb-2">{t.scheduleAppointment}</h2>
+      <p className="text-muted-foreground font-light mb-8">{t.chooseDateTimeLocation}</p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Column - Date & Time */}
         <div className="space-y-6">
           <div>
-            <Label className="text-base font-semibold mb-3 block">{t.selectDate}</Label>
+            <Label className="text-base font-medium mb-3 block">{t.selectDate}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
-                  variant="glass"
-                  className={cn("w-full justify-start text-left font-normal h-12", !date && "text-muted-foreground")}
+                  variant="outline"
+                  className={cn("w-full justify-start text-left font-normal h-12 border-border", !date && "text-muted-foreground")}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {date ? format(date, "PPP", { locale: dateLocale }) : t.pickDate}
@@ -240,7 +240,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
           </div>
 
           <div>
-            <Label className="text-base font-semibold mb-3 block">
+            <Label className="text-base font-medium mb-3 block">
               {t.selectTime}
               {isLoadingSlots && <Loader2 className="inline-block w-4 h-4 ml-2 animate-spin" />}
             </Label>
@@ -253,11 +253,11 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
                     onClick={() => !isBooked && setTime(slot)}
                     disabled={isBooked}
                     className={cn(
-                      "glass-card py-2 px-3 text-sm transition-all",
-                      time === slot && "border-primary bg-primary/10",
+                      "tesla-card py-3 px-3 text-sm transition-all",
+                      time === slot && "border-foreground bg-foreground text-background",
                       isBooked 
                         ? "opacity-40 cursor-not-allowed line-through text-muted-foreground" 
-                        : "hover:border-primary/50"
+                        : "hover:border-foreground/30"
                     )}
                     title={isBooked ? (language === "hu" ? "Foglalt" : "Booked") : undefined}
                   >
@@ -269,7 +269,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
           </div>
 
           <div>
-            <Label className="text-base font-semibold mb-3 block">{t.selectLocation}</Label>
+            <Label className="text-base font-medium mb-3 block">{t.selectLocation}</Label>
             <div className="space-y-2">
               {locations.map((loc) => {
                 const locationData = t.locationsList[loc.id as keyof typeof t.locationsList];
@@ -279,15 +279,25 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
                     <button
                       onClick={() => setLocation(loc.id)}
                       className={cn(
-                        "glass-card p-4 flex-1 text-left transition-all hover:border-primary/50",
-                        location === loc.id && "border-primary bg-primary/10"
+                        "tesla-card p-4 flex-1 text-left transition-all",
+                        location === loc.id 
+                          ? "border-foreground bg-foreground text-background" 
+                          : "hover:border-foreground/30"
                       )}
                     >
                       <div className="flex items-start gap-3">
-                        <MapPin className="w-5 h-5 text-primary mt-0.5" />
+                        <MapPin className={cn(
+                          "w-5 h-5 mt-0.5",
+                          location === loc.id ? "text-background" : "text-foreground"
+                        )} />
                         <div>
                           <div className="font-medium">{locationData.name}</div>
-                          <div className="text-sm text-muted-foreground">{locationData.address}</div>
+                          <div className={cn(
+                            "text-sm",
+                            location === loc.id ? "text-background/70" : "text-muted-foreground"
+                          )}>
+                            {locationData.address}
+                          </div>
                         </div>
                       </div>
                     </button>
@@ -295,10 +305,10 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
                       href={mapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="glass-card p-4 flex items-center justify-center hover:border-primary/50 transition-all"
+                      className="tesla-card p-4 flex items-center justify-center hover:border-foreground/30 transition-all"
                       title={language === "hu" ? "Navigáció" : "Navigate"}
                     >
-                      <Navigation className="w-5 h-5 text-primary" />
+                      <Navigation className="w-5 h-5" />
                     </a>
                   </div>
                 );
@@ -309,8 +319,8 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
 
         {/* Right Column - Contact Info */}
         <div className="space-y-6">
-          <div className="glass-card p-6 space-y-4">
-            <h3 className="text-lg font-semibold mb-4">{t.contactInformation}</h3>
+          <div className="tesla-card p-6 space-y-4">
+            <h3 className="text-lg font-medium mb-4">{t.contactInformation}</h3>
 
             <div className="space-y-2">
               <Label htmlFor="name">{t.fullName}</Label>
@@ -319,7 +329,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={language === "hu" ? "Kovács János" : "John Doe"}
-                className="bg-muted/50 border-border"
+                className="bg-muted/30 border-border h-12"
               />
             </div>
 
@@ -331,7 +341,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={language === "hu" ? "kovacs.janos@example.com" : "john@example.com"}
-                className="bg-muted/50 border-border"
+                className="bg-muted/30 border-border h-12"
               />
             </div>
 
@@ -343,7 +353,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder={language === "hu" ? "+36 30 123 4567" : "(555) 123-4567"}
-                className="bg-muted/50 border-border"
+                className="bg-muted/30 border-border h-12"
               />
             </div>
           </div>

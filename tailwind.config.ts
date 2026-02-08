@@ -14,7 +14,14 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+      },
+      fontWeight: {
+        extralight: '200',
+        light: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
       },
       colors: {
         border: "hsl(var(--border))",
@@ -50,9 +57,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        tesla: {
-          red: "hsl(var(--tesla-red))",
-          glow: "hsl(var(--tesla-red-glow))",
+        dark: {
+          bg: "hsl(var(--dark-bg))",
+          fg: "hsl(var(--dark-fg))",
+          muted: "hsl(var(--dark-muted))",
+          border: "hsl(var(--dark-border))",
         },
       },
       borderRadius: {
