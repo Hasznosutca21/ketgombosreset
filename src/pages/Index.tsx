@@ -148,7 +148,7 @@ const Index = () => {
         {/* Header */}
         <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 bg-background/30 backdrop-blur-md border-b border-border/40">
           <div className="flex items-center gap-2">
-            <img src={teslandLogo} alt="TESLAND" className="h-6 md:h-8 w-auto" />
+            <img src={teslandLogo} alt="TESLAND" className="h-12 md:h-16 w-auto" />
           </div>
 
           {/* Desktop Navigation */}
@@ -348,7 +348,7 @@ const Index = () => {
       <footer className="border-t border-border py-8 px-6">
         <div className="max-w-4xl mx-auto flex flex-col items-center gap-6 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <img src={teslandLogo} alt="TESLAND" className="h-6 w-auto dark:invert" />
+            <img src={teslandLogo} alt="TESLAND" className="h-12 w-auto dark:invert" />
           </div>
           <div className="flex flex-wrap justify-center gap-6">
             <Link to="/about" className="hover:text-foreground transition-colors">
