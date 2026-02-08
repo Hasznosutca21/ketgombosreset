@@ -188,6 +188,14 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
   locationLabel: "Helyszín",
   scheduleAnother: "Másik foglalás",
   addToCalendar: "Naptárhoz adás",
+  payOnline: "Online fizetés",
+  payNow: "Fizetés most",
+  paymentProcessing: "Fizetés feldolgozása...",
+  paymentSuccess: "Fizetés sikeres!",
+  paymentCancelled: "Fizetés megszakítva",
+  paymentFailed: "Fizetés sikertelen",
+  totalToPay: "Fizetendő összeg",
+  orPayOnSite: "vagy fizessen helyszínen",
 
   // Auth
   adminSignIn: "Admin bejelentkezés",
@@ -555,6 +563,14 @@ The price includes a personal consultation where we discuss the results and answ
   locationLabel: "Location",
   scheduleAnother: "Schedule Another",
   addToCalendar: "Add to Calendar",
+  payOnline: "Pay Online",
+  payNow: "Pay Now",
+  paymentProcessing: "Processing payment...",
+  paymentSuccess: "Payment successful!",
+  paymentCancelled: "Payment cancelled",
+  paymentFailed: "Payment failed",
+  totalToPay: "Total to pay",
+  orPayOnSite: "or pay on-site",
 
   // Auth
   adminSignIn: "Admin Sign In",
