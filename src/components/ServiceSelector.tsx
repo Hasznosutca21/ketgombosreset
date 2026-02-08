@@ -42,7 +42,15 @@ interface ServiceSelectorProps {
 
 // Categories with their services
 // vehicleRestriction: array of vehicle IDs that can use this service (empty = all vehicles)
-const categories = [
+// yearRestriction: { from, to } - optional year range restriction
+interface ServiceDef {
+  id: string;
+  icon: typeof Wrench;
+  vehicleRestriction: string[];
+  yearRestriction?: { from: number; to: number };
+}
+
+const categories: { id: string; icon: typeof Wrench; services: ServiceDef[] }[] = [
   {
     id: "maintenance",
     icon: Wrench,
@@ -59,7 +67,7 @@ const categories = [
       { id: "ac", icon: Fan, vehicleRestriction: [] },
       { id: "heatpump", icon: Thermometer, vehicleRestriction: [] },
       { id: "heating", icon: Flame, vehicleRestriction: [] },
-      { id: "ptcheater", icon: Zap, vehicleRestriction: [] },
+      { id: "ptcheater", icon: Zap, vehicleRestriction: [], yearRestriction: { from: 2018, to: 2020 } },
     ],
   },
   {
@@ -120,15 +128,43 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
     }
   };
 
+  // Parse vehicle ID and year from selectedVehicle (format: "model-3-2022")
+  const parseVehicleSelection = (vehicle: string | null | undefined) => {
+    if (!vehicle) return { vehicleId: null, year: null };
+    const parts = vehicle.split('-');
+    if (parts.length >= 3) {
+      const year = parseInt(parts[parts.length - 1], 10);
+      const vehicleId = parts.slice(0, -1).join('-');
+      return { vehicleId, year: isNaN(year) ? null : year };
+    }
+    return { vehicleId: vehicle, year: null };
+  };
+
   // Filter categories to only show services available for the selected vehicle
   const filteredCategories = useMemo(() => {
+    const { vehicleId, year } = parseVehicleSelection(selectedVehicle);
+    
     return categories.map(category => ({
       ...category,
       services: category.services.filter(service => {
-        // If no restriction, available for all vehicles
-        if (service.vehicleRestriction.length === 0) return true;
-        // If restriction exists, check if selected vehicle is in the list
-        return selectedVehicle ? service.vehicleRestriction.includes(selectedVehicle) : true;
+        // Check vehicle restriction
+        if (service.vehicleRestriction.length > 0) {
+          if (!vehicleId || !service.vehicleRestriction.includes(vehicleId)) {
+            return false;
+          }
+        }
+        
+        // Check year restriction
+        if (service.yearRestriction && year) {
+          if (year < service.yearRestriction.from || year > service.yearRestriction.to) {
+            return false;
+          }
+        } else if (service.yearRestriction && !year) {
+          // If service has year restriction but no year selected, hide it
+          return false;
+        }
+        
+        return true;
       })
     })).filter(category => category.services.length > 0); // Remove empty categories
   }, [selectedVehicle]);
