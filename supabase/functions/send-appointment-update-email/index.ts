@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "npm:resend@2.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -131,8 +132,69 @@ serve(async (req) => {
   }
 
   try {
+    // Authentication check
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      console.error('Missing authorization header');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      console.error('Auth error:', userError?.message || 'No user found');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const data: UpdateEmailRequest = await req.json();
-    console.log(`Sending ${data.type} email for appointment:`, data.appointmentId);
+    console.log(`User ${user.id} requesting ${data.type} email for appointment:`, data.appointmentId);
+
+    // Verify appointment exists and user has access
+    const { data: appointment, error: appointmentError } = await supabase
+      .from('appointments')
+      .select('email')
+      .eq('id', data.appointmentId)
+      .single();
+
+    if (appointmentError || !appointment) {
+      console.error('Appointment not found:', appointmentError?.message);
+      return new Response(
+        JSON.stringify({ error: 'Appointment not found' }),
+        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Verify user owns this appointment or is admin
+    const userEmail = user.email;
+    if (appointment.email !== userEmail) {
+      // Check if user is admin
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .maybeSingle();
+
+      if (!roleData) {
+        console.error('Forbidden: User does not own this appointment and is not admin');
+        return new Response(
+          JSON.stringify({ error: 'Forbidden' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      console.log('Admin user accessing appointment');
+    }
 
     const lang = data.language === "en" ? "en" : "hu";
     const t = translations[lang];
