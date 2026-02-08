@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { translations } from "@/lib/translations";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -25,7 +26,7 @@ const Auth = () => {
         if (error) {
           toast.error(error.message);
         } else {
-          toast.success("Welcome back!");
+          toast.success(translations.welcomeBack);
           navigate("/admin");
         }
       } else {
@@ -33,7 +34,7 @@ const Auth = () => {
         if (error) {
           toast.error(error.message);
         } else {
-          toast.success("Check your email to verify your account!");
+          toast.success(translations.checkEmailVerify);
         }
       }
     } finally {
@@ -47,11 +48,11 @@ const Auth = () => {
       <header className="flex items-center justify-between px-6 py-4 md:px-12 border-b border-border">
         <div className="flex items-center gap-2">
           <Zap className="h-8 w-8 text-primary" />
-          <span className="text-xl font-semibold tracking-tight">Tesla Service</span>
+          <span className="text-xl font-semibold tracking-tight">{translations.teslaService}</span>
         </div>
         <Button variant="ghost" onClick={() => navigate("/")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Home
+          {translations.backToHome}
         </Button>
       </header>
 
@@ -60,12 +61,12 @@ const Auth = () => {
         <Card className="w-full max-w-md glass-card">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">
-              {isLogin ? "Admin Sign In" : "Create Account"}
+              {isLogin ? translations.adminSignIn : translations.createAccount}
             </CardTitle>
             <CardDescription>
               {isLogin
-                ? "Sign in to access the admin dashboard"
-                : "Create an account to get started"}
+                ? translations.signInToAccess
+                : translations.createAccountToStart}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -75,7 +76,7 @@ const Auth = () => {
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="email"
-                    placeholder="Email"
+                    placeholder={translations.email}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
@@ -88,7 +89,7 @@ const Auth = () => {
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="password"
-                    placeholder="Password"
+                    placeholder={translations.password}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-10"
@@ -99,19 +100,19 @@ const Auth = () => {
               </div>
               <Button type="submit" variant="tesla" className="w-full" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isLogin ? "Sign In" : "Create Account"}
+                {isLogin ? translations.signIn : translations.createAccount}
               </Button>
             </form>
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">
-                {isLogin ? "Don't have an account? " : "Already have an account? "}
+                {isLogin ? translations.dontHaveAccount + " " : translations.alreadyHaveAccount + " "}
               </span>
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}
                 className="text-primary hover:underline font-medium"
               >
-                {isLogin ? "Sign up" : "Sign in"}
+                {isLogin ? translations.signUp : translations.signIn}
               </button>
             </div>
           </CardContent>

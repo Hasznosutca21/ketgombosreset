@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { translations } from "@/lib/translations";
 
 interface VehicleSelectorProps {
   onSelect: (vehicle: string) => void;
@@ -52,17 +53,18 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
     <div className="animate-fade-in">
       <Button variant="ghost" onClick={onBack} className="mb-6 -ml-2">
         <ArrowLeft className="w-4 h-4 mr-2" />
-        Back
+        {translations.back}
       </Button>
 
-      <h2 className="text-2xl md:text-3xl font-bold mb-2">Select Your Vehicle</h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-2">{translations.selectVehicle}</h2>
       <p className="text-muted-foreground mb-8">
-        Choose your Tesla model for accurate service options
+        {translations.chooseVehicleModel}
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {vehicles.map((vehicle) => {
           const isSelected = selected === vehicle.id;
+          const translatedType = translations.vehicleTypes[vehicle.type as keyof typeof translations.vehicleTypes];
 
           return (
             <button
@@ -83,7 +85,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
               </div>
               <div className="p-4">
                 <h3 className="text-lg font-semibold">{vehicle.name}</h3>
-                <p className="text-sm text-muted-foreground">{vehicle.type}</p>
+                <p className="text-sm text-muted-foreground">{translatedType}</p>
               </div>
             </button>
           );

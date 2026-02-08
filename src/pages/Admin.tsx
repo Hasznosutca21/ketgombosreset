@@ -9,6 +9,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { hu } from "date-fns/locale";
+import { translations } from "@/lib/translations";
 
 interface Appointment {
   id: string;
@@ -24,26 +26,13 @@ interface Appointment {
   created_at: string;
 }
 
-const serviceLabels: Record<string, string> = {
-  maintenance: "Maintenance",
-  repair: "Repair",
-  inspection: "Inspection",
-  upgrade: "Upgrade",
-};
-
 const vehicleLabels: Record<string, string> = {
   "model-s": "Model S",
   "model-3": "Model 3",
   "model-x": "Model X",
   "model-y": "Model Y",
   cybertruck: "Cybertruck",
-};
-
-const locationLabels: Record<string, string> = {
-  sf: "San Francisco",
-  la: "Los Angeles",
-  seattle: "Seattle",
-  austin: "Austin",
+  roadster: "Roadster",
 };
 
 const Admin = () => {
@@ -78,7 +67,7 @@ const Admin = () => {
       setAppointments(data || []);
     } catch (error) {
       console.error("Error fetching appointments:", error);
-      toast.error("Failed to load appointments");
+      toast.error(translations.failedToLoad);
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +75,7 @@ const Admin = () => {
 
   const handleDelete = async (id: string) => {
     if (!isAdmin) {
-      toast.error("Only admins can delete appointments");
+      toast.error(translations.onlyAdminsCanDelete);
       return;
     }
 
@@ -95,10 +84,10 @@ const Admin = () => {
       const { error } = await supabase.from("appointments").delete().eq("id", id);
       if (error) throw error;
       setAppointments((prev) => prev.filter((a) => a.id !== id));
-      toast.success("Appointment deleted");
+      toast.success(translations.appointmentDeleted);
     } catch (error) {
       console.error("Error deleting appointment:", error);
-      toast.error("Failed to delete appointment");
+      toast.error(translations.failedToDelete);
     } finally {
       setDeletingId(null);
     }
@@ -107,6 +96,16 @@ const Admin = () => {
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
+  };
+
+  const getServiceLabel = (serviceId: string) => {
+    const serviceData = translations.services[serviceId as keyof typeof translations.services];
+    return serviceData?.title || serviceId;
+  };
+
+  const getLocationLabel = (locationId: string) => {
+    const locationData = translations.locationsList[locationId as keyof typeof translations.locationsList];
+    return locationData?.name || locationId;
   };
 
   if (authLoading) {
@@ -123,20 +122,20 @@ const Admin = () => {
       <header className="flex items-center justify-between px-6 py-4 md:px-12 border-b border-border">
         <div className="flex items-center gap-2">
           <Zap className="h-8 w-8 text-primary" />
-          <span className="text-xl font-semibold tracking-tight">Tesla Service</span>
+          <span className="text-xl font-semibold tracking-tight">{translations.teslaService}</span>
           <Badge variant="secondary" className="ml-2">
             <Shield className="h-3 w-3 mr-1" />
-            Admin
+            {translations.admin}
           </Badge>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" onClick={() => navigate("/")}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Home
+            {translations.backToHome}
           </Button>
           <Button variant="outline" onClick={handleSignOut}>
             <LogOut className="mr-2 h-4 w-4" />
-            Sign Out
+            {translations.signOut}
           </Button>
         </div>
       </header>
@@ -148,15 +147,15 @@ const Admin = () => {
             <div>
               <CardTitle className="text-2xl flex items-center gap-2">
                 <Calendar className="h-6 w-6 text-primary" />
-                Appointments Dashboard
+                {translations.appointmentsDashboard}
               </CardTitle>
               <CardDescription>
-                View and manage all booked service appointments
+                {translations.viewManageAppointments}
               </CardDescription>
             </div>
             <Button variant="outline" onClick={fetchAppointments} disabled={isLoading}>
               <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-              Refresh
+              {translations.refresh}
             </Button>
           </CardHeader>
           <CardContent>
@@ -167,20 +166,20 @@ const Admin = () => {
             ) : appointments.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No appointments found</p>
+                <p>{translations.noAppointments}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Customer</TableHead>
-                      <TableHead>Service</TableHead>
-                      <TableHead>Vehicle</TableHead>
-                      <TableHead>Date & Time</TableHead>
-                      <TableHead>Location</TableHead>
-                      <TableHead>Status</TableHead>
-                      {isAdmin && <TableHead className="w-[80px]">Actions</TableHead>}
+                      <TableHead>{translations.customer}</TableHead>
+                      <TableHead>{translations.serviceLabel}</TableHead>
+                      <TableHead>{translations.vehicleLabel}</TableHead>
+                      <TableHead>{translations.dateLabel} & {translations.timeLabel}</TableHead>
+                      <TableHead>{translations.locationLabel}</TableHead>
+                      <TableHead>{translations.status}</TableHead>
+                      {isAdmin && <TableHead className="w-[80px]">{translations.actions}</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -197,7 +196,7 @@ const Admin = () => {
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline">
-                            {serviceLabels[appointment.service] || appointment.service}
+                            {getServiceLabel(appointment.service)}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -210,7 +209,7 @@ const Admin = () => {
                           <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-1">
                               <Calendar className="h-4 w-4 text-muted-foreground" />
-                              {format(new Date(appointment.appointment_date), "MMM d, yyyy")}
+                              {format(new Date(appointment.appointment_date), "yyyy. MMM d.", { locale: hu })}
                             </div>
                             <div className="flex items-center gap-1">
                               <Clock className="h-4 w-4 text-muted-foreground" />
@@ -221,14 +220,14 @@ const Admin = () => {
                         <TableCell>
                           <div className="flex items-center gap-1">
                             <MapPin className="h-4 w-4 text-muted-foreground" />
-                            {locationLabels[appointment.location] || appointment.location}
+                            {getLocationLabel(appointment.location)}
                           </div>
                         </TableCell>
                         <TableCell>
                           <Badge
                             variant={appointment.status === "confirmed" ? "default" : "secondary"}
                           >
-                            {appointment.status}
+                            {appointment.status === "confirmed" ? translations.confirmed : appointment.status}
                           </Badge>
                         </TableCell>
                         {isAdmin && (

@@ -7,7 +7,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { hu } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
+import { translations } from "@/lib/translations";
 
 interface AppointmentFormProps {
   onSubmit: (data: {
@@ -23,14 +25,14 @@ interface AppointmentFormProps {
 }
 
 const locations = [
-  { id: "sf", name: "San Francisco Service Center", address: "123 Tesla Blvd, SF, CA" },
-  { id: "la", name: "Los Angeles Service Center", address: "456 Electric Ave, LA, CA" },
-  { id: "ny", name: "New York Service Center", address: "789 Innovation St, NY, NY" },
+  { id: "sf" },
+  { id: "la" },
+  { id: "ny" },
 ];
 
 const timeSlots = [
-  "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
-  "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM",
+  "9:00", "10:00", "11:00", "12:00",
+  "13:00", "14:00", "15:00", "16:00",
 ];
 
 const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: AppointmentFormProps) => {
@@ -53,19 +55,19 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
     <div className="animate-fade-in">
       <Button variant="ghost" onClick={onBack} className="mb-6 -ml-2">
         <ArrowLeft className="w-4 h-4 mr-2" />
-        Back
+        {translations.back}
       </Button>
 
-      <h2 className="text-2xl md:text-3xl font-bold mb-2">Schedule Appointment</h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-2">{translations.scheduleAppointment}</h2>
       <p className="text-muted-foreground mb-8">
-        Choose your preferred date, time, and location
+        {translations.chooseDateTimeLocation}
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Column - Date & Time */}
         <div className="space-y-6">
           <div>
-            <Label className="text-base font-semibold mb-3 block">Select Date</Label>
+            <Label className="text-base font-semibold mb-3 block">{translations.selectDate}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -76,7 +78,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : "Pick a date"}
+                  {date ? format(date, "PPP", { locale: hu }) : translations.pickDate}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0 bg-card border-border" align="start">
@@ -93,7 +95,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
           </div>
 
           <div>
-            <Label className="text-base font-semibold mb-3 block">Select Time</Label>
+            <Label className="text-base font-semibold mb-3 block">{translations.selectTime}</Label>
             <div className="grid grid-cols-4 gap-2">
               {timeSlots.map((slot) => (
                 <button
@@ -111,26 +113,29 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
           </div>
 
           <div>
-            <Label className="text-base font-semibold mb-3 block">Select Location</Label>
+            <Label className="text-base font-semibold mb-3 block">{translations.selectLocation}</Label>
             <div className="space-y-2">
-              {locations.map((loc) => (
-                <button
-                  key={loc.id}
-                  onClick={() => setLocation(loc.id)}
-                  className={cn(
-                    "glass-card p-4 w-full text-left transition-all hover:border-primary/50",
-                    location === loc.id && "border-primary bg-primary/10"
-                  )}
-                >
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-primary mt-0.5" />
-                    <div>
-                      <div className="font-medium">{loc.name}</div>
-                      <div className="text-sm text-muted-foreground">{loc.address}</div>
+              {locations.map((loc) => {
+                const locationData = translations.locationsList[loc.id as keyof typeof translations.locationsList];
+                return (
+                  <button
+                    key={loc.id}
+                    onClick={() => setLocation(loc.id)}
+                    className={cn(
+                      "glass-card p-4 w-full text-left transition-all hover:border-primary/50",
+                      location === loc.id && "border-primary bg-primary/10"
+                    )}
+                  >
+                    <div className="flex items-start gap-3">
+                      <MapPin className="w-5 h-5 text-primary mt-0.5" />
+                      <div>
+                        <div className="font-medium">{locationData.name}</div>
+                        <div className="text-sm text-muted-foreground">{locationData.address}</div>
+                      </div>
                     </div>
-                  </div>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -138,39 +143,39 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
         {/* Right Column - Contact Info */}
         <div className="space-y-6">
           <div className="glass-card p-6 space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
+            <h3 className="text-lg font-semibold mb-4">{translations.contactInformation}</h3>
             
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">{translations.fullName}</Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="John Doe"
+                placeholder="Kovács János"
                 className="bg-muted/50 border-border"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{translations.email}</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="john@example.com"
+                placeholder="kovacs.janos@example.com"
                 className="bg-muted/50 border-border"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
+              <Label htmlFor="phone">{translations.phone}</Label>
               <Input
                 id="phone"
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="(555) 123-4567"
+                placeholder="+36 30 123 4567"
                 className="bg-muted/50 border-border"
               />
             </div>
@@ -183,7 +188,7 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false }: Appointment
             disabled={!isValid || isSubmitting}
             onClick={handleSubmit}
           >
-            {isSubmitting ? "Booking..." : "Confirm Appointment"}
+            {isSubmitting ? translations.booking : translations.confirmAppointment}
           </Button>
         </div>
       </div>
