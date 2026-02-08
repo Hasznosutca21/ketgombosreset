@@ -114,13 +114,8 @@ export const cancelAppointment = async (
     // Send cancellation email
     if (sendEmail) {
       try {
-        await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-appointment-update-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({
+        await supabase.functions.invoke('send-appointment-update-email', {
+          body: {
             type: 'cancellation',
             appointmentId: id,
             customerName: appointment.name,
@@ -131,7 +126,7 @@ export const cancelAppointment = async (
             originalTime: appointment.time,
             location: appointment.location,
             language,
-          }),
+          },
         });
       } catch (emailError) {
         console.error('Error sending cancellation email:', emailError);
@@ -180,13 +175,8 @@ export const rescheduleAppointment = async (
     // Send reschedule email
     if (sendEmail) {
       try {
-        await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-appointment-update-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({
+        await supabase.functions.invoke('send-appointment-update-email', {
+          body: {
             type: 'reschedule',
             appointmentId: id,
             customerName: originalAppointment.name,
@@ -199,7 +189,7 @@ export const rescheduleAppointment = async (
             newTime: newTime,
             location: originalAppointment.location,
             language,
-          }),
+          },
         });
       } catch (emailError) {
         console.error('Error sending reschedule email:', emailError);

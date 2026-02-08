@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { Calendar, Car, Wrench, ChevronRight, Menu, LogOut, User, Info } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -87,13 +88,8 @@ const Index = () => {
         setAppointmentData(data);
 
         try {
-          const emailResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-confirmation-email`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-            },
-            body: JSON.stringify({
+          const { error: emailError } = await supabase.functions.invoke('send-confirmation-email', {
+            body: {
               appointmentId: saved.id,
               customerName: data.name,
               customerEmail: data.email,
@@ -103,13 +99,13 @@ const Index = () => {
               appointmentTime: data.time,
               location: data.location,
               language: language,
-            }),
+            },
           });
 
-          if (emailResponse.ok) {
+          if (!emailError) {
             console.log("Confirmation email sent successfully");
           } else {
-            console.error("Failed to send confirmation email");
+            console.error("Failed to send confirmation email:", emailError);
           }
         } catch (emailError) {
           console.error("Error sending confirmation email:", emailError);

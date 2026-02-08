@@ -27,10 +27,10 @@ const AppointmentEmailSchema = z.object({
 // Sanitize text for email content
 function sanitizeForEmail(text: string): string {
   return text
-    .replace(/[<>]/g, '') // Remove angle brackets
-    .replace(/[\r\n]/g, ' ') // Replace newlines with spaces
+    .replace(/[<>]/g, '')
+    .replace(/[\r\n]/g, ' ')
     .trim()
-    .substring(0, 100); // Limit length
+    .substring(0, 100);
 }
 
 // Translations
@@ -52,12 +52,18 @@ const translations = {
     contact: "Kapcsolat",
     subject: (service: string, date: string) => `Időpont megerősítve - ${service}, ${date}`,
     services: {
-      maintenance: "Éves karbantartás",
-      battery: "Akkumulátor szerviz",
+      maintenance: "Általános átvizsgálás",
+      battery: "Éves felülvizsgálat",
       brake: "Fékszerviz",
+      ac: "Klíma szerviz",
+      heatpump: "Hőszivattyú szerviz",
+      heating: "Fűtésrendszer",
       software: "Software frissítés",
+      autopilot: "Autopilot kalibrálás",
+      multimedia: "Multimédia frissítés",
       body: "Karosszéria javítás",
       warranty: "Garanciális szerviz",
+      tires: "Abroncs szerviz",
     },
     locationsList: {
       nagytarcsa: { name: "TESLAND Nagytarcsa", address: "Ganz Ábrahám utca 3, Nagytarcsa, Magyarország" },
@@ -80,12 +86,18 @@ const translations = {
     contact: "Contact",
     subject: (service: string, date: string) => `Appointment Confirmed - ${service} on ${date}`,
     services: {
-      maintenance: "Annual Maintenance",
-      battery: "Battery Service",
+      maintenance: "General Inspection",
+      battery: "Annual Inspection",
       brake: "Brake Service",
+      ac: "AC Service",
+      heatpump: "Heat Pump Service",
+      heating: "Heating System",
       software: "Software Update",
+      autopilot: "Autopilot Calibration",
+      multimedia: "Multimedia Update",
       body: "Body Repair",
       warranty: "Warranty Service",
+      tires: "Tire Service",
     },
     locationsList: {
       nagytarcsa: { name: "TESLAND Nagytarcsa", address: "Ganz Ábrahám utca 3, Nagytarcsa, Hungary" },
@@ -107,39 +119,20 @@ const vehicleNames: Record<string, string> = {
   roadster: "Roadster",
 };
 
+// Admin notification email
+const ADMIN_EMAIL = "info@tesland.hu";
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    // Authentication check
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      console.error('Missing authorization header');
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     
-    // Create client with user token to verify identity
-    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
-
-    const { data: { user }, error: userError } = await userClient.auth.getUser();
-    if (userError || !user) {
-      console.error('Auth error:', userError?.message || 'No user found');
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    // Create service client for database access
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Parse and validate input
     const rawData = await req.json();
@@ -154,11 +147,9 @@ serve(async (req) => {
     }
 
     const data = validationResult.data;
-    console.log(`User ${user.id} sending confirmation email for appointment:`, data.appointmentId);
+    console.log(`Sending confirmation email for appointment:`, data.appointmentId);
 
-    // Verify the appointment exists in the database using service role
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
+    // Verify the appointment exists in the database
     const { data: appointment, error: appointmentError } = await supabase
       .from('appointments')
       .select('id, email')
@@ -173,24 +164,13 @@ serve(async (req) => {
       );
     }
 
-    // Verify user owns this appointment or email matches their account
-    const userEmail = user.email;
-    if (appointment.email !== data.customerEmail || (appointment.email !== userEmail)) {
-      // Check if user is admin
-      const { data: roleData } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .eq('role', 'admin')
-        .maybeSingle();
-
-      if (!roleData && appointment.email !== userEmail) {
-        console.error('Forbidden: User does not own this appointment and is not admin');
-        return new Response(
-          JSON.stringify({ error: 'Forbidden' }),
-          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
+    // Verify the email matches the appointment
+    if (appointment.email.toLowerCase() !== data.customerEmail.toLowerCase()) {
+      console.error('Email mismatch for appointment:', data.appointmentId);
+      return new Response(
+        JSON.stringify({ error: 'Email mismatch' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const lang = data.language === "en" ? "en" : "hu";
@@ -333,9 +313,11 @@ serve(async (req) => {
       </html>
     `;
 
+    // Send email to customer AND cc to admin
     const { data: emailResult, error } = await resend.emails.send({
       from: 'TESLAND <onboarding@resend.dev>',
       to: [data.customerEmail],
+      cc: [ADMIN_EMAIL],
       subject: t.subject(serviceName, formattedDate),
       html: emailHtml,
     });
