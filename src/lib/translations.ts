@@ -171,7 +171,8 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
     body: {
       title: "Hátsó csomagtérajtó probléma",
       description: "Kábelköteg szakadás okozta hibák javítása",
-      duration: "Változó",
+      price: "30 000 Ft",
+      duration: "2-3 óra",
     },
     warranty: {
       title: "Garanciális szerviz",
@@ -592,9 +593,10 @@ Price: 25,000 Ft / piece
 Select which handle needs replacement on the interactive diagram!`,
     },
     body: {
-      title: "Body Repair",
-      description: "Dent removal and paint touch-ups",
-      duration: "Varies",
+      title: "Rear Trunk Lid Issue",
+      description: "Cable harness breakage repair",
+      price: "30 000 Ft",
+      duration: "2-3 hours",
     },
     warranty: {
       title: "Warranty Service",
