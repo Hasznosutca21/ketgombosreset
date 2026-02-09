@@ -464,11 +464,11 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             
             <div className="space-y-2">
               {[
-                { id: "floormats", hu: "Padlószőnyeg", en: "Floor Mats" },
-                { id: "sunshade", hu: "Napellenző", en: "Sunshade" },
-                { id: "trunk_mat", hu: "Csomagtér szőnyeg", en: "Trunk Mat" },
-                { id: "screen_protector", hu: "Kijelzővédő", en: "Screen Protector" },
-                { id: "phone_mount", hu: "Telefontartó", en: "Phone Mount" },
+                { id: "commander", hu: "S3XY Commander", en: "S3XY Commander" },
+                { id: "knob", hu: "S3XY Knob", en: "S3XY Knob" },
+                { id: "strip", hu: "S3XY Strip", en: "S3XY Strip" },
+                { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk" },
+                { id: "dash", hu: "S3XY Dash", en: "S3XY Dash" },
               ].map((product) => (
                 <div 
                   key={product.id}
