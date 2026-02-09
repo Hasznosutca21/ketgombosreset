@@ -54,6 +54,13 @@ export const hu = {
 
   // Services
   services: {
+    // Akkumulátor szolgáltatások
+    lowvoltagebattery: {
+      title: "Alacsony feszültségű akkumulátor csere",
+      description: "12V akkumulátor diagnosztika és csere",
+      price: "89 900 Ft",
+      duration: "30 perc",
+    },
     // Karbantartás
     maintenance: {
       title: "Általános átvizsgálás",
@@ -483,6 +490,13 @@ export const en = {
 
   // Services
   services: {
+    // Battery services
+    lowvoltagebattery: {
+      title: "Low Voltage Battery Replacement",
+      description: "12V battery diagnostics and replacement",
+      price: "89 900 Ft",
+      duration: "30 min",
+    },
     // Maintenance
     maintenance: {
       title: "General Inspection",
