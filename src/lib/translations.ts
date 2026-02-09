@@ -469,6 +469,9 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
   vinVerified: "VIN ellenőrizve",
   vinLockedInfo: "A jármű a profilban megadott VIN alapján van rögzítve. Módosításhoz látogassa meg a profil beállításait.",
   continue: "Tovább",
+  
+  // Profile - History
+  history: "Előzmények",
 };
 
 export const en = {
@@ -942,6 +945,9 @@ Select which handle needs replacement on the interactive diagram!`,
   vinVerified: "VIN verified",
   vinLockedInfo: "The vehicle is locked based on the VIN in your profile. Visit profile settings to change.",
   continue: "Continue",
+  
+  // Profile - History
+  history: "History",
 };
 
 export type Language = "hu" | "en";
