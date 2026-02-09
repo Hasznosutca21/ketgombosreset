@@ -488,16 +488,17 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 const isSXYearValid = !isModelSX || (year !== null && year >= 2021);
                 
                 return [
-                  { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", requiresYear: true },
-                  { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, requiresYear: false },
-                  { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", requiresYear: true },
-                  { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: null, requiresYear: false },
-                  { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, requiresYear: false },
-                  { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, requiresYear: false },
+                  { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", modelSXOnly: true },
+                  { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, modelSXOnly: false },
+                  { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", modelSXOnly: false },
+                  { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: null, modelSXOnly: false },
+                  { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, modelSXOnly: false },
+                  { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, modelSXOnly: false },
                 ].filter(product => {
-                  // For products that require 2021+ for Model S/X
-                  if (product.requiresYear && isModelSX && !isSXYearValid) {
-                    return false;
+                  // For Model S/X: only Commander is available (and only 2021+)
+                  if (isModelSX) {
+                    if (!product.modelSXOnly) return false;
+                    if (!isSXYearValid) return false;
                   }
                   return true;
                 }).map((product) => {
