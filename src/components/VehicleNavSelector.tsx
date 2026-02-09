@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import {
@@ -9,6 +9,12 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Import vehicle images
 import modelSImage from "@/assets/vehicles/model-s.png";
@@ -27,27 +33,34 @@ const vehicles = [
     id: "model-s", 
     name: "Model S",
     image: modelSImage,
+    description: "Prémium szedán",
+    info: "Plaid és Long Range",
   },
   { 
     id: "model-3", 
     name: "Model 3",
     image: model3Image,
+    description: "A legnépszerűbb",
+    info: "Standard, LR, Performance",
   },
   { 
     id: "model-x", 
     name: "Model X",
     image: modelXImage,
+    description: "SUV, Falcon Wing",
+    info: "Plaid és Long Range",
   },
   { 
     id: "model-y", 
     name: "Model Y",
     image: modelYImage,
+    description: "Kompakt SUV",
+    info: "Long Range, Performance",
   },
 ];
 
 const VehicleNavSelector = ({ selected, onSelect, variant = "glass" }: VehicleNavSelectorProps) => {
   const { t } = useLanguage();
-  const [isOpen, setIsOpen] = useState(false);
 
   // Parse selected vehicle (format: "model-y-2024")
   const parseSelected = () => {
@@ -90,37 +103,65 @@ const VehicleNavSelector = ({ selected, onSelect, variant = "glass" }: VehicleNa
             )}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <div className="w-80 p-2">
-              {vehicles.map((vehicle) => {
-                const isSelected = selectedParsed?.modelId === vehicle.id;
-                return (
-                  <button
-                    key={vehicle.id}
-                    onClick={() => {
-                      // For now just select the vehicle without year
-                      // User can change year in the main selector
-                      onSelect(vehicle.id);
-                    }}
-                    className={cn(
-                      "w-full flex items-center gap-4 p-3 rounded-lg transition-all text-left",
-                      "hover:bg-muted/80",
-                      isSelected && "bg-muted border border-foreground/20"
-                    )}
-                  >
-                    <img 
-                      src={vehicle.image} 
-                      alt={vehicle.name}
-                      className="h-10 w-16 object-contain"
-                    />
-                    <div className="flex-1">
-                      <div className="font-medium text-foreground">{vehicle.name}</div>
-                    </div>
-                    {isSelected && (
-                      <Check className="h-4 w-4 text-foreground" />
-                    )}
-                  </button>
-                );
-              })}
+            <div className="w-[500px] p-4 bg-background border border-border rounded-lg shadow-xl">
+              <div className="grid grid-cols-2 gap-3">
+                <TooltipProvider>
+                  {vehicles.map((vehicle) => {
+                    const isSelected = selectedParsed?.modelId === vehicle.id;
+                    return (
+                      <button
+                        key={vehicle.id}
+                        onClick={() => onSelect(vehicle.id)}
+                        className={cn(
+                          "relative flex flex-col items-center p-4 rounded-xl transition-all text-center",
+                          "bg-muted/30 hover:bg-muted/60 border-2",
+                          isSelected 
+                            ? "border-foreground shadow-md" 
+                            : "border-transparent hover:border-foreground/20"
+                        )}
+                      >
+                        {/* Info tooltip */}
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="absolute top-2 right-2 p-1 rounded-full hover:bg-muted transition-colors z-10">
+                              <Info className="w-3.5 h-3.5 text-muted-foreground" />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{vehicle.info}</p>
+                          </TooltipContent>
+                        </Tooltip>
+
+                        {/* Selected checkmark */}
+                        {isSelected && (
+                          <div className="absolute top-2 left-2 w-5 h-5 rounded-full bg-foreground flex items-center justify-center">
+                            <Check className="w-3 h-3 text-background" />
+                          </div>
+                        )}
+
+                        {/* Vehicle Image */}
+                        <div className="w-full aspect-[16/9] mb-3 flex items-center justify-center">
+                          <img 
+                            src={vehicle.image} 
+                            alt={vehicle.name}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        
+                        {/* Vehicle Name */}
+                        <h4 className="text-sm font-semibold text-foreground mb-0.5">
+                          {vehicle.name}
+                        </h4>
+
+                        {/* Description */}
+                        <p className="text-xs text-muted-foreground">
+                          {vehicle.description}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </TooltipProvider>
+              </div>
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
