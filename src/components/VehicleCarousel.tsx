@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Car, Lock } from "lucide-react";
+import { ChevronLeft, ChevronRight, Car, Lock, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
@@ -17,16 +17,25 @@ interface VehicleCarouselProps {
   selected: string | null;
 }
 
-const vehicles = [
+const defaultVehicles = [
   { id: "model-s", name: "Model S", image: modelSImage },
   { id: "model-3", name: "Model 3", image: model3Image },
   { id: "model-x", name: "Model X", image: modelXImage },
   { id: "model-y", name: "Model Y", image: modelYImage },
 ];
 
+const getVehicleImage = (modelName: string): string => {
+  const normalized = modelName.toLowerCase().trim();
+  if (normalized.includes('model s')) return modelSImage;
+  if (normalized.includes('model 3')) return model3Image;
+  if (normalized.includes('model x')) return modelXImage;
+  if (normalized.includes('model y')) return modelYImage;
+  return model3Image; // fallback
+};
+
 const findVehicleIdFromModel = (modelName: string): string | null => {
   const normalized = modelName.toLowerCase().trim();
-  for (const vehicle of vehicles) {
+  for (const vehicle of defaultVehicles) {
     if (vehicle.name.toLowerCase() === normalized) return vehicle.id;
   }
   if (normalized.includes('model s')) return 'model-s';
@@ -36,35 +45,41 @@ const findVehicleIdFromModel = (modelName: string): string | null => {
   return null;
 };
 
-interface ProfileVehicle {
+interface UserVehicle {
+  id: string;
+  display_name: string | null;
   model: string;
-  vin: string | null;
-  year: number | null;
   type: string | null;
+  year: number | null;
+  vin: string | null;
+  plate: string | null;
+  image_url: string | null;
+  is_primary: boolean;
 }
 
 const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user } = useAuth();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasAutoSelected, setHasAutoSelected] = useState(false);
-  const [profileVehicle, setProfileVehicle] = useState<ProfileVehicle | null>(null);
-  const [isVinLocked, setIsVinLocked] = useState(false);
+  const [userVehicles, setUserVehicles] = useState<UserVehicle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showUserVehicles, setShowUserVehicles] = useState(false);
+  const [selectedUserVehicle, setSelectedUserVehicle] = useState<UserVehicle | null>(null);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: !isVinLocked, // Disable loop when VIN locked
+    loop: true,
     align: "center",
     skipSnaps: false,
   });
 
   const scrollPrev = useCallback(() => {
-    if (!isVinLocked) emblaApi?.scrollPrev();
-  }, [emblaApi, isVinLocked]);
+    emblaApi?.scrollPrev();
+  }, [emblaApi]);
   
   const scrollNext = useCallback(() => {
-    if (!isVinLocked) emblaApi?.scrollNext();
-  }, [emblaApi, isVinLocked]);
+    emblaApi?.scrollNext();
+  }, [emblaApi]);
 
   const onSelectCallback = useCallback(() => {
     if (!emblaApi) return;
@@ -80,145 +95,83 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
     };
   }, [emblaApi, onSelectCallback]);
 
-  // Load vehicle from profile and check for VIN lock
+  // Load user vehicles from the new vehicles table
   useEffect(() => {
-    const loadProfileVehicle = async () => {
+    const loadUserVehicles = async () => {
       if (!user) {
         setIsLoading(false);
         return;
       }
 
       try {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("vehicle_model, vehicle_vin, vehicle_year, vehicle_type")
+        const { data: vehicles } = await supabase
+          .from("vehicles")
+          .select("*")
           .eq("user_id", user.id)
-          .maybeSingle();
+          .order("is_primary", { ascending: false })
+          .order("created_at", { ascending: true });
 
-        if (profile?.vehicle_model) {
-          const vehicleId = findVehicleIdFromModel(profile.vehicle_model);
+        if (vehicles && vehicles.length >= 2) {
+          // User has 2+ vehicles - show vehicle selector
+          setUserVehicles(vehicles as UserVehicle[]);
+          setShowUserVehicles(true);
           
-          // Check if VIN is set - if so, lock to this vehicle
-          const hasVin = profile.vehicle_vin && profile.vehicle_vin.length === 17;
-          
-          if (hasVin && vehicleId) {
-            setProfileVehicle({
-              model: profile.vehicle_model,
-              vin: profile.vehicle_vin,
-              year: profile.vehicle_year,
-              type: profile.vehicle_type,
-            });
-            setIsVinLocked(true);
-            
-            // Auto-select and proceed
-            const index = vehicles.findIndex(v => v.id === vehicleId);
-            if (index !== -1 && emblaApi) {
-              emblaApi.scrollTo(index, true);
-              setSelectedIndex(index);
+          // Pre-select primary vehicle
+          const primary = vehicles.find(v => v.is_primary) || vehicles[0];
+          if (primary) {
+            setSelectedUserVehicle(primary as UserVehicle);
+          }
+        } else if (vehicles && vehicles.length === 1) {
+          // Single vehicle with VIN - lock to it
+          const singleVehicle = vehicles[0] as UserVehicle;
+          if (singleVehicle.vin && singleVehicle.vin.length === 17) {
+            setUserVehicles([singleVehicle]);
+            setSelectedUserVehicle(singleVehicle);
+            setShowUserVehicles(true);
+          } else {
+            // Single vehicle without VIN - just pre-select in carousel
+            const vehicleId = findVehicleIdFromModel(singleVehicle.model);
+            if (vehicleId && emblaApi && !hasAutoSelected) {
+              const index = defaultVehicles.findIndex(v => v.id === vehicleId);
+              if (index !== -1) {
+                emblaApi.scrollTo(index, true);
+                setSelectedIndex(index);
+              }
+              setHasAutoSelected(true);
             }
-            setHasAutoSelected(true);
-          } else if (vehicleId && !hasAutoSelected) {
-            // Just auto-scroll to saved vehicle without locking
-            const index = vehicles.findIndex(v => v.id === vehicleId);
-            if (index !== -1 && emblaApi) {
-              emblaApi.scrollTo(index, true);
-              setSelectedIndex(index);
-            }
-            setHasAutoSelected(true);
           }
         }
       } catch (error) {
-        console.error("Error loading profile vehicle:", error);
+        console.error("Error loading user vehicles:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadProfileVehicle();
+    loadUserVehicles();
   }, [user, emblaApi, hasAutoSelected]);
 
-  const handleSelect = () => {
-    const vehicle = vehicles[selectedIndex];
+  const handleSelectFromCarousel = () => {
+    const vehicle = defaultVehicles[selectedIndex];
     if (vehicle) {
       onSelect(vehicle.id);
     }
   };
 
-  const currentVehicle = vehicles[selectedIndex];
+  const handleSelectUserVehicle = (vehicle: UserVehicle) => {
+    setSelectedUserVehicle(vehicle);
+  };
 
-  // If VIN locked, show simplified locked view
-  if (isVinLocked && profileVehicle) {
-    const lockedVehicle = vehicles.find(v => 
-      findVehicleIdFromModel(profileVehicle.model) === v.id
-    );
+  const handleContinueWithUserVehicle = () => {
+    if (selectedUserVehicle) {
+      const vehicleId = findVehicleIdFromModel(selectedUserVehicle.model);
+      if (vehicleId) {
+        onSelect(vehicleId);
+      }
+    }
+  };
 
-    return (
-      <div className="animate-fade-in">
-        <h2 className="text-2xl md:text-4xl font-extralight tracking-tight mb-2 text-center">
-          {t.yourVehicle || "Az Ön járműve"}
-        </h2>
-        <p className="text-muted-foreground font-light mb-8 text-center">
-          {t.vinLockedVehicle || "VIN alapján azonosítva"}
-        </p>
-
-        {/* Locked Vehicle Display */}
-        <div className="max-w-md mx-auto">
-          <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
-            {/* Lock Badge */}
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-muted rounded-full text-xs text-muted-foreground">
-                <Lock className="w-3 h-3" />
-                <span>{t.vinVerified || "VIN ellenőrizve"}</span>
-              </div>
-            </div>
-
-            {/* Vehicle Image */}
-            {lockedVehicle && (
-              <img
-                src={lockedVehicle.image}
-                alt={lockedVehicle.name}
-                className="w-full max-w-xs mx-auto h-auto object-contain mb-6"
-              />
-            )}
-
-            {/* Vehicle Info */}
-            <div className="text-center space-y-1">
-              <h3 className="text-xl md:text-2xl font-medium text-foreground">
-                {profileVehicle.model}
-              </h3>
-              {profileVehicle.year && (
-                <p className="text-muted-foreground">
-                  {profileVehicle.year}
-                  {profileVehicle.type && ` • ${profileVehicle.type}`}
-                </p>
-              )}
-              <p className="text-xs text-muted-foreground font-mono mt-2">
-                {profileVehicle.vin}
-              </p>
-            </div>
-          </div>
-
-          {/* Info text */}
-          <p className="text-xs text-muted-foreground text-center mt-4">
-            {t.vinLockedInfo || "A jármű a profilban megadott VIN alapján van rögzítve. Módosításhoz látogassa meg a profil beállításait."}
-          </p>
-        </div>
-
-        {/* Continue Button */}
-        <div className="flex justify-center mt-10">
-          <button
-            onClick={() => {
-              const vehicleId = findVehicleIdFromModel(profileVehicle.model);
-              if (vehicleId) onSelect(vehicleId);
-            }}
-            className="px-8 py-3 bg-foreground text-background font-medium rounded-lg hover:bg-foreground/90 transition-colors"
-          >
-            {t.continue || "Tovább"}
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const currentVehicle = defaultVehicles[selectedIndex];
 
   // Loading state
   if (isLoading) {
@@ -229,6 +182,121 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
     );
   }
 
+  // Show user's saved vehicles if they have 2+
+  if (showUserVehicles && userVehicles.length >= 1) {
+    return (
+      <div className="animate-fade-in">
+        <h2 className="text-2xl md:text-4xl font-extralight tracking-tight mb-2 text-center">
+          {userVehicles.length >= 2 
+            ? (language === "hu" ? "Válassz járművet" : "Select Your Vehicle")
+            : (t.yourVehicle || "Az Ön járműve")}
+        </h2>
+        <p className="text-muted-foreground font-light mb-8 text-center">
+          {userVehicles.length >= 2 
+            ? (language === "hu" ? "Melyik autóhoz szeretnél időpontot foglalni?" : "Which car would you like to book an appointment for?")
+            : (t.vinLockedVehicle || "VIN alapján azonosítva")}
+        </p>
+
+        {/* User Vehicles Grid/List */}
+        <div className={cn(
+          "max-w-2xl mx-auto",
+          userVehicles.length >= 2 ? "grid gap-4" : "",
+          userVehicles.length === 2 ? "grid-cols-1 sm:grid-cols-2" : "",
+          userVehicles.length >= 3 ? "grid-cols-1 sm:grid-cols-3" : ""
+        )}>
+          {userVehicles.map((vehicle) => {
+            const isSelected = selectedUserVehicle?.id === vehicle.id;
+            const vehicleImage = vehicle.image_url || getVehicleImage(vehicle.model);
+
+            return (
+              <button
+                key={vehicle.id}
+                onClick={() => handleSelectUserVehicle(vehicle)}
+                className={cn(
+                  "relative bg-card border rounded-xl p-4 md:p-6 transition-all duration-200 text-left",
+                  isSelected 
+                    ? "border-foreground ring-2 ring-foreground/20" 
+                    : "border-border hover:border-foreground/50"
+                )}
+              >
+                {/* Primary Badge */}
+                {vehicle.is_primary && userVehicles.length >= 2 && (
+                  <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 bg-muted rounded-full text-xs text-muted-foreground">
+                    <Star className="w-3 h-3 fill-current" />
+                    <span>{language === "hu" ? "Elsődleges" : "Primary"}</span>
+                  </div>
+                )}
+
+                {/* VIN Lock Badge */}
+                {vehicle.vin && vehicle.vin.length === 17 && (
+                  <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-0.5 bg-muted rounded-full text-xs text-muted-foreground">
+                    <Lock className="w-3 h-3" />
+                  </div>
+                )}
+
+                {/* Vehicle Image */}
+                <div className="flex justify-center mb-4">
+                  <img
+                    src={vehicleImage}
+                    alt={vehicle.model}
+                    className="w-full max-w-[180px] h-auto object-contain"
+                  />
+                </div>
+
+                {/* Vehicle Info */}
+                <div className="text-center space-y-1">
+                  <h3 className="text-lg font-medium text-foreground">
+                    {vehicle.display_name || vehicle.model}
+                  </h3>
+                  <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                    {vehicle.display_name && <span>{vehicle.model}</span>}
+                    {vehicle.year && <span>{vehicle.year}</span>}
+                    {vehicle.type && <span>• {vehicle.type}</span>}
+                  </div>
+                  {vehicle.plate && (
+                    <p className="text-xs font-mono text-muted-foreground">
+                      {vehicle.plate}
+                    </p>
+                  )}
+                </div>
+
+                {/* Selection Indicator */}
+                {isSelected && (
+                  <div className="absolute inset-0 rounded-xl ring-2 ring-foreground pointer-events-none" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Switch to Standard Selection Link */}
+        {userVehicles.length >= 2 && (
+          <p className="text-center text-xs text-muted-foreground mt-6">
+            {language === "hu" ? "Más autó? " : "Different car? "}
+            <button 
+              onClick={() => setShowUserVehicles(false)}
+              className="underline hover:text-foreground transition-colors"
+            >
+              {language === "hu" ? "Válassz a listából" : "Choose from list"}
+            </button>
+          </p>
+        )}
+
+        {/* Continue Button */}
+        <div className="flex justify-center mt-10">
+          <button
+            onClick={handleContinueWithUserVehicle}
+            disabled={!selectedUserVehicle}
+            className="px-8 py-3 bg-foreground text-background font-medium rounded-lg hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {t.continue || "Tovább"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Standard carousel for users without saved vehicles or choosing to browse
   return (
     <div className="animate-fade-in">
       <h2 className="text-2xl md:text-4xl font-extralight tracking-tight mb-2 text-center">
@@ -237,6 +305,18 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
       <p className="text-muted-foreground font-light mb-8 text-center">
         {t.chooseVehicleModel}
       </p>
+
+      {/* Back to Saved Vehicles Link */}
+      {userVehicles.length >= 2 && (
+        <p className="text-center text-xs text-muted-foreground mb-6">
+          <button 
+            onClick={() => setShowUserVehicles(true)}
+            className="underline hover:text-foreground transition-colors"
+          >
+            {language === "hu" ? "← Vissza a mentett járművekhez" : "← Back to saved vehicles"}
+          </button>
+        </p>
+      )}
 
       {/* Carousel Container */}
       <div className="relative max-w-2xl mx-auto">
@@ -260,7 +340,7 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
         {/* Embla Carousel */}
         <div ref={emblaRef} className="overflow-hidden">
           <div className="flex">
-            {vehicles.map((vehicle, index) => {
+            {defaultVehicles.map((vehicle, index) => {
               const isActive = index === selectedIndex;
               return (
                 <div
@@ -295,7 +375,7 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
 
         {/* Dot Indicators */}
         <div className="flex justify-center gap-2 mt-6">
-          {vehicles.map((_, index) => (
+          {defaultVehicles.map((_, index) => (
             <button
               key={index}
               onClick={() => emblaApi?.scrollTo(index)}
@@ -314,7 +394,7 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
       {/* Continue Button */}
       <div className="flex justify-center mt-10">
         <button
-          onClick={handleSelect}
+          onClick={handleSelectFromCarousel}
           className="px-8 py-3 bg-foreground text-background font-medium rounded-lg hover:bg-foreground/90 transition-colors"
         >
           {t.continue || "Tovább"}
