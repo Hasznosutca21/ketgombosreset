@@ -1,21 +1,32 @@
-import { useState, useEffect } from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 
-// Import Model 3 chrome image for visualization
-import model3ChromeImage from "@/assets/vehicles/model-3-chrome.png";
+// Import Model 3 side images
+import model3LeftSide from "@/assets/vehicles/model-3-left-side.jpg";
+import model3RightSide from "@/assets/vehicles/model-3-right-side.jpg";
 
 interface DoorHandleSelectorProps {
   value: string[];
   onChange: (handles: string[]) => void;
 }
 
-const HANDLE_POSITIONS = [
-  { id: "front-left", label: "Bal első", labelEn: "Front Left", x: 18, y: 42 },
-  { id: "rear-left", label: "Bal hátsó", labelEn: "Rear Left", x: 35, y: 42 },
-  { id: "front-right", label: "Jobb első", labelEn: "Front Right", x: 18, y: 58 },
-  { id: "rear-right", label: "Jobb hátsó", labelEn: "Rear Right", x: 35, y: 58 },
+// Handle positions as percentages on the images
+const LEFT_SIDE_HANDLES = [
+  { id: "front-left", label: "Bal első", labelEn: "Front Left", x: 75, y: 42 },
+  { id: "rear-left", label: "Bal hátsó", labelEn: "Rear Left", x: 42, y: 42 },
+];
+
+const RIGHT_SIDE_HANDLES = [
+  { id: "front-right", label: "Jobb első", labelEn: "Front Right", x: 25, y: 42 },
+  { id: "rear-right", label: "Jobb hátsó", labelEn: "Rear Right", x: 58, y: 42 },
+];
+
+const ALL_HANDLES = [
+  { id: "front-left", label: "Bal első", labelEn: "Front Left" },
+  { id: "rear-left", label: "Bal hátsó", labelEn: "Rear Left" },
+  { id: "front-right", label: "Jobb első", labelEn: "Front Right" },
+  { id: "rear-right", label: "Jobb hátsó", labelEn: "Rear Right" },
 ];
 
 const PRICE_PER_HANDLE = 25000;
@@ -35,115 +46,85 @@ const DoorHandleSelector = ({ value, onChange }: DoorHandleSelectorProps) => {
   const totalPrice = value.length * PRICE_PER_HANDLE;
   const formattedPrice = new Intl.NumberFormat("hu-HU").format(totalPrice);
 
+  const renderMarker = (handle: { id: string; x: number; y: number }, isSelected: boolean) => (
+    <button
+      key={handle.id}
+      type="button"
+      onClick={() => toggleHandle(handle.id)}
+      className="absolute transform -translate-x-1/2 -translate-y-1/2 group"
+      style={{ left: `${handle.x}%`, top: `${handle.y}%` }}
+    >
+      <div
+        className={cn(
+          "w-6 h-6 md:w-8 md:h-8 rounded-full border-2 flex items-center justify-center transition-all duration-200",
+          isSelected
+            ? "bg-destructive border-destructive scale-110"
+            : "bg-background/80 border-muted-foreground/50 hover:border-foreground hover:scale-110"
+        )}
+      >
+        {isSelected && (
+          <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-white" />
+        )}
+      </div>
+      {/* Pulse animation for selected */}
+      {isSelected && (
+        <div className="absolute inset-0 w-6 h-6 md:w-8 md:h-8 rounded-full border-2 border-destructive animate-ping opacity-50" />
+      )}
+    </button>
+  );
+
   return (
     <div className="space-y-6">
-      {/* Visual Car Diagram */}
-      <div className="relative bg-muted/30 rounded-xl p-6 overflow-hidden">
-        {/* Top-down car silhouette */}
-        <div className="relative mx-auto" style={{ maxWidth: "320px" }}>
-          {/* Car outline - top-down view */}
-          <svg
-            viewBox="0 0 100 60"
-            className="w-full h-auto"
-            style={{ filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.1))" }}
-          >
-            {/* Car body */}
-            <path
-              d="M15 20 Q10 20 10 25 L10 35 Q10 40 15 40 L85 40 Q90 40 90 35 L90 25 Q90 20 85 20 L65 20 L60 12 Q58 10 50 10 Q42 10 40 12 L35 20 Z"
-              fill="hsl(var(--muted))"
-              stroke="hsl(var(--border))"
-              strokeWidth="1"
-            />
-            {/* Windshield */}
-            <path
-              d="M38 20 L42 14 Q44 12 50 12 Q56 12 58 14 L62 20"
-              fill="none"
-              stroke="hsl(var(--foreground))"
-              strokeWidth="0.5"
-              opacity="0.5"
-            />
-            {/* Rear window */}
-            <path
-              d="M72 22 L78 22 Q80 22 80 24 L80 36 Q80 38 78 38 L72 38"
-              fill="none"
-              stroke="hsl(var(--foreground))"
-              strokeWidth="0.5"
-              opacity="0.5"
-            />
-            {/* Left side windows */}
-            <rect x="25" y="16" width="8" height="4" rx="1" fill="hsl(var(--foreground))" opacity="0.2" />
-            <rect x="36" y="16" width="8" height="4" rx="1" fill="hsl(var(--foreground))" opacity="0.2" />
-            {/* Right side windows */}
-            <rect x="25" y="40" width="8" height="4" rx="1" fill="hsl(var(--foreground))" opacity="0.2" />
-            <rect x="36" y="40" width="8" height="4" rx="1" fill="hsl(var(--foreground))" opacity="0.2" />
-            
-            {/* Door handles - interactive */}
-            {HANDLE_POSITIONS.map((handle) => {
-              const isSelected = value.includes(handle.id);
-              return (
-                <g
-                  key={handle.id}
-                  onClick={() => toggleHandle(handle.id)}
-                  style={{ cursor: "pointer" }}
-                  className="transition-transform hover:scale-110"
-                >
-                  {/* Handle marker */}
-                  <circle
-                    cx={handle.x}
-                    cy={handle.y}
-                    r="4"
-                    fill={isSelected ? "hsl(var(--destructive))" : "hsl(var(--muted-foreground))"}
-                    stroke={isSelected ? "hsl(var(--destructive))" : "hsl(var(--border))"}
-                    strokeWidth="1"
-                    className="transition-colors"
-                  />
-                  {isSelected && (
-                    <circle
-                      cx={handle.x}
-                      cy={handle.y}
-                      r="6"
-                      fill="none"
-                      stroke="hsl(var(--destructive))"
-                      strokeWidth="1"
-                      opacity="0.5"
-                    />
-                  )}
-                </g>
-              );
-            })}
-          </svg>
-
-          {/* Labels */}
-          <div className="absolute top-0 left-0 text-xs text-muted-foreground font-medium">
+      {/* Visual Car Images */}
+      <div className="space-y-4">
+        {/* Left side view */}
+        <div className="relative rounded-xl overflow-hidden bg-[#1a1a1a]">
+          <p className="absolute top-2 left-3 text-xs text-white/70 font-medium z-10">
             {isHu ? "Bal oldal" : "Left side"}
-          </div>
-          <div className="absolute bottom-0 left-0 text-xs text-muted-foreground font-medium">
-            {isHu ? "Jobb oldal" : "Right side"}
-          </div>
-          <div className="absolute top-1/2 -translate-y-1/2 left-0 text-xs text-muted-foreground">
-            ←{isHu ? " Elöl" : " Front"}
-          </div>
-          <div className="absolute top-1/2 -translate-y-1/2 right-0 text-xs text-muted-foreground">
-            {isHu ? "Hátul " : "Rear "}→
-          </div>
+          </p>
+          <img
+            src={model3LeftSide}
+            alt="Tesla Model 3 Left Side"
+            className="w-full h-auto"
+          />
+          {LEFT_SIDE_HANDLES.map((handle) =>
+            renderMarker(handle, value.includes(handle.id))
+          )}
         </div>
 
-        {/* Legend */}
-        <div className="flex items-center justify-center gap-6 mt-4 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-muted-foreground" />
-            <span className="text-muted-foreground">{isHu ? "Ép" : "OK"}</span>
+        {/* Right side view */}
+        <div className="relative rounded-xl overflow-hidden bg-[#1a1a1a]">
+          <p className="absolute top-2 left-3 text-xs text-white/70 font-medium z-10">
+            {isHu ? "Jobb oldal" : "Right side"}
+          </p>
+          <img
+            src={model3RightSide}
+            alt="Tesla Model 3 Right Side"
+            className="w-full h-auto"
+          />
+          {RIGHT_SIDE_HANDLES.map((handle) =>
+            renderMarker(handle, value.includes(handle.id))
+          )}
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="flex items-center justify-center gap-6 text-sm">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full border-2 border-muted-foreground/50 bg-background/80" />
+          <span className="text-muted-foreground">{isHu ? "Ép" : "OK"}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-destructive flex items-center justify-center">
+            <div className="w-1.5 h-1.5 rounded-full bg-white" />
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-destructive" />
-            <span className="text-muted-foreground">{isHu ? "Sérült" : "Damaged"}</span>
-          </div>
+          <span className="text-muted-foreground">{isHu ? "Sérült" : "Damaged"}</span>
         </div>
       </div>
 
       {/* Handle selection buttons */}
       <div className="grid grid-cols-2 gap-3">
-        {HANDLE_POSITIONS.map((handle) => {
+        {ALL_HANDLES.map((handle) => {
           const isSelected = value.includes(handle.id);
           return (
             <button
