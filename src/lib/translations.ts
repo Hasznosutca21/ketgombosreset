@@ -44,7 +44,7 @@ export const hu = {
     },
     other: {
       title: "Egyéb javítások",
-      description: "Tipikus problémák",
+      description: "Modell specifikus hibák",
     },
   },
 
