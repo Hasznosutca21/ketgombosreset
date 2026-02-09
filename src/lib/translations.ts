@@ -149,6 +149,25 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
       duration: "30 perc",
     },
     // Egyéb szolgáltatások
+    doorhandle: {
+      title: "Króm kilincs csere",
+      description: "A 2018-2020 Model 3 króm kilincs felülete lepereg",
+      duration: "1-2 óra",
+      price: "25 000 Ft / db",
+      details: `A 2018-2020 között gyártott Tesla Model 3 járművek króm bevonatú kilincseinél gyakori probléma, hogy a felület idővel lepereg, lepattogzik.
+
+Ez nemcsak esztétikai hiba, hanem a kilincsmechanizmus élettartamát is befolyásolhatja.
+
+A Tesland kilincs csere szolgáltatás:
+• Eredeti minőségű króm vagy matt fekete cserealkatrész
+• Precíz beszerelés tapasztalt szerelők által
+• Garanciális munka
+• Akár egy, akár mind a négy kilincs cserélhető
+
+Ár: 25 000 Ft / darab
+
+Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
+    },
     body: {
       title: "Karosszéria javítás",
       description: "Horpadás eltávolítás és festés javítás",
@@ -553,6 +572,25 @@ The price includes a personal consultation where we discuss the results and answ
       duration: "30 mins",
     },
     // Other Services
+    doorhandle: {
+      title: "Chrome Handle Replacement",
+      description: "2018-2020 Model 3 chrome door handle surface peels off",
+      duration: "1-2 hours",
+      price: "25 000 Ft / pc",
+      details: `Tesla Model 3 vehicles manufactured between 2018-2020 with chrome-coated door handles often experience surface peeling and flaking over time.
+
+This is not just an aesthetic issue – it can also affect the lifespan of the handle mechanism.
+
+Tesland door handle replacement service:
+• Original quality chrome or matte black replacement parts
+• Precise installation by experienced technicians
+• Warranty covered work
+• One or all four handles can be replaced
+
+Price: 25,000 Ft / piece
+
+Select which handle needs replacement on the interactive diagram!`,
+    },
     body: {
       title: "Body Repair",
       description: "Dent removal and paint touch-ups",
