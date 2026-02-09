@@ -91,8 +91,8 @@ const ConfirmationView = ({ service, vehicle, appointment, appointmentId, onStar
       }
 
       if (data?.url) {
-        // Redirect to Stripe Checkout - don't reset loading state as we're navigating away
-        window.location.href = data.url;
+        // Redirect to Stripe Checkout - use location.assign for better mobile compatibility
+        window.location.assign(data.url);
       } else {
         toast.error(t.paymentFailed);
         setIsPaymentLoading(false);
