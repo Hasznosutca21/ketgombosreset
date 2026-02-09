@@ -202,6 +202,11 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
       description: "Gumiabroncs csere és centírozás",
       duration: "1 óra",
     },
+    accessories: {
+      title: "Kiegészítők beszerelése",
+      description: "Tesla kiegészítők professzionális beszerelése",
+      duration: "Egyedi",
+    },
   },
 
   // Vehicle Selector
@@ -643,6 +648,11 @@ Select which handle needs replacement on the interactive diagram!`,
       title: "Tire Service",
       description: "Tire replacement and balancing",
       duration: "1 hour",
+    },
+    accessories: {
+      title: "Accessories Installation",
+      description: "Professional Tesla accessories installation",
+      duration: "Custom",
     },
   },
 
