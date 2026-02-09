@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, Car, Info, Check, Calendar } from "lucide-react";
+import { ArrowLeft, Car, Info, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -11,13 +11,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { YearPicker } from "@/components/ui/year-picker";
 
 // Import vehicle images
 import modelSImage from "@/assets/vehicles/model-s.png";
@@ -99,8 +92,6 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
   const [profileVehicle, setProfileVehicle] = useState<ProfileVehicle | null>(null);
   const [hasAutoSelected, setHasAutoSelected] = useState(false);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
-  const [tempYear, setTempYear] = useState<number | null>(null);
 
   // Load vehicle from profile
   useEffect(() => {
@@ -126,10 +117,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
             const vehicleId = findVehicleIdFromModel(profile.vehicle_model);
             if (vehicleId) {
               setSelectedVehicleId(vehicleId);
-              if (profile.vehicle_year) {
-                setSelectedYear(profile.vehicle_year);
-                onSelect(`${vehicleId}-${profile.vehicle_year}`);
-              }
+              onSelect(vehicleId);
               setHasAutoSelected(true);
             }
           }
@@ -143,46 +131,12 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
   }, [user, selected, onSelect, hasAutoSelected]);
 
   const handleVehicleClick = (vehicleId: string) => {
-    // Model 3 doesn't need year selection - select directly
-    if (vehicleId === "model-3") {
-      setSelectedVehicleId(vehicleId);
-      setSelectedYear(2020); // Default year for Model 3
-      onSelect(`${vehicleId}-2020`);
-      return;
-    }
+    // Direct selection without year picker
     setSelectedVehicleId(vehicleId);
-    setSelectedYear(null);
-    setTempYear(null);
-  };
-
-  const handleYearSelect = (year: number) => {
-    setTempYear(year);
-  };
-
-  const handleYearConfirm = () => {
-    if (tempYear && selectedVehicleId) {
-      setSelectedYear(tempYear);
-      onSelect(`${selectedVehicleId}-${tempYear}`);
-    }
+    onSelect(vehicleId);
   };
 
   const selectedVehicle = vehicles.find(v => v.id === selectedVehicleId);
-  const yearOptions = selectedVehicle 
-    ? Array.from(
-        { length: selectedVehicle.yearRange.to - selectedVehicle.yearRange.from + 1 }, 
-        (_, i) => selectedVehicle.yearRange.to - i
-      )
-    : [];
-
-  // Get the appropriate image based on year (for Model 3 chrome trim)
-  const getVehicleImage = (vehicle: typeof vehicles[0], year: number | null) => {
-    if (vehicle.chromeImage && vehicle.chromeYearRange && year) {
-      if (year >= vehicle.chromeYearRange.from && year <= vehicle.chromeYearRange.to) {
-        return vehicle.chromeImage;
-      }
-    }
-    return vehicle.image;
-  };
 
   return (
     <div className="animate-fade-in">
@@ -277,74 +231,20 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
         </TooltipProvider>
       </div>
 
-      {/* Year selector dialog */}
-      <Dialog 
-        open={!!selectedVehicleId && !selectedYear} 
-        onOpenChange={(open) => {
-          if (!open && !selectedYear) {
-            setSelectedVehicleId(null);
-            setTempYear(null);
-          }
-        }}
-      >
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-center gap-2 text-xl">
-              <Calendar className="w-5 h-5" />
-              {t.selectYear}
-            </DialogTitle>
-          </DialogHeader>
-          
-          {selectedVehicle && (
-            <div className="flex items-center justify-center gap-3 p-3 bg-muted/50 rounded-lg mb-2">
-              <img 
-                src={selectedVehicle.image} 
-                alt={selectedVehicle.name}
-                className="w-16 h-12 object-contain"
-              />
-              <span className="font-medium">{selectedVehicle.name}</span>
-            </div>
-          )}
-          
-          <YearPicker
-            years={yearOptions}
-            value={tempYear}
-            onChange={handleYearSelect}
-            className="my-4"
-          />
-
-          <Button 
-            onClick={handleYearConfirm}
-            disabled={!tempYear}
-            className="w-full"
-          >
-            {t.confirm || "Megerősítés"}
-          </Button>
-        </DialogContent>
-      </Dialog>
-
-      {/* Selected vehicle and year display */}
-      {selectedVehicleId && selectedYear && (
+      {/* Selected vehicle display */}
+      {selectedVehicleId && (
         <div className="mt-8 animate-fade-in">
           <div className="flex items-center justify-center gap-3 p-4 bg-muted/30 rounded-xl max-w-md mx-auto">
             {selectedVehicle && (
               <>
                 <img 
-                  src={getVehicleImage(selectedVehicle, selectedYear)} 
+                  src={selectedVehicle.image} 
                   alt={selectedVehicle.name}
                   className="w-20 h-14 object-contain"
                 />
                 <div className="flex-1">
                   <div className="font-semibold">{selectedVehicle.name}</div>
-                  <div className="text-sm text-muted-foreground">{selectedYear}</div>
                 </div>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => setSelectedYear(null)}
-                >
-                  {t.change || "Módosítás"}
-                </Button>
               </>
             )}
           </div>

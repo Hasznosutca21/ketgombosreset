@@ -87,9 +87,9 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[] }[] 
     id: "other",
     icon: Shield,
     services: [
-      { id: "doorhandle", icon: DoorOpen, vehicleRestriction: ["model-3"], yearRestriction: { from: 2018, to: 2020 } },
+      { id: "doorhandle", icon: DoorOpen, vehicleRestriction: ["model-3"] },
       { id: "body", icon: Package, vehicleRestriction: [] },
-      { id: "warranty", icon: Shield, vehicleRestriction: ["model-3"], yearRestriction: { from: 2021, to: 2026 } },
+      { id: "warranty", icon: Shield, vehicleRestriction: ["model-3"] },
       { id: "tires", icon: CircleDot, vehicleRestriction: [] },
     ],
   },
