@@ -262,121 +262,180 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
   };
 
   const handlePrint = (sheet: WorkSheet) => {
-    setViewSheet(sheet);
-    setTimeout(() => {
-      const printContent = printRef.current;
-      if (!printContent) return;
-      const printWindow = window.open("", "_blank");
-      if (!printWindow) return;
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Munkalap - ${sheet.customer_name}</title>
-          <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: 'Segoe UI', system-ui, sans-serif; padding: 40px; color: #1a1a1a; }
-            .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; border-bottom: 2px solid #1a1a1a; padding-bottom: 16px; }
-            .logo { font-size: 24px; font-weight: 700; letter-spacing: 2px; }
-            .title { font-size: 20px; font-weight: 300; text-transform: uppercase; letter-spacing: 3px; }
-            .meta { font-size: 12px; color: #666; margin-top: 4px; }
-            .section { margin-bottom: 24px; }
-            .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 8px; font-weight: 600; }
-            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-            .field { margin-bottom: 12px; }
-            .field-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-            .field-value { font-size: 14px; margin-top: 2px; }
-            .description { white-space: pre-wrap; font-size: 14px; line-height: 1.6; padding: 16px; background: #f8f8f8; border-radius: 4px; min-height: 100px; }
-            .footer { margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
-            .signature { border-top: 1px solid #ccc; padding-top: 8px; font-size: 12px; color: #888; text-align: center; }
-            @media print { body { padding: 20px; } }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <div>
-              <div class="logo">TESLAND</div>
-              <div class="meta">Tesla szerviz és szolgáltató</div>
-            </div>
-            <div style="text-align: right;">
-              <div class="title">Munkalap</div>
-              <div class="meta">${format(new Date(sheet.created_at), "yyyy. MMM d.", { locale: hu })}</div>
-              <div class="meta">#${sheet.id.slice(0, 8).toUpperCase()}</div>
+    const docNumber = `TG-${new Date(sheet.created_at).getFullYear()}-${sheet.id.slice(0, 3).toUpperCase()}`;
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Munkalap - ${sheet.customer_name}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; padding: 32px 40px; color: #1a1a1a; font-size: 13px; line-height: 1.5; }
+          
+          .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+          .header-left { display: flex; gap: 16px; align-items: flex-start; }
+          .header-logo img { height: 64px; }
+          .header-company { font-size: 13px; }
+          .header-company strong { font-size: 14px; }
+          .header-right { text-align: left; font-size: 13px; color: #333; }
+          
+          .title-bar { border-top: 3px solid #1a1a1a; border-bottom: 1px solid #ccc; padding: 12px 0; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+          .title-bar h1 { font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+          .title-bar .doc-number { font-size: 14px; color: #555; }
+          
+          .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 20px; }
+          .info-section { padding: 12px 0; }
+          .info-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 6px; font-weight: 600; }
+          .info-section p { margin: 2px 0; }
+          .info-section strong { font-weight: 600; }
+          
+          .section { margin-bottom: 20px; }
+          .section-title { font-size: 13px; font-weight: 700; border-bottom: 2px solid #1a1a1a; padding-bottom: 4px; margin-bottom: 10px; }
+          .description-text { font-size: 13px; line-height: 1.7; white-space: pre-wrap; padding: 12px 0; }
+          
+          .items-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 12px; }
+          .items-table th { text-align: left; padding: 8px 6px; border-bottom: 2px solid #1a1a1a; font-weight: 600; font-size: 11px; }
+          .items-table td { padding: 8px 6px; border-bottom: 1px solid #eee; }
+          
+          .totals { margin-left: auto; width: 280px; font-size: 13px; }
+          .totals .row { display: flex; justify-content: space-between; padding: 4px 0; }
+          .totals .row.total { font-weight: 700; border-top: 2px solid #1a1a1a; padding-top: 6px; margin-top: 4px; }
+          
+          .legal { margin-top: 20px; font-size: 11.5px; line-height: 1.6; color: #333; }
+          .legal p { margin: 3px 0; }
+          
+          .signatures { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+          .sig-block { }
+          .sig-block .sig-text { font-size: 12px; color: #333; margin-bottom: 24px; min-height: 36px; }
+          .sig-line { border-top: 1px solid #999; width: 200px; }
+          
+          .footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 8px; font-size: 10px; color: #999; }
+          
+          @media print { 
+            body { padding: 16px 24px; } 
+            @page { margin: 12mm; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="header-left">
+            <div class="header-company">
+              <strong>Tesland Győr - Innovateam Hungária Kft</strong><br>
+              9011 Győr Váci Mihály út 140<br>
+              +36203682641<br>
+              bogdan.krisztian@innovateamkft.hu<br>
+              14708268-2-08
             </div>
           </div>
+          <div class="header-right">
+            Megrendelés dátuma: ${format(new Date(sheet.service_date), "yyyy-MM-dd")}<br>
+            Határidő: <br>
+            Szerelő: <br>
+            Munkalap megnevezése: ${sheet.service}
+          </div>
+        </div>
 
-          <div class="section">
-            <div class="section-title">Ügyfél adatok</div>
-            <div class="grid">
-              <div class="field">
-                <div class="field-label">Név</div>
-                <div class="field-value">${sheet.customer_name}</div>
-              </div>
-              <div class="field">
-                <div class="field-label">E-mail</div>
-                <div class="field-value">${sheet.customer_email}</div>
-              </div>
-              <div class="field">
-                <div class="field-label">Telefon</div>
-                <div class="field-value">${sheet.customer_phone || "—"}</div>
-              </div>
-            </div>
-          </div>
+        <div class="title-bar">
+          <h1>ÁRAJÁNLAT / MUNKALAP</h1>
+          <span class="doc-number">${docNumber}</span>
+        </div>
 
-          <div class="section">
-            <div class="section-title">Jármű adatok</div>
-            <div class="grid">
-              <div class="field">
-                <div class="field-label">Jármű</div>
-                <div class="field-value">${getVehicleLabel(sheet.vehicle)}</div>
-              </div>
-              <div class="field">
-                <div class="field-label">VIN</div>
-                <div class="field-value">${sheet.vehicle_vin || "—"}</div>
-              </div>
-            </div>
+        <div class="info-grid">
+          <div class="info-section">
+            <div class="info-label">Ügyfél</div>
+            <p><strong>${sheet.customer_name}</strong></p>
+            <p>${sheet.customer_phone || ""}</p>
+            <p>${sheet.customer_email}</p>
           </div>
+          <div class="info-section">
+            <div class="info-label">Gépjármű</div>
+            <p><strong>${sheet.vehicle_vin ? sheet.vehicle_vin + ", " : ""}TESLA ${getVehicleLabel(sheet.vehicle)}</strong></p>
+            <p>Alvázszám: ${sheet.vehicle_vin || "—"}</p>
+          </div>
+        </div>
 
-          <div class="section">
-            <div class="section-title">Szolgáltatás</div>
-            <div class="grid">
-              <div class="field">
-                <div class="field-label">Típus</div>
-                <div class="field-value">${sheet.service}</div>
-              </div>
-              <div class="field">
-                <div class="field-label">Dátum</div>
-                <div class="field-value">${format(new Date(sheet.service_date), "yyyy. MMM d.", { locale: hu })}</div>
-              </div>
-            </div>
-          </div>
+        <div class="section">
+          <div class="section-title">Hiba leírása</div>
+          <div class="description-text">${sheet.description || "—"}</div>
+        </div>
 
-          <div class="section">
-            <div class="section-title">Elvégzett munka leírása</div>
-            <div class="description">${sheet.description || "—"}</div>
+        <div class="section">
+          <table class="items-table">
+            <thead>
+              <tr>
+                <th>Azonosító</th>
+                <th>Megnevezés</th>
+                <th>Menny.</th>
+                <th>Nettó Egységár</th>
+                <th>Nettó ár</th>
+                <th>ÁFA</th>
+                <th>Bruttó ár</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>01</td>
+                <td>${sheet.service}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>27%</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="totals">
+            <div class="row"><span>Nettó számla érték:</span><span></span></div>
+            <div class="row"><span>ÁFA:</span><span></span></div>
+            <div class="row total"><span>Bruttó számla érték:</span><span></span></div>
           </div>
+        </div>
 
-          ${sheet.notes ? `
-          <div class="section">
-            <div class="section-title">Megjegyzések</div>
-            <div class="description">${sheet.notes}</div>
-          </div>
-          ` : ""}
+        ${sheet.notes ? `
+        <div class="section">
+          <div class="section-title">Megjegyzések</div>
+          <div class="description-text">${sheet.notes}</div>
+        </div>
+        ` : ""}
 
-          <div class="footer">
-            <div>
-              <div class="signature">Szerviz aláírás</div>
-            </div>
-            <div>
-              <div class="signature">Ügyfél aláírás</div>
-            </div>
+        <div class="legal">
+          <p>[x] A szerviz a munkáért garanciát vállal.</p>
+          <p>[x] A lecserélt alkatrészek tulajdonjogáról a szolgáltató részére lemondok.</p>
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;A szerviz általános szerződési feltételeit és adatkezelési tájékoztatóját megismertem azokat elfogadom.</p>
+          <p>[ ] Hozzájárulok, hogy a szerviz, mint adatkezelő a személyes adataimat marketing célokra kezelje, részemre akcióiról, szolgáltatásairól, tájékoztatókat és ajánlatokat küldjön.</p>
+        </div>
+
+        <div class="signatures">
+          <div class="sig-block">
+            <div class="sig-text">Az ajánlatot elfogadom, a munkát megrendelem.</div>
+            <div class="sig-line"></div>
           </div>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
-    }, 100);
+          <div class="sig-block">
+            <div class="sig-text">A megrendelésben szereplő munka elvégzésére a gépjárművet átvettem.</div>
+            <div class="sig-line"></div>
+          </div>
+          <div class="sig-block">
+            <div class="sig-text">A javított gépjárművet átvettem.</div>
+            <div class="sig-line"></div>
+          </div>
+          <div class="sig-block">
+            <div class="sig-text">Az elvégzett munkákról tájékoztattam az ügyfelet.</div>
+            <div class="sig-line"></div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span>Tesland Győr</span>
+          <span>1/ 1</span>
+        </div>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
   };
 
   return (
