@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import heroImage from "@/assets/tesland-hero.jpg";
 import teslandLogo from "@/assets/tesland-logo.png";
 import ServiceSelector from "@/components/ServiceSelector";
-import VehicleSelector from "@/components/VehicleSelector";
+import VehicleCarousel from "@/components/VehicleCarousel";
 
 import AppointmentForm from "@/components/AppointmentForm";
 import ConfirmationView from "@/components/ConfirmationView";
@@ -384,7 +384,7 @@ const Index = () => {
         {/* Main Content */}
         <main className="max-w-4xl mx-auto px-6 py-12">
           {currentStep === "vehicle" && (
-            <VehicleSelector onSelect={handleVehicleSelect} selected={selectedVehicle} />
+            <VehicleCarousel onSelect={handleVehicleSelect} selected={selectedVehicle} />
           )}
           {currentStep === "service" && (
             <ServiceSelector onSelect={handleServiceSelect} selected={selectedService} selectedVehicle={selectedVehicle} onBack={() => setCurrentStep("vehicle")} />
