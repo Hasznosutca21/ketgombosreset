@@ -5,6 +5,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import useEmblaCarousel from "embla-carousel-react";
+import { TESLA_COLORS } from "@/components/VehicleColorSelector";
 
 // Import vehicle images
 import modelSImage from "@/assets/vehicles/model-s.png";
@@ -55,7 +56,14 @@ interface UserVehicle {
   plate: string | null;
   image_url: string | null;
   is_primary: boolean;
+  color: string | null;
 }
+
+const getColorHex = (colorId: string | null): string | null => {
+  if (!colorId) return null;
+  const color = TESLA_COLORS.find(c => c.id === colorId);
+  return color?.hex || null;
+};
 
 const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
   const { t, language } = useLanguage();
@@ -245,9 +253,18 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
 
                 {/* Vehicle Info */}
                 <div className="text-center space-y-1">
-                  <h3 className="text-lg font-medium text-foreground">
-                    {vehicle.display_name || vehicle.model}
-                  </h3>
+                  <div className="flex items-center justify-center gap-2">
+                    {vehicle.color && (
+                      <div 
+                        className="w-4 h-4 rounded-full border border-border flex-shrink-0"
+                        style={{ backgroundColor: getColorHex(vehicle.color) || undefined }}
+                        title={TESLA_COLORS.find(c => c.id === vehicle.color)?.name[language] || ""}
+                      />
+                    )}
+                    <h3 className="text-lg font-medium text-foreground">
+                      {vehicle.display_name || vehicle.model}
+                    </h3>
+                  </div>
                   <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                     {vehicle.display_name && <span>{vehicle.model}</span>}
                     {vehicle.year && <span>{vehicle.year}</span>}
