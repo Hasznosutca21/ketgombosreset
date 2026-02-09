@@ -113,7 +113,7 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
     id: "accessories",
     icon: Package,
     services: [
-      { id: "s3xy_products", icon: Package, vehicleRestriction: [] },
+      { id: "s3xy_products", icon: Package, vehicleRestriction: ["model-3", "model-y"] },
     ],
   },
 ];
@@ -127,6 +127,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [trunkLightNotWorking, setTrunkLightNotWorking] = useState(false);
   const [s3xyDialogOpen, setS3xyDialogOpen] = useState(false);
   const [selectedS3xyProducts, setSelectedS3xyProducts] = useState<string[]>([]);
+  const [selectedS3xyVehicleVariant, setSelectedS3xyVehicleVariant] = useState<string>("");
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
     details: string;
@@ -452,7 +453,10 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
       {/* S3XY Products Dialog */}
       <Dialog open={s3xyDialogOpen} onOpenChange={(open) => {
         setS3xyDialogOpen(open);
-        if (!open) setSelectedS3xyProducts([]);
+        if (!open) {
+          setSelectedS3xyProducts([]);
+          setSelectedS3xyVehicleVariant("");
+        }
       }}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -470,37 +474,78 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             
             <div className="space-y-2">
               {[
-                { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2 },
-                { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle },
-                { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package },
-                { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus },
-                { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation },
-                { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard },
+                { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: null },
+                { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null },
+                { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft" },
+                { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: null },
+                { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null },
+                { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null },
               ].map((product) => {
                 const ProductIcon = product.icon;
+                const isChecked = selectedS3xyProducts.includes(product.id);
                 return (
-                  <div 
-                    key={product.id}
-                    className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border hover:bg-muted/50 transition-colors"
-                  >
-                    <Checkbox 
-                      id={`s3xy-${product.id}`}
-                      checked={selectedS3xyProducts.includes(product.id)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedS3xyProducts([...selectedS3xyProducts, product.id]);
-                        } else {
-                          setSelectedS3xyProducts(selectedS3xyProducts.filter(p => p !== product.id));
-                        }
-                      }}
-                    />
-                    <ProductIcon className="w-4 h-4 text-muted-foreground" />
-                    <label 
-                      htmlFor={`s3xy-${product.id}`}
-                      className="text-sm font-medium leading-none cursor-pointer select-none flex-1"
+                  <div key={product.id} className="space-y-2">
+                    <div 
+                      className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border hover:bg-muted/50 transition-colors"
                     >
-                      {language === "hu" ? product.hu : product.en}
-                    </label>
+                      <Checkbox 
+                        id={`s3xy-${product.id}`}
+                        checked={isChecked}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedS3xyProducts([...selectedS3xyProducts, product.id]);
+                          } else {
+                            setSelectedS3xyProducts(selectedS3xyProducts.filter(p => p !== product.id));
+                            if (product.id === 'knob_commander') {
+                              setSelectedS3xyVehicleVariant("");
+                            }
+                          }
+                        }}
+                      />
+                      <ProductIcon className="w-4 h-4 text-muted-foreground" />
+                      <label 
+                        htmlFor={`s3xy-${product.id}`}
+                        className="text-sm font-medium leading-none cursor-pointer select-none flex-1"
+                      >
+                        {language === "hu" ? product.hu : product.en}
+                      </label>
+                      {product.price && (
+                        <span className="text-sm font-medium text-foreground">
+                          {product.price}
+                        </span>
+                      )}
+                    </div>
+                    
+                    {/* Vehicle variant selector for Knob + Commander */}
+                    {product.id === 'knob_commander' && isChecked && (
+                      <div className="ml-8 p-3 rounded-lg bg-muted/20 border border-border space-y-2">
+                        <p className="text-xs text-muted-foreground">
+                          {language === "hu" ? "Válassz járműtípust:" : "Select vehicle type:"}
+                        </p>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { id: "model3_facelift", label: "Model 3 Facelift" },
+                            { id: "model3_highland", label: "Model 3 Highland" },
+                            { id: "modely", label: "Model Y" },
+                            { id: "modely_juniper", label: "Model Y Juniper Premium" },
+                          ].map((variant) => (
+                            <button
+                              key={variant.id}
+                              type="button"
+                              onClick={() => setSelectedS3xyVehicleVariant(variant.id)}
+                              className={cn(
+                                "p-2 text-xs rounded-md border transition-colors text-center",
+                                selectedS3xyVehicleVariant === variant.id
+                                  ? "bg-foreground text-background border-foreground"
+                                  : "bg-background border-border hover:border-foreground/50"
+                              )}
+                            >
+                              {variant.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -509,7 +554,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             <Button 
               variant="tesla" 
               className="w-full" 
-              disabled={selectedS3xyProducts.length === 0}
+              disabled={selectedS3xyProducts.length === 0 || (selectedS3xyProducts.includes('knob_commander') && !selectedS3xyVehicleVariant)}
               onClick={() => {
                 onSelect('s3xy_products', { s3xyProducts: selectedS3xyProducts });
                 setS3xyDialogOpen(false);
