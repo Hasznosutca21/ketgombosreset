@@ -65,6 +65,25 @@ const getColorHex = (colorId: string | null): string | null => {
   return color?.hex || null;
 };
 
+// CSS filter to colorize the vehicle image based on Tesla color
+const getColorFilter = (colorId: string | null): React.CSSProperties => {
+  if (!colorId) return {};
+  
+  // Each color needs specific filter values to achieve the right tint
+  const colorFilters: Record<string, string> = {
+    "pearl-white": "brightness(1.1) contrast(0.95)",
+    "solid-black": "brightness(0.3) contrast(1.2)",
+    "midnight-silver": "brightness(0.7) saturate(0.3) contrast(1.1)",
+    "quicksilver": "brightness(0.85) saturate(0.2) contrast(1.05)",
+    "ultra-red": "sepia(1) saturate(5) hue-rotate(-10deg) brightness(0.9)",
+    "deep-blue": "sepia(1) saturate(3) hue-rotate(180deg) brightness(0.7)",
+    "midnight-cherry": "sepia(1) saturate(4) hue-rotate(-20deg) brightness(0.5)",
+  };
+  
+  const filter = colorFilters[colorId];
+  return filter ? { filter } : {};
+};
+
 const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
   const { t, language } = useLanguage();
   const { user } = useAuth();
@@ -242,31 +261,14 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
                   </div>
                 )}
 
-                {/* Vehicle Image with Color Overlay */}
-                <div className="flex justify-center mb-4 relative">
-                  <div className="relative">
-                    <img
-                      src={vehicleImage}
-                      alt={vehicle.model}
-                      className="w-full max-w-[180px] h-auto object-contain"
-                    />
-                    {vehicle.color && getColorHex(vehicle.color) && (
-                      <div 
-                        className="absolute inset-0 mix-blend-multiply opacity-60 pointer-events-none"
-                        style={{ 
-                          backgroundColor: getColorHex(vehicle.color) || undefined,
-                          maskImage: `url(${vehicleImage})`,
-                          WebkitMaskImage: `url(${vehicleImage})`,
-                          maskSize: 'contain',
-                          WebkitMaskSize: 'contain',
-                          maskRepeat: 'no-repeat',
-                          WebkitMaskRepeat: 'no-repeat',
-                          maskPosition: 'center',
-                          WebkitMaskPosition: 'center',
-                        }}
-                      />
-                    )}
-                  </div>
+                {/* Vehicle Image with Color Filter */}
+                <div className="flex justify-center mb-4">
+                  <img
+                    src={vehicleImage}
+                    alt={vehicle.model}
+                    className="w-full max-w-[180px] h-auto object-contain transition-all duration-300"
+                    style={getColorFilter(vehicle.color)}
+                  />
                 </div>
 
                 {/* Vehicle Info */}
