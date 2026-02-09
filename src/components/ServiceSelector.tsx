@@ -16,7 +16,8 @@ import {
   ArrowLeft,
   ChevronDown,
   DoorOpen,
-  Package
+  Package,
+  Battery
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -53,7 +54,7 @@ interface ServiceDef {
   yearRestriction?: { from: number; to: number };
 }
 
-const categories: { id: string; icon: typeof Wrench; services: ServiceDef[] }[] = [
+const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; vehicleRestriction?: string[] }[] = [
   {
     id: "maintenance",
     icon: Wrench,
@@ -82,6 +83,12 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[] }[] 
       { id: "autopilot", icon: Lightbulb, vehicleRestriction: ["model-3"] }, // Interior lighting - only Model 3
       { id: "multimedia", icon: MonitorPlay, vehicleRestriction: [] },
     ],
+  },
+  {
+    id: "batteryCategory",
+    icon: Battery,
+    services: [],
+    vehicleRestriction: ["model-3"],
   },
   {
     id: "other",
@@ -151,31 +158,30 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
 
   // Filter categories to only show services available for the selected vehicle
   const filteredCategories = useMemo(() => {
-    const { vehicleId, year } = parseVehicleSelection(selectedVehicle);
+    const { vehicleId } = parseVehicleSelection(selectedVehicle);
     
-    return categories.map(category => ({
-      ...category,
-      services: category.services.filter(service => {
-        // Check vehicle restriction
-        if (service.vehicleRestriction.length > 0) {
-          if (!vehicleId || !service.vehicleRestriction.includes(vehicleId)) {
-            return false;
-          }
+    return categories.map(category => {
+      // Check category-level vehicle restriction
+      if (category.vehicleRestriction && category.vehicleRestriction.length > 0) {
+        if (!vehicleId || !category.vehicleRestriction.includes(vehicleId)) {
+          return { ...category, services: [] };
         }
-        
-        // Check year restriction
-        if (service.yearRestriction && year) {
-          if (year < service.yearRestriction.from || year > service.yearRestriction.to) {
-            return false;
+      }
+      
+      return {
+        ...category,
+        services: category.services.filter(service => {
+          // Check vehicle restriction
+          if (service.vehicleRestriction.length > 0) {
+            if (!vehicleId || !service.vehicleRestriction.includes(vehicleId)) {
+              return false;
+            }
           }
-        } else if (service.yearRestriction && !year) {
-          // If service has year restriction but no year selected, hide it
-          return false;
-        }
-        
-        return true;
-      })
-    })).filter(category => category.services.length > 0); // Remove empty categories
+          
+          return true;
+        })
+      };
+    }).filter(category => category.services.length > 0 || (category.vehicleRestriction && category.vehicleRestriction.length > 0)); // Keep categories with vehicle restriction even if empty
   }, [selectedVehicle]);
 
   return (

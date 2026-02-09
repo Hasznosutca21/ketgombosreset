@@ -46,6 +46,10 @@ export const hu = {
       title: "Egyéb javítások",
       description: "Modell specifikus hibák",
     },
+    batteryCategory: {
+      title: "Akkumulátor",
+      description: "Model 3 akkumulátor szolgáltatások",
+    },
   },
 
   // Services
@@ -469,7 +473,11 @@ export const en = {
     },
     other: {
       title: "Other Services",
-      description: "Body, warranty and more",
+      description: "Model-specific issues",
+    },
+    batteryCategory: {
+      title: "Battery",
+      description: "Model 3 battery services",
     },
   },
 
