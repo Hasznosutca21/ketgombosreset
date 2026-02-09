@@ -201,7 +201,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
           return true;
         })
       };
-    }).filter(category => category.services.length > 0 || (category.vehicleRestriction && category.vehicleRestriction.length > 0)); // Keep categories with vehicle restriction even if empty
+    }).filter(category => category.services.length > 0);
   }, [selectedVehicle]);
 
   return (
