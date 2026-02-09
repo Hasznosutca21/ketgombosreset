@@ -2,24 +2,104 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 
-// Import Model 3 top-down image
-import model3TopDown from "@/assets/vehicles/model-3-topdown.jpg";
-
 interface DoorHandleSelectorProps {
   value: string[];
   onChange: (handles: string[]) => void;
 }
 
-// Handle positions as percentages on the top-down image
-// Adjust these values to precisely match door handle locations
+// Handle positions as percentages on the silhouette
 const HANDLE_POSITIONS = [
-  { id: "front-left", label: "Bal első", labelEn: "Front Left", x: 22, y: 32 },
-  { id: "rear-left", label: "Bal hátsó", labelEn: "Rear Left", x: 22, y: 52 },
-  { id: "front-right", label: "Jobb első", labelEn: "Front Right", x: 78, y: 32 },
-  { id: "rear-right", label: "Jobb hátsó", labelEn: "Rear Right", x: 78, y: 52 },
+  { id: "front-left", label: "Bal első", labelEn: "Front Left", x: 18, y: 38 },
+  { id: "rear-left", label: "Bal hátsó", labelEn: "Rear Left", x: 18, y: 58 },
+  { id: "front-right", label: "Jobb első", labelEn: "Front Right", x: 82, y: 38 },
+  { id: "rear-right", label: "Jobb hátsó", labelEn: "Rear Right", x: 82, y: 58 },
 ];
 
 const PRICE_PER_HANDLE = 25000;
+
+// Tesla Model 3 top-down silhouette SVG
+const CarSilhouette = () => (
+  <svg
+    viewBox="0 0 200 320"
+    className="w-full h-auto max-w-[280px] mx-auto"
+    fill="currentColor"
+  >
+    {/* Car body silhouette - top-down view */}
+    <path
+      d="M100 10
+         C70 10 55 20 50 35
+         L45 60
+         C40 65 35 70 32 85
+         L30 120
+         L28 160
+         L28 200
+         L30 240
+         L35 270
+         C40 285 50 295 55 300
+         C70 310 130 310 145 300
+         C150 295 160 285 165 270
+         L170 240
+         L172 200
+         L172 160
+         L170 120
+         L168 85
+         C165 70 160 65 155 60
+         L150 35
+         C145 20 130 10 100 10
+         Z"
+      className="fill-muted-foreground/20"
+    />
+    {/* Roof/glass area */}
+    <path
+      d="M100 45
+         C80 45 70 50 65 60
+         L60 90
+         L58 130
+         L58 180
+         L60 220
+         L65 250
+         C70 260 80 265 100 265
+         C120 265 130 260 135 250
+         L140 220
+         L142 180
+         L142 130
+         L140 90
+         L135 60
+         C130 50 120 45 100 45
+         Z"
+      className="fill-muted-foreground/10"
+    />
+    {/* Front windshield */}
+    <path
+      d="M100 55
+         C85 55 75 58 70 65
+         L65 95
+         L135 95
+         L130 65
+         C125 58 115 55 100 55
+         Z"
+      className="fill-foreground/20"
+    />
+    {/* Rear windshield */}
+    <path
+      d="M65 235
+         L70 255
+         C75 260 85 262 100 262
+         C115 262 125 260 130 255
+         L135 235
+         Z"
+      className="fill-foreground/20"
+    />
+    {/* Side mirrors */}
+    <ellipse cx="25" cy="95" rx="8" ry="5" className="fill-muted-foreground/30" />
+    <ellipse cx="175" cy="95" rx="8" ry="5" className="fill-muted-foreground/30" />
+    {/* Door handle indicators - small lines */}
+    <rect x="28" y="118" width="6" height="2" rx="1" className="fill-muted-foreground/40" />
+    <rect x="28" y="178" width="6" height="2" rx="1" className="fill-muted-foreground/40" />
+    <rect x="166" y="118" width="6" height="2" rx="1" className="fill-muted-foreground/40" />
+    <rect x="166" y="178" width="6" height="2" rx="1" className="fill-muted-foreground/40" />
+  </svg>
+);
 
 const DoorHandleSelector = ({ value, onChange }: DoorHandleSelectorProps) => {
   const { language } = useLanguage();
@@ -38,13 +118,9 @@ const DoorHandleSelector = ({ value, onChange }: DoorHandleSelectorProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Visual Car Image - Top Down View */}
-      <div className="relative rounded-xl overflow-hidden bg-[#1a1a1a]">
-        <img
-          src={model3TopDown}
-          alt="Tesla Model 3 Top Down View"
-          className="w-full h-auto"
-        />
+      {/* Visual Car Silhouette */}
+      <div className="relative py-6 px-4 rounded-xl bg-muted/30">
+        <CarSilhouette />
         
         {/* Door handle markers */}
         {HANDLE_POSITIONS.map((handle) => {
@@ -59,43 +135,43 @@ const DoorHandleSelector = ({ value, onChange }: DoorHandleSelectorProps) => {
             >
               <div
                 className={cn(
-                  "w-7 h-7 md:w-9 md:h-9 rounded-full border-2 flex items-center justify-center transition-all duration-200",
+                  "w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center transition-all duration-200 cursor-pointer",
                   isSelected
                     ? "bg-destructive border-destructive scale-110"
-                    : "bg-background/90 border-foreground/30 hover:border-foreground hover:scale-110"
+                    : "bg-background border-muted-foreground/50 hover:border-foreground hover:scale-110"
                 )}
               >
                 {isSelected && (
-                  <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-white" />
+                  <div className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-white" />
                 )}
               </div>
               {/* Pulse animation for selected */}
               {isSelected && (
-                <div className="absolute inset-0 w-7 h-7 md:w-9 md:h-9 rounded-full border-2 border-destructive animate-ping opacity-50" />
+                <div className="absolute inset-0 w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-destructive animate-ping opacity-50" />
               )}
             </button>
           );
         })}
 
         {/* Side labels */}
-        <div className="absolute top-1/2 left-2 -translate-y-1/2 text-xs text-white/70 font-medium writing-mode-vertical">
-          {isHu ? "Bal" : "Left"}
+        <div className="absolute top-1/2 left-1 -translate-y-1/2 text-xs text-muted-foreground font-medium">
+          {isHu ? "Bal" : "L"}
         </div>
-        <div className="absolute top-1/2 right-2 -translate-y-1/2 text-xs text-white/70 font-medium">
-          {isHu ? "Jobb" : "Right"}
+        <div className="absolute top-1/2 right-1 -translate-y-1/2 text-xs text-muted-foreground font-medium">
+          {isHu ? "Jobb" : "R"}
         </div>
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 text-xs text-white/70 font-medium">
-          {isHu ? "Elöl" : "Front"}
+        <div className="absolute top-1 left-1/2 -translate-x-1/2 text-xs text-muted-foreground font-medium">
+          ↑ {isHu ? "Elöl" : "Front"}
         </div>
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-white/70 font-medium">
-          {isHu ? "Hátul" : "Rear"}
+        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 text-xs text-muted-foreground font-medium">
+          {isHu ? "Hátul" : "Rear"} ↓
         </div>
       </div>
 
       {/* Legend */}
       <div className="flex items-center justify-center gap-6 text-sm">
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 rounded-full border-2 border-foreground/30 bg-background/90" />
+          <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/50 bg-background" />
           <span className="text-muted-foreground">{isHu ? "Ép" : "OK"}</span>
         </div>
         <div className="flex items-center gap-2">
