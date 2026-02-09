@@ -106,7 +106,9 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
   {
     id: "accessories",
     icon: Package,
-    services: [],
+    services: [
+      { id: "accessory_floormats", icon: Package, vehicleRestriction: [] },
+    ],
   },
 ];
 
