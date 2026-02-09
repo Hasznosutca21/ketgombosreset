@@ -83,6 +83,7 @@ const Profile = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
   });
@@ -449,14 +450,23 @@ const Profile = () => {
         vehicle_vin: vin.toUpperCase(),
       };
 
+      // Immediately reflect in the form fields (RHF inputs are uncontrolled)
+      setValue("vehicle_vin", decodedData.vehicle_vin, { shouldDirty: true });
+      setValue("vehicle_model", decodedData.vehicle_model || "", { shouldDirty: true });
+      setValue("vehicle_type", decodedData.vehicle_type || "", { shouldDirty: true });
+      setValue("vehicle_year", (decodedData.vehicle_year ?? "") as unknown as any, { shouldDirty: true });
+
       // Save to database immediately
       if (user) {
         const { error: saveError } = await supabase
           .from("profiles")
-          .upsert({
-            user_id: user.id,
-            ...decodedData,
-          }, { onConflict: 'user_id' });
+          .upsert(
+            {
+              user_id: user.id,
+              ...decodedData,
+            },
+            { onConflict: "user_id" }
+          );
 
         if (saveError) {
           console.error("Error saving decoded VIN data:", saveError);
@@ -465,11 +475,11 @@ const Profile = () => {
         }
       }
 
-      // Update local profile state
-      setProfile((prev) => prev ? { 
-        ...prev, 
+      // Update local profile state (also works if profile hasn't loaded yet)
+      setProfile((prev) => ({
+        ...(prev ?? ({ user_id: user?.id ?? "", preferences: {} } as any)),
         ...decodedData,
-      } : null);
+      }));
 
       if (!vinValue) {
         toast.success(t.vinDecoded || "Vehicle data filled successfully");
