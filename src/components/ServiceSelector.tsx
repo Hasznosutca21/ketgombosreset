@@ -483,22 +483,20 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             
             <div className="space-y-2">
               {(() => {
-                const { vehicleId, year } = parseVehicleSelection(selectedVehicle);
+                const { vehicleId } = parseVehicleSelection(selectedVehicle);
                 const isModelSX = vehicleId === 'model-s' || vehicleId === 'model-x';
-                const isSXYearValid = !isModelSX || (year !== null && year >= 2021);
                 
                 return [
-                  { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", modelSXOnly: true },
-                  { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, modelSXOnly: false },
-                  { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", modelSXOnly: false },
-                  { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: null, modelSXOnly: false },
-                  { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, modelSXOnly: false },
-                  { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, modelSXOnly: false },
+                  { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true },
+                  { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, availableForSX: false },
+                  { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false },
+                  { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: null, availableForSX: false },
+                  { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false },
+                  { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, availableForSX: false },
                 ].filter(product => {
-                  // For Model S/X: only Commander is available (and only 2021+)
+                  // For Model S/X: only Commander is available
                   if (isModelSX) {
-                    if (!product.modelSXOnly) return false;
-                    if (!isSXYearValid) return false;
+                    return product.availableForSX;
                   }
                   return true;
                 }).map((product) => {
