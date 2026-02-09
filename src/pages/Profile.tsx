@@ -690,7 +690,10 @@ const Profile = () => {
                         <Input
                           id="vehicle_type"
                           placeholder={t.vehicleTypePlaceholder || "e.g., Long Range, Performance, Standard Range"}
-                          {...register("vehicle_type")}
+                          value={profile?.vehicle_type || ""}
+                          onChange={(e) => {
+                            setProfile((prev) => prev ? { ...prev, vehicle_type: e.target.value } : null);
+                          }}
                         />
                       </div>
 
@@ -702,7 +705,10 @@ const Profile = () => {
                           min={2008}
                           max={new Date().getFullYear() + 1}
                           placeholder={t.vehicleYearPlaceholder || "e.g., 2023"}
-                          {...register("vehicle_year")}
+                          value={profile?.vehicle_year || ""}
+                          onChange={(e) => {
+                            setProfile((prev) => prev ? { ...prev, vehicle_year: e.target.value ? parseInt(e.target.value) : null } : null);
+                          }}
                         />
                       </div>
 
