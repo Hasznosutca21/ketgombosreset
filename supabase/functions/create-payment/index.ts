@@ -117,6 +117,7 @@ serve(async (req) => {
     }
 
     // Create a one-time payment session
+    // Note: Stripe treats HUF as a two-decimal currency, so we multiply by 100
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : customerEmail,
@@ -129,7 +130,7 @@ serve(async (req) => {
               name: servicePrice.name,
               description: `Szolgáltatás fizetése - Foglalás: ${appointmentId}`,
             },
-            unit_amount: servicePrice.amount,
+            unit_amount: servicePrice.amount * 100,
           },
           quantity: 1,
         },
