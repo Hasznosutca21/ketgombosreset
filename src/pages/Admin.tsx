@@ -55,6 +55,8 @@ const Admin = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isPushEnabled, setIsPushEnabled] = useState(false);
   const [isTogglingPush, setIsTogglingPush] = useState(false);
+  const [activeTab, setActiveTab] = useState("appointments");
+  const [worksheetAppointment, setWorksheetAppointment] = useState<Appointment | null>(null);
 
   // Cancel dialog state
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
@@ -313,7 +315,7 @@ const Admin = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
-        <Tabs defaultValue="appointments" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full max-w-lg grid-cols-3">
             <TabsTrigger value="appointments" className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
@@ -458,6 +460,17 @@ const Admin = () => {
                                     </>
                                   )}
                                   <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => {
+                                          setWorksheetAppointment(appointment);
+                                          setActiveTab("worksheets");
+                                        }}
+                                        title={language === "hu" ? "Munkalap készítés" : "Create work sheet"}
+                                      >
+                                        <FileText className="h-4 w-4" />
+                                      </Button>
+                                  <Button
                                     variant="ghost"
                                     size="icon"
                                     onClick={() => handleDelete(appointment.id)}
@@ -489,7 +502,7 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="worksheets">
-            <AdminWorkSheets language={language} />
+            <AdminWorkSheets language={language} prefillAppointment={worksheetAppointment} />
           </TabsContent>
         </Tabs>
       </main>

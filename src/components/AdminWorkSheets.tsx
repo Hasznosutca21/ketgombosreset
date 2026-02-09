@@ -38,13 +38,14 @@ interface Appointment {
   email: string;
   phone: string | null;
   vehicle: string;
-  vehicle_vin: string | null;
+  vehicle_vin?: string | null;
   service: string;
   appointment_date: string;
 }
 
 interface AdminWorkSheetsProps {
   language: string;
+  prefillAppointment?: Appointment | null;
 }
 
 const vehicleLabels: Record<string, string> = {
@@ -61,7 +62,7 @@ const getVehicleLabel = (v: string) => {
   return vehicleLabels[key] || v;
 };
 
-const AdminWorkSheets = ({ language }: AdminWorkSheetsProps) => {
+const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps) => {
   const { user } = useAuth();
   const [workSheets, setWorkSheets] = useState<WorkSheet[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -119,6 +120,25 @@ const AdminWorkSheets = ({ language }: AdminWorkSheetsProps) => {
     fetchWorkSheets();
     fetchAppointments();
   }, []);
+
+  // Handle prefill from appointment
+  useEffect(() => {
+    if (prefillAppointment) {
+      setForm({
+        customer_name: prefillAppointment.name,
+        customer_email: prefillAppointment.email,
+        customer_phone: prefillAppointment.phone || "",
+        vehicle: prefillAppointment.vehicle,
+        vehicle_vin: prefillAppointment.vehicle_vin || "",
+        service: prefillAppointment.service,
+        service_date: prefillAppointment.appointment_date,
+        description: "",
+        notes: "",
+      });
+      setSelectedAppointment(prefillAppointment.id);
+      setCreateOpen(true);
+    }
+  }, [prefillAppointment]);
 
   const fetchWorkSheets = async () => {
     setIsLoading(true);
