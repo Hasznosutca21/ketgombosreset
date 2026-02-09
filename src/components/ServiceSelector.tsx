@@ -97,7 +97,8 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
     icon: Shield,
     services: [
       { id: "doorhandle", icon: DoorOpen, vehicleRestriction: ["model-3"] },
-      { id: "body", icon: Package, vehicleRestriction: [] },
+      { id: "body", icon: Package, vehicleRestriction: ["model-3"] },
+      { id: "canbus", icon: Settings, vehicleRestriction: ["model-y"] },
       { id: "warranty", icon: Shield, vehicleRestriction: ["model-3"] },
       { id: "tires", icon: CircleDot, vehicleRestriction: [] },
     ],
