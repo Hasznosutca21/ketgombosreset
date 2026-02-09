@@ -114,7 +114,7 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
     id: "accessories",
     icon: Package,
     services: [
-      { id: "s3xy_products", icon: Package, vehicleRestriction: ["model-3", "model-y"] },
+      { id: "s3xy_products", icon: Package, vehicleRestriction: [] },
     ],
   },
 ];
@@ -482,14 +482,25 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </p>
             
             <div className="space-y-2">
-              {[
-                { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: null },
-                { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null },
-                { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft" },
-                { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: null },
-                { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null },
-                { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null },
-              ].map((product) => {
+              {(() => {
+                const { vehicleId, year } = parseVehicleSelection(selectedVehicle);
+                const isModelSX = vehicleId === 'model-s' || vehicleId === 'model-x';
+                const isSXYearValid = !isModelSX || (year !== null && year >= 2021);
+                
+                return [
+                  { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", requiresYear: true },
+                  { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, requiresYear: false },
+                  { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", requiresYear: true },
+                  { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: null, requiresYear: false },
+                  { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, requiresYear: false },
+                  { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, requiresYear: false },
+                ].filter(product => {
+                  // For products that require 2021+ for Model S/X
+                  if (product.requiresYear && isModelSX && !isSXYearValid) {
+                    return false;
+                  }
+                  return true;
+                }).map((product) => {
                 const ProductIcon = product.icon;
                 const isChecked = selectedS3xyProducts.includes(product.id);
                 return (
@@ -557,7 +568,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                     )}
                   </div>
                 );
-              })}
+              });
+              })()}
             </div>
 
             <Button 
