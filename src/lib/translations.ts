@@ -169,8 +169,8 @@ A Tesland kilincs csere szolgáltatás:
 Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
     },
     body: {
-      title: "Karosszéria javítás",
-      description: "Horpadás eltávolítás és festés javítás",
+      title: "Hátsó csomagtérajtó probléma",
+      description: "Kábelköteg szakadás okozta hibák javítása",
       duration: "Változó",
     },
     warranty: {
