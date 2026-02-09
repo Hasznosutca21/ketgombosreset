@@ -86,19 +86,20 @@ const ConfirmationView = ({ service, vehicle, appointment, appointmentId, onStar
       if (error) {
         console.error("Payment error:", error);
         toast.error(t.paymentFailed);
+        setIsPaymentLoading(false);
         return;
       }
 
       if (data?.url) {
-        // Use window.location.href instead of window.open to avoid Safari popup blocker
+        // Redirect to Stripe Checkout - don't reset loading state as we're navigating away
         window.location.href = data.url;
       } else {
         toast.error(t.paymentFailed);
+        setIsPaymentLoading(false);
       }
     } catch (error) {
       console.error("Payment error:", error);
       toast.error(t.paymentFailed);
-    } finally {
       setIsPaymentLoading(false);
     }
   };
