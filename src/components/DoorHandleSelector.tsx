@@ -10,12 +10,12 @@ interface DoorHandleSelectorProps {
   onChange: (handles: string[]) => void;
 }
 
-// Handle positions as percentages - adjusted for the new image with doors visible
+// Handle positions as percentages - adjusted for the vertical top-down image
 const HANDLE_POSITIONS = [
-  { id: "front-left", label: "Bal első", labelEn: "Front Left", x: 18, y: 28 },
-  { id: "rear-left", label: "Bal hátsó", labelEn: "Rear Left", x: 18, y: 48 },
-  { id: "front-right", label: "Jobb első", labelEn: "Front Right", x: 82, y: 28 },
-  { id: "rear-right", label: "Jobb hátsó", labelEn: "Rear Right", x: 82, y: 48 },
+  { id: "front-left", label: "Bal első", labelEn: "Front Left", x: 12, y: 32 },
+  { id: "rear-left", label: "Bal hátsó", labelEn: "Rear Left", x: 12, y: 52 },
+  { id: "front-right", label: "Jobb első", labelEn: "Front Right", x: 88, y: 32 },
+  { id: "rear-right", label: "Jobb hátsó", labelEn: "Rear Right", x: 88, y: 52 },
 ];
 
 const PRICE_PER_HANDLE = 25000;
