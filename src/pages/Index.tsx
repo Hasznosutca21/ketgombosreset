@@ -16,7 +16,7 @@ import heroImage from "@/assets/tesland-hero.jpg";
 import teslandLogo from "@/assets/tesland-logo.png";
 import ServiceSelector from "@/components/ServiceSelector";
 import VehicleSelector from "@/components/VehicleSelector";
-import VehicleNavSelector from "@/components/VehicleNavSelector";
+
 import AppointmentForm from "@/components/AppointmentForm";
 import ConfirmationView from "@/components/ConfirmationView";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -59,23 +59,7 @@ const Index = () => {
 
   const handleVehicleSelect = (vehicle: string) => {
     setSelectedVehicle(vehicle);
-    // Only advance to service step if year is included (format: model-x-2024)
-    const parts = vehicle.split("-");
-    if (parts.length >= 3) {
-      setCurrentStep("service");
-    }
-  };
-
-  const handleNavVehicleSelect = (vehicleId: string) => {
-    // Just update the selected vehicle, don't change step
-    // The user will need to select year in the main flow
-    setSelectedVehicle(null);
-    setCurrentStep("vehicle");
-    // We'll pre-select this vehicle in the selector
-    setTimeout(() => {
-      const event = new CustomEvent('preselect-vehicle', { detail: vehicleId });
-      window.dispatchEvent(event);
-    }, 100);
+    setCurrentStep("service");
   };
 
   const handleServiceSelect = (service: string) => {
@@ -182,11 +166,6 @@ const Index = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-4">
-            <VehicleNavSelector 
-              selected={selectedVehicle} 
-              onSelect={handleNavVehicleSelect}
-              variant="glass"
-            />
             <Button variant="ghost" size="sm" asChild className="text-white/80 hover:text-white hover:bg-white/10">
               <a href="/manage">{t.manageMyAppointment}</a>
             </Button>
