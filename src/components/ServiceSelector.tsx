@@ -135,6 +135,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [selectedStripVariant, setSelectedStripVariant] = useState<string>("");
   const [softcloseDialogOpen, setSoftcloseDialogOpen] = useState(false);
   const [selectedSoftcloseOption, setSelectedSoftcloseOption] = useState<string>("");
+  const [commanderInfoOpen, setCommanderInfoOpen] = useState(false);
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
     details: string;
@@ -508,12 +509,12 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                   )}
                   <div className="space-y-2">
                     {[
-                      { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true },
-                      { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, availableForSX: false },
-                      { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false },
-                      { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false },
-                      { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false },
-                      { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, availableForSX: false },
+                      { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true, hasInfo: true },
+                      { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, availableForSX: false, hasInfo: false },
+                      { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false, hasInfo: false },
+                      { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: false },
+                      { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, hasInfo: false },
+                      { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, availableForSX: false, hasInfo: false },
                     ].filter(product => {
                       // For Model S/X: only Commander is available
                       if (isModelSX) {
@@ -552,6 +553,18 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                             >
                               {language === "hu" ? product.hu : product.en}
                             </label>
+                            {product.hasInfo && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setCommanderInfoOpen(true);
+                                }}
+                                className="p-1.5 rounded-full hover:bg-muted transition-colors"
+                              >
+                                <Info className="w-4 h-4 text-muted-foreground" />
+                              </button>
+                            )}
                             {product.price && (
                               <span className="text-sm font-medium text-foreground">
                                 {product.price}
@@ -709,6 +722,40 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             >
               {language === "hu" ? "Tovább a foglaláshoz" : "Continue to booking"}
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* S3XY Commander Info Dialog */}
+      <Dialog open={commanderInfoOpen} onOpenChange={setCommanderInfoOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-medium flex items-center gap-2">
+              <Gamepad2 className="w-5 h-5" />
+              S3XY Commander
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {language === "hu" 
+                ? "Az S3XY Commander egy multifunkciós vezérlőpanel, amely a Tesla középkonzoljára szerelhető. Lehetővé teszi a gyakran használt funkciók gyors elérését fizikai gombokkal, mint például a klíma, ablakfűtés, csomagtér nyitás és még sok más."
+                : "The S3XY Commander is a multifunctional control panel that mounts on the Tesla center console. It allows quick access to frequently used functions with physical buttons, such as climate, window heating, trunk opening, and much more."}
+            </p>
+            <div className="space-y-2 text-sm">
+              <h4 className="font-medium">{language === "hu" ? "Főbb funkciók:" : "Main features:"}</h4>
+              <ul className="list-disc list-inside text-muted-foreground space-y-1">
+                <li>{language === "hu" ? "Programozható fizikai gombok" : "Programmable physical buttons"}</li>
+                <li>{language === "hu" ? "Klíma és ablakfűtés vezérlés" : "Climate and window heating control"}</li>
+                <li>{language === "hu" ? "Csomagtér és frunk nyitás" : "Trunk and frunk opening"}</li>
+                <li>{language === "hu" ? "Ülésállítás és memória funkciók" : "Seat adjustment and memory functions"}</li>
+                <li>{language === "hu" ? "Vezetési mód váltás" : "Driving mode switching"}</li>
+              </ul>
+            </div>
+            <div className="pt-2 border-t border-border">
+              <p className="text-sm font-medium">
+                {language === "hu" ? "Beszerelési díj:" : "Installation fee:"} 89 900 Ft
+              </p>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
