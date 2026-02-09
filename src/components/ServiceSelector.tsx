@@ -481,95 +481,108 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 : "Select the products you want to install."}
             </p>
             
-            <div className="space-y-2">
-              {(() => {
-                const { vehicleId } = parseVehicleSelection(selectedVehicle);
-                const isModelSX = vehicleId === 'model-s' || vehicleId === 'model-x';
-                
-                return [
-                  { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true },
-                  { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, availableForSX: false },
-                  { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false },
-                  { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: null, availableForSX: false },
-                  { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false },
-                  { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, availableForSX: false },
-                ].filter(product => {
-                  // For Model S/X: only Commander is available
-                  if (isModelSX) {
-                    return product.availableForSX;
-                  }
-                  return true;
-                }).map((product) => {
-                const ProductIcon = product.icon;
-                const isChecked = selectedS3xyProducts.includes(product.id);
-                return (
-                  <div key={product.id} className="space-y-2">
-                    <div 
-                      className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border hover:bg-muted/50 transition-colors"
-                    >
-                      <Checkbox 
-                        id={`s3xy-${product.id}`}
-                        checked={isChecked}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setSelectedS3xyProducts([...selectedS3xyProducts, product.id]);
-                          } else {
-                            setSelectedS3xyProducts(selectedS3xyProducts.filter(p => p !== product.id));
-                            if (product.id === 'knob_commander') {
-                              setSelectedS3xyVehicleVariant("");
-                            }
-                          }
-                        }}
-                      />
-                      <ProductIcon className="w-4 h-4 text-muted-foreground" />
-                      <label 
-                        htmlFor={`s3xy-${product.id}`}
-                        className="text-sm font-medium leading-none cursor-pointer select-none flex-1"
-                      >
-                        {language === "hu" ? product.hu : product.en}
-                      </label>
-                      {product.price && (
-                        <span className="text-sm font-medium text-foreground">
-                          {product.price}
-                        </span>
-                      )}
+            {(() => {
+              const { vehicleId } = parseVehicleSelection(selectedVehicle);
+              const isModelSX = vehicleId === 'model-s' || vehicleId === 'model-x';
+              
+              return (
+                <>
+                  {isModelSX && (
+                    <div className="p-3 rounded-lg bg-accent/50 border border-accent mb-4">
+                      <p className="text-sm text-muted-foreground">
+                        {language === "hu" 
+                          ? "Model S és X esetében a Commander kizárólag Palladium típusokhoz (2021+) érhető el."
+                          : "For Model S and X, Commander is only available for Palladium versions (2021+)."}
+                      </p>
                     </div>
-                    
-                    {/* Vehicle variant selector for Knob + Commander */}
-                    {product.id === 'knob_commander' && isChecked && (
-                      <div className="ml-8 p-3 rounded-lg bg-muted/20 border border-border space-y-2">
-                        <p className="text-xs text-muted-foreground">
-                          {language === "hu" ? "Válassz járműtípust:" : "Select vehicle type:"}
-                        </p>
-                        <div className="grid grid-cols-2 gap-2">
-                          {[
-                            { id: "model3_facelift", label: "Model 3 Facelift" },
-                            { id: "model3_highland", label: "Model 3 Highland" },
-                            { id: "modely", label: "Model Y" },
-                            { id: "modely_juniper", label: "Model Y Juniper Premium" },
-                          ].map((variant) => (
-                            <button
-                              key={variant.id}
-                              type="button"
-                              onClick={() => setSelectedS3xyVehicleVariant(variant.id)}
-                              className={cn(
-                                "p-2 text-xs rounded-md border transition-colors text-center",
-                                selectedS3xyVehicleVariant === variant.id
-                                  ? "bg-foreground text-background border-foreground"
-                                  : "bg-background border-border hover:border-foreground/50"
-                              )}
+                  )}
+                  <div className="space-y-2">
+                    {[
+                      { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true },
+                      { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, availableForSX: false },
+                      { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false },
+                      { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: null, availableForSX: false },
+                      { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false },
+                      { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, availableForSX: false },
+                    ].filter(product => {
+                      // For Model S/X: only Commander is available
+                      if (isModelSX) {
+                        return product.availableForSX;
+                      }
+                      return true;
+                    }).map((product) => {
+                      const ProductIcon = product.icon;
+                      const isChecked = selectedS3xyProducts.includes(product.id);
+                      return (
+                        <div key={product.id} className="space-y-2">
+                          <div 
+                            className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border hover:bg-muted/50 transition-colors"
+                          >
+                            <Checkbox 
+                              id={`s3xy-${product.id}`}
+                              checked={isChecked}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedS3xyProducts([...selectedS3xyProducts, product.id]);
+                                } else {
+                                  setSelectedS3xyProducts(selectedS3xyProducts.filter(p => p !== product.id));
+                                  if (product.id === 'knob_commander') {
+                                    setSelectedS3xyVehicleVariant("");
+                                  }
+                                }
+                              }}
+                            />
+                            <ProductIcon className="w-4 h-4 text-muted-foreground" />
+                            <label 
+                              htmlFor={`s3xy-${product.id}`}
+                              className="text-sm font-medium leading-none cursor-pointer select-none flex-1"
                             >
-                              {variant.label}
-                            </button>
-                          ))}
+                              {language === "hu" ? product.hu : product.en}
+                            </label>
+                            {product.price && (
+                              <span className="text-sm font-medium text-foreground">
+                                {product.price}
+                              </span>
+                            )}
+                          </div>
+                          
+                          {/* Vehicle variant selector for Knob + Commander */}
+                          {product.id === 'knob_commander' && isChecked && (
+                            <div className="ml-8 p-3 rounded-lg bg-muted/20 border border-border space-y-2">
+                              <p className="text-xs text-muted-foreground">
+                                {language === "hu" ? "Válassz járműtípust:" : "Select vehicle type:"}
+                              </p>
+                              <div className="grid grid-cols-2 gap-2">
+                                {[
+                                  { id: "model3_facelift", label: "Model 3 Facelift" },
+                                  { id: "model3_highland", label: "Model 3 Highland" },
+                                  { id: "modely", label: "Model Y" },
+                                  { id: "modely_juniper", label: "Model Y Juniper Premium" },
+                                ].map((variant) => (
+                                  <button
+                                    key={variant.id}
+                                    type="button"
+                                    onClick={() => setSelectedS3xyVehicleVariant(variant.id)}
+                                    className={cn(
+                                      "p-2 text-xs rounded-md border transition-colors text-center",
+                                      selectedS3xyVehicleVariant === variant.id
+                                        ? "bg-foreground text-background border-foreground"
+                                        : "bg-background border-border hover:border-foreground/50"
+                                    )}
+                                  >
+                                    {variant.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    )}
+                      );
+                    })}
                   </div>
-                );
-              });
-              })()}
-            </div>
+                </>
+              );
+            })()}
 
             <Button 
               variant="tesla" 
