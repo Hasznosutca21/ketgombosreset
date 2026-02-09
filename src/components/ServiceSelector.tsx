@@ -746,18 +746,9 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {language === "hu" 
-                ? "A Commander a teljes S3XY ökoszisztéma agya. Hozzáférést biztosít az összes funkcióhoz, automatizációhoz és valós idejű statisztikához. Egy erőteljes Dashboard alkalmazással is rendelkezik, így remek fejlesztés bármely Model 3 vagy Model Y számára."
-                : "The Commander is the brain behind the entire S3XY ecosystem. It gives you access to all features, automations, and real-time stats. It also comes with a powerful Dashboard app, making it a great upgrade for any Model 3 or Model Y."}
+                ? "A Commander a teljes S3XY ökoszisztéma agya. Hozzáférést biztosít az összes funkcióhoz, automatizációhoz és valós idejű statisztikához."
+                : "The Commander is the brain behind the entire S3XY ecosystem. It gives you access to all features, automations, and real-time stats."}
             </p>
-            <div className="space-y-2 text-sm">
-              <h4 className="font-medium">{language === "hu" ? "Egyedi automatizációk:" : "Unique automations:"}</h4>
-              <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                <li>{language === "hu" ? "ISA rendszer automatikus némítása minden 2024-től gyártott EU modellen (elülső beszerelés szükséges)" : "Automatically muting the ISA system on all EU models made from 2024 onward (front installation required)"}</li>
-                <li>{language === "hu" ? "Ambient fényeffektek a LED szalaghoz Highland és Juniper modelleken" : "Ambient light effects for the LED strip on Highland and Juniper models"}</li>
-                <li>{language === "hu" ? "Gyorsparancs a Frunk nyitásához a vezetőoldali kilincs meghúzásával" : "A shortcut to open your Frunk by pulling the driver's door handle"}</li>
-                <li>{language === "hu" ? "Automatikus csomagtér nyitás közeledéskor régebbi Model 3 vagy Y esetén" : "Automatically open the trunk when approaching an older Model 3 or Y"}</li>
-              </ul>
-            </div>
             <div className="pt-2 border-t border-border">
               <p className="text-sm font-medium">
                 {language === "hu" ? "Termék ára beszereléssel:" : "Product price with installation:"} 89 900 Ft
