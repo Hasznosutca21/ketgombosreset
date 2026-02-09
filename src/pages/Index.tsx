@@ -34,6 +34,7 @@ const Index = () => {
   const { user, isAdmin, isLoading: authLoading, signOut } = useAuth();
   const [currentStep, setCurrentStep] = useState<Step>("vehicle");
   const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedServiceExtras, setSelectedServiceExtras] = useState<{ doorHandles?: string[] } | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
   const [appointmentData, setAppointmentData] = useState<{
     date: Date | undefined;
@@ -62,8 +63,9 @@ const Index = () => {
     setCurrentStep("service");
   };
 
-  const handleServiceSelect = (service: string) => {
+  const handleServiceSelect = (service: string, extras?: { doorHandles?: string[] }) => {
     setSelectedService(service);
+    setSelectedServiceExtras(extras || null);
     setCurrentStep("appointment");
   };
 
@@ -72,9 +74,25 @@ const Index = () => {
 
     setIsSubmitting(true);
 
+    // Build service name with extras (e.g., door handles)
+    let serviceWithExtras = selectedService;
+    if (selectedService === 'doorhandle' && selectedServiceExtras?.doorHandles) {
+      const handleCount = selectedServiceExtras.doorHandles.length;
+      const handleLabels = selectedServiceExtras.doorHandles.map(h => {
+        const labelMap: Record<string, string> = {
+          'front-left': 'BE',
+          'rear-left': 'BH',
+          'front-right': 'JE',
+          'rear-right': 'JH',
+        };
+        return labelMap[h] || h;
+      }).join(', ');
+      serviceWithExtras = `doorhandle (${handleCount}db: ${handleLabels})`;
+    }
+
     try {
       const saved = await saveAppointment({
-        service: selectedService,
+        service: serviceWithExtras,
         vehicle: selectedVehicle,
         date: data.date,
         time: data.time,
@@ -139,6 +157,7 @@ const Index = () => {
   const handleStartOver = () => {
     setCurrentStep("vehicle");
     setSelectedService(null);
+    setSelectedServiceExtras(null);
     setSelectedVehicle(null);
     setAppointmentData(null);
     setSavedAppointment(null);

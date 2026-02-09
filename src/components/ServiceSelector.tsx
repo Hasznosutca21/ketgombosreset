@@ -15,7 +15,8 @@ import {
   Info,
   Donut,
   ArrowLeft,
-  ChevronDown
+  ChevronDown,
+  DoorOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -32,9 +33,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import DoorHandleSelector from "@/components/DoorHandleSelector";
 
 interface ServiceSelectorProps {
-  onSelect: (service: string) => void;
+  onSelect: (service: string, extras?: { doorHandles?: string[] }) => void;
   selected: string | null;
   selectedVehicle?: string | null;
   onBack?: () => void;
@@ -84,6 +86,7 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[] }[] 
     id: "other",
     icon: Shield,
     services: [
+      { id: "doorhandle", icon: DoorOpen, vehicleRestriction: ["model-3"], yearRestriction: { from: 2018, to: 2020 } },
       { id: "body", icon: Paintbrush, vehicleRestriction: [] },
       { id: "warranty", icon: Shield, vehicleRestriction: [] },
       { id: "tires", icon: CircleDot, vehicleRestriction: [] },
@@ -92,8 +95,10 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[] }[] 
 ];
 
 const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: ServiceSelectorProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [doorHandleDialogOpen, setDoorHandleDialogOpen] = useState(false);
+  const [selectedDoorHandles, setSelectedDoorHandles] = useState<string[]>([]);
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
     details: string;
@@ -234,7 +239,13 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                     return (
                       <button
                         key={service.id}
-                        onClick={() => onSelect(service.id)}
+                        onClick={() => {
+                          if (service.id === 'doorhandle') {
+                            setDoorHandleDialogOpen(true);
+                          } else {
+                            onSelect(service.id);
+                          }
+                        }}
                         className={cn(
                           "p-5 text-left rounded-lg transition-all duration-200 border relative",
                           isSelected 
@@ -320,6 +331,42 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 </p>
               ))}
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Door Handle Selector Dialog */}
+      <Dialog open={doorHandleDialogOpen} onOpenChange={setDoorHandleDialogOpen}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-medium flex items-center gap-2">
+              <DoorOpen className="w-5 h-5" />
+              {language === "hu" ? "Kilincs csere" : "Door Handle Replacement"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              {language === "hu" 
+                ? "Jelölje be, melyik kilincs(ek) sérültek és cserére szorulnak."
+                : "Select which door handle(s) are damaged and need replacement."}
+            </p>
+            
+            <DoorHandleSelector
+              value={selectedDoorHandles}
+              onChange={setSelectedDoorHandles}
+            />
+
+            <Button 
+              variant="tesla" 
+              className="w-full" 
+              disabled={selectedDoorHandles.length === 0}
+              onClick={() => {
+                onSelect('doorhandle', { doorHandles: selectedDoorHandles });
+                setDoorHandleDialogOpen(false);
+              }}
+            >
+              {language === "hu" ? "Tovább a foglaláshoz" : "Continue to booking"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
