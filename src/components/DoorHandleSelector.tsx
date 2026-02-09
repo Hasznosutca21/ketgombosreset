@@ -11,15 +11,15 @@ interface DoorHandleSelectorProps {
   onChange: (handles: string[]) => void;
 }
 
-// Handle positions as percentages on the images
+// Handle positions as percentages on the images - adjusted to point at door handles
 const LEFT_SIDE_HANDLES = [
-  { id: "front-left", label: "Bal első", labelEn: "Front Left", x: 75, y: 42 },
-  { id: "rear-left", label: "Bal hátsó", labelEn: "Rear Left", x: 42, y: 42 },
+  { id: "front-left", label: "Bal első", labelEn: "Front Left", x: 78, y: 48 },
+  { id: "rear-left", label: "Bal hátsó", labelEn: "Rear Left", x: 45, y: 50 },
 ];
 
 const RIGHT_SIDE_HANDLES = [
-  { id: "front-right", label: "Jobb első", labelEn: "Front Right", x: 25, y: 42 },
-  { id: "rear-right", label: "Jobb hátsó", labelEn: "Rear Right", x: 58, y: 42 },
+  { id: "front-right", label: "Jobb első", labelEn: "Front Right", x: 22, y: 48 },
+  { id: "rear-right", label: "Jobb hátsó", labelEn: "Rear Right", x: 55, y: 50 },
 ];
 
 const ALL_HANDLES = [
@@ -78,14 +78,14 @@ const DoorHandleSelector = ({ value, onChange }: DoorHandleSelectorProps) => {
       {/* Visual Car Images */}
       <div className="space-y-4">
         {/* Left side view */}
-        <div className="relative rounded-xl overflow-hidden bg-[#1a1a1a]">
-          <p className="absolute top-2 left-3 text-xs text-white/70 font-medium z-10">
+        <div className="relative rounded-xl overflow-hidden">
+          <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium z-10">
             {isHu ? "Bal oldal" : "Left side"}
           </p>
           <img
             src={model3LeftSide}
             alt="Tesla Model 3 Left Side"
-            className="w-full h-auto"
+            className="w-full h-auto mix-blend-lighten dark:mix-blend-lighten opacity-90"
           />
           {LEFT_SIDE_HANDLES.map((handle) =>
             renderMarker(handle, value.includes(handle.id))
@@ -93,14 +93,14 @@ const DoorHandleSelector = ({ value, onChange }: DoorHandleSelectorProps) => {
         </div>
 
         {/* Right side view */}
-        <div className="relative rounded-xl overflow-hidden bg-[#1a1a1a]">
-          <p className="absolute top-2 left-3 text-xs text-white/70 font-medium z-10">
+        <div className="relative rounded-xl overflow-hidden">
+          <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium z-10">
             {isHu ? "Jobb oldal" : "Right side"}
           </p>
           <img
             src={model3RightSide}
             alt="Tesla Model 3 Right Side"
-            className="w-full h-auto"
+            className="w-full h-auto mix-blend-lighten dark:mix-blend-lighten opacity-90"
           />
           {RIGHT_SIDE_HANDLES.map((handle) =>
             renderMarker(handle, value.includes(handle.id))
