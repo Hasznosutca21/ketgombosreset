@@ -129,6 +129,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [s3xyDialogOpen, setS3xyDialogOpen] = useState(false);
   const [selectedS3xyProducts, setSelectedS3xyProducts] = useState<string[]>([]);
   const [selectedS3xyVehicleVariant, setSelectedS3xyVehicleVariant] = useState<string>("");
+  const [selectedStripVariant, setSelectedStripVariant] = useState<string>("");
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
     details: string;
@@ -501,7 +502,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                       { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true },
                       { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, availableForSX: false },
                       { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false },
-                      { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: null, availableForSX: false },
+                      { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false },
                       { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false },
                       { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, availableForSX: false },
                     ].filter(product => {
@@ -528,6 +529,9 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                                   setSelectedS3xyProducts(selectedS3xyProducts.filter(p => p !== product.id));
                                   if (product.id === 'knob_commander') {
                                     setSelectedS3xyVehicleVariant("");
+                                  }
+                                  if (product.id === 'strip') {
+                                    setSelectedStripVariant("");
                                   }
                                 }
                               }}
@@ -576,6 +580,37 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                               </div>
                             </div>
                           )}
+
+                          {/* Vehicle variant selector for Strip */}
+                          {product.id === 'strip' && isChecked && (
+                            <div className="ml-8 p-3 rounded-lg bg-muted/20 border border-border space-y-2">
+                              <p className="text-xs text-muted-foreground">
+                                {language === "hu" ? "Válassz járműtípust:" : "Select vehicle type:"}
+                              </p>
+                              <div className="grid grid-cols-2 gap-2">
+                                {[
+                                  { id: "model3", label: "Model 3" },
+                                  { id: "model3_highland", label: "Model 3 Highland" },
+                                  { id: "modely", label: "Model Y" },
+                                  { id: "modely_juniper", label: "Model Y Juniper" },
+                                ].map((variant) => (
+                                  <button
+                                    key={variant.id}
+                                    type="button"
+                                    onClick={() => setSelectedStripVariant(variant.id)}
+                                    className={cn(
+                                      "p-2 text-xs rounded-md border transition-colors text-center",
+                                      selectedStripVariant === variant.id
+                                        ? "bg-foreground text-background border-foreground"
+                                        : "bg-background border-border hover:border-foreground/50"
+                                    )}
+                                  >
+                                    {variant.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       );
                     })}
@@ -587,7 +622,11 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             <Button 
               variant="tesla" 
               className="w-full" 
-              disabled={selectedS3xyProducts.length === 0 || (selectedS3xyProducts.includes('knob_commander') && !selectedS3xyVehicleVariant)}
+              disabled={
+                selectedS3xyProducts.length === 0 || 
+                (selectedS3xyProducts.includes('knob_commander') && !selectedS3xyVehicleVariant) ||
+                (selectedS3xyProducts.includes('strip') && !selectedStripVariant)
+              }
               onClick={() => {
                 onSelect('s3xy_products', { s3xyProducts: selectedS3xyProducts });
                 setS3xyDialogOpen(false);
