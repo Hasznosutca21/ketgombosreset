@@ -216,6 +216,11 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
       description: "Válassz a Tesla S3XY termékek közül",
       duration: "15-30 perc",
     },
+    softclose: {
+      title: "Softclose",
+      description: "Elektromos ajtóbehúzó beszerelése",
+      duration: "1-2 óra",
+    },
   },
 
   // Vehicle Selector
@@ -671,6 +676,11 @@ Select which handle needs replacement on the interactive diagram!`,
       title: "S3XY Products",
       description: "Choose from Tesla S3XY products",
       duration: "15-30 min",
+    },
+    softclose: {
+      title: "Softclose",
+      description: "Electric door closer installation",
+      duration: "1-2 hours",
     },
   },
 

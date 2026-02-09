@@ -116,6 +116,7 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
     icon: Package,
     services: [
       { id: "s3xy_products", icon: Package, vehicleRestriction: [] },
+      { id: "softclose", icon: DoorClosed, vehicleRestriction: ["model-3", "model-y"] },
     ],
   },
 ];
@@ -131,6 +132,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [selectedS3xyProducts, setSelectedS3xyProducts] = useState<string[]>([]);
   const [selectedS3xyVehicleVariant, setSelectedS3xyVehicleVariant] = useState<string>("");
   const [selectedStripVariant, setSelectedStripVariant] = useState<string>("");
+  const [softcloseDialogOpen, setSoftcloseDialogOpen] = useState(false);
   const [selectedSoftcloseOption, setSelectedSoftcloseOption] = useState<string>("");
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
@@ -282,6 +284,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                             setTrunkDialogOpen(true);
                           } else if (service.id === 's3xy_products') {
                             setS3xyDialogOpen(true);
+                          } else if (service.id === 'softclose') {
+                            setSoftcloseDialogOpen(true);
                           } else {
                             onSelect(service.id);
                           }
@@ -503,13 +507,12 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                   )}
                   <div className="space-y-2">
                     {[
-                      { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true, forModel3Y: true },
-                      { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, availableForSX: false, forModel3Y: true },
-                      { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false, forModel3Y: true },
-                      { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, forModel3Y: true },
-                      { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, forModel3Y: true },
-                      { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, availableForSX: false, forModel3Y: true },
-                      { id: "softclose", hu: "Softclose", en: "Softclose", icon: DoorClosed, price: null, availableForSX: false, forModel3Y: true },
+                      { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true },
+                      { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, availableForSX: false },
+                      { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false },
+                      { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false },
+                      { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false },
+                      { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, availableForSX: false },
                     ].filter(product => {
                       // For Model S/X: only Commander is available
                       if (isModelSX) {
@@ -537,9 +540,6 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                                   }
                                   if (product.id === 'strip') {
                                     setSelectedStripVariant("");
-                                  }
-                                  if (product.id === 'softclose') {
-                                    setSelectedSoftcloseOption("");
                                   }
                                 }
                               }}
@@ -619,36 +619,6 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                               </div>
                             </div>
                           )}
-
-                          {/* Door option selector for Softclose */}
-                          {product.id === 'softclose' && isChecked && (
-                            <div className="ml-8 p-3 rounded-lg bg-muted/20 border border-border space-y-2">
-                              <p className="text-xs text-muted-foreground">
-                                {language === "hu" ? "Válassz ajtó opciót:" : "Select door option:"}
-                              </p>
-                              <div className="grid grid-cols-1 gap-2">
-                                {[
-                                  { id: "front_2", label: language === "hu" ? "Első 2 ajtó" : "Front 2 doors" },
-                                  { id: "rear_2", label: language === "hu" ? "Hátsó 2 ajtó" : "Rear 2 doors" },
-                                  { id: "all_4", label: language === "hu" ? "Mind a 4 ajtó" : "All 4 doors" },
-                                ].map((option) => (
-                                  <button
-                                    key={option.id}
-                                    type="button"
-                                    onClick={() => setSelectedSoftcloseOption(option.id)}
-                                    className={cn(
-                                      "p-2 text-xs rounded-md border transition-colors text-center",
-                                      selectedSoftcloseOption === option.id
-                                        ? "bg-foreground text-background border-foreground"
-                                        : "bg-background border-border hover:border-foreground/50"
-                                    )}
-                                  >
-                                    {option.label}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
                         </div>
                       );
                     })}
@@ -663,12 +633,69 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               disabled={
                 selectedS3xyProducts.length === 0 || 
                 (selectedS3xyProducts.includes('knob_commander') && !selectedS3xyVehicleVariant) ||
-                (selectedS3xyProducts.includes('strip') && !selectedStripVariant) ||
-                (selectedS3xyProducts.includes('softclose') && !selectedSoftcloseOption)
+                (selectedS3xyProducts.includes('strip') && !selectedStripVariant)
               }
               onClick={() => {
                 onSelect('s3xy_products', { s3xyProducts: selectedS3xyProducts });
                 setS3xyDialogOpen(false);
+              }}
+            >
+              {language === "hu" ? "Tovább a foglaláshoz" : "Continue to booking"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Softclose Dialog */}
+      <Dialog open={softcloseDialogOpen} onOpenChange={(open) => {
+        setSoftcloseDialogOpen(open);
+        if (!open) {
+          setSelectedSoftcloseOption("");
+        }
+      }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-medium flex items-center gap-2">
+              <DoorClosed className="w-5 h-5" />
+              Softclose
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              {language === "hu" 
+                ? "Válaszd ki, melyik ajtókra szeretnéd a softclose beszerelését."
+                : "Select which doors you want the softclose installed on."}
+            </p>
+            
+            <div className="space-y-2">
+              {[
+                { id: "front_2", label: language === "hu" ? "Első 2 ajtó" : "Front 2 doors" },
+                { id: "rear_2", label: language === "hu" ? "Hátsó 2 ajtó" : "Rear 2 doors" },
+                { id: "all_4", label: language === "hu" ? "Mind a 4 ajtó" : "All 4 doors" },
+              ].map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => setSelectedSoftcloseOption(option.id)}
+                  className={cn(
+                    "w-full p-4 text-sm rounded-lg border transition-colors text-center",
+                    selectedSoftcloseOption === option.id
+                      ? "bg-foreground text-background border-foreground"
+                      : "bg-muted/30 border-border hover:border-foreground/50"
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+
+            <Button 
+              variant="tesla" 
+              className="w-full" 
+              disabled={!selectedSoftcloseOption}
+              onClick={() => {
+                onSelect('softclose', { s3xyProducts: [`softclose_${selectedSoftcloseOption}`] });
+                setSoftcloseDialogOpen(false);
               }}
             >
               {language === "hu" ? "Tovább a foglaláshoz" : "Continue to booking"}
