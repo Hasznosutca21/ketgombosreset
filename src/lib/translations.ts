@@ -50,6 +50,10 @@ export const hu = {
       title: "Akkumulátor",
       description: "12V akkumulátor (Intel processzoros típus)",
     },
+    accessories: {
+      title: "Kiegészítők beszerelése",
+      description: "Tesla kiegészítők professzionális beszerelése",
+    },
   },
 
   // Services
@@ -496,6 +500,10 @@ export const en = {
     batteryCategory: {
       title: "Battery",
       description: "12V battery (Intel processor type)",
+    },
+    accessories: {
+      title: "Accessories Installation",
+      description: "Professional Tesla accessories installation",
     },
   },
 

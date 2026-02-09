@@ -62,7 +62,6 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
       { id: "maintenance", icon: Wrench, vehicleRestriction: [] },
       { id: "battery", icon: Zap, vehicleRestriction: [] },
       { id: "brake", icon: Disc, vehicleRestriction: [] },
-      { id: "accessories", icon: Package, vehicleRestriction: [] },
     ],
   },
   {
@@ -74,7 +73,6 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
       { id: "heating", icon: Flame, vehicleRestriction: ["model-3", "model-y"] },
       { id: "hepa", icon: Fan, vehicleRestriction: ["model-y"] },
       { id: "ptcheater", icon: Zap, vehicleRestriction: ["model-3"], yearRestriction: { from: 2018, to: 2020 } },
-      { id: "accessories", icon: Package, vehicleRestriction: [] },
     ],
   },
   {
@@ -84,7 +82,6 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
       { id: "software", icon: Donut, vehicleRestriction: ["model-3"] },
       { id: "autopilot", icon: Lightbulb, vehicleRestriction: ["model-3"] },
       { id: "multimedia", icon: MonitorPlay, vehicleRestriction: [] },
-      { id: "accessories", icon: Package, vehicleRestriction: [] },
     ],
   },
   {
@@ -92,7 +89,6 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
     icon: Battery,
     services: [
       { id: "lowvoltagebattery", icon: Battery, vehicleRestriction: ["model-3", "model-y"] },
-      { id: "accessories", icon: Package, vehicleRestriction: [] },
     ],
     vehicleRestriction: ["model-3", "model-y"],
   },
@@ -105,8 +101,12 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
       { id: "canbus", icon: Settings, vehicleRestriction: ["model-y"] },
       { id: "warranty", icon: Shield, vehicleRestriction: ["model-3"] },
       { id: "tires", icon: CircleDot, vehicleRestriction: [] },
-      { id: "accessories", icon: Package, vehicleRestriction: [] },
     ],
+  },
+  {
+    id: "accessories",
+    icon: Package,
+    services: [],
   },
 ];
 
