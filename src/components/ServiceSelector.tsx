@@ -25,6 +25,7 @@ import {
   LayoutDashboard,
   LucideIcon
 } from "lucide-react";
+import s3xyIcon from "@/assets/s3xy-icon.png";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -240,7 +241,11 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                     "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
                     hasSelectedService ? "bg-foreground text-background" : "bg-muted"
                   )}>
-                    <CategoryIcon className="w-5 h-5" />
+                    {category.id === 'accessories' ? (
+                      <img src={s3xyIcon} alt="S3XY" className="w-6 h-6 object-contain" />
+                    ) : (
+                      <CategoryIcon className="w-5 h-5" />
+                    )}
                   </div>
                   <div className="text-left flex-1">
                     <h3 className="text-lg font-medium">{categoryData.title}</h3>
@@ -305,7 +310,11 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                               isSelected ? "bg-background/20 text-background" : "bg-muted"
                             )}
                           >
-                            <Icon className="w-5 h-5" />
+                            {service.id === 's3xy_products' ? (
+                              <img src={s3xyIcon} alt="S3XY" className="w-6 h-6 object-contain" />
+                            ) : (
+                              <Icon className="w-5 h-5" />
+                            )}
                           </div>
                           <div>
                             <h4 className="font-medium text-sm mb-1">{serviceData.title}</h4>
