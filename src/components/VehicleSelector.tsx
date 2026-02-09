@@ -143,6 +143,13 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
   }, [user, selected, onSelect, hasAutoSelected]);
 
   const handleVehicleClick = (vehicleId: string) => {
+    // Model 3 doesn't need year selection - select directly
+    if (vehicleId === "model-3") {
+      setSelectedVehicleId(vehicleId);
+      setSelectedYear(2020); // Default year for Model 3
+      onSelect(`${vehicleId}-2020`);
+      return;
+    }
     setSelectedVehicleId(vehicleId);
     setSelectedYear(null);
     setTempYear(null);
