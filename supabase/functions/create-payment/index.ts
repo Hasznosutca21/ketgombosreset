@@ -118,10 +118,12 @@ serve(async (req) => {
 
     // Create a one-time payment session
     // Note: Stripe treats HUF as a two-decimal currency, so we multiply by 100
+    // Payment method types include card (with Google Pay & Apple Pay wallets)
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : customerEmail,
       locale: "hu",
+      payment_method_types: ["card"],
       line_items: [
         {
           price_data: {
