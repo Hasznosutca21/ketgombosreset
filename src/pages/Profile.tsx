@@ -409,17 +409,16 @@ const Profile = () => {
     }
   };
 
-  const handleDecodeVin = async () => {
-    const vinInput = document.getElementById('vehicle_vin') as HTMLInputElement;
-    const vin = vinInput?.value?.trim();
+  const handleDecodeVin = async (vinValue?: string) => {
+    const vin = vinValue || (document.getElementById('vehicle_vin') as HTMLInputElement)?.value?.trim();
 
     if (!vin) {
-      toast.error(t.vehicleVinPlaceholder || "Please enter a VIN");
+      if (!vinValue) toast.error(t.vehicleVinPlaceholder || "Please enter a VIN");
       return;
     }
 
     if (vin.length !== 17) {
-      toast.error(t.invalidVinLength || "VIN must be exactly 17 characters");
+      if (!vinValue) toast.error(t.invalidVinLength || "VIN must be exactly 17 characters");
       return;
     }
 
@@ -432,35 +431,40 @@ const Profile = () => {
       if (error) throw error;
 
       if (data.error) {
-        if (data.error.includes("Only Tesla")) {
-          toast.error(t.onlyTeslaSupported || "Only Tesla vehicles are supported");
-        } else {
-          toast.error(data.error);
+        if (!vinValue) {
+          if (data.error.includes("Only Tesla")) {
+            toast.error(t.onlyTeslaSupported || "Only Tesla vehicles are supported");
+          } else {
+            toast.error(data.error);
+          }
         }
         return;
       }
 
       // Update profile state with decoded data
-      // Model now includes variant (e.g., "Model S Plaid")
-      if (data.model) {
-        setProfile((prev) => prev ? { ...prev, vehicle_model: data.model } : null);
-      }
-      // Type/drive info (e.g., "All-Wheel Drive")
-      if (data.drive) {
-        setProfile((prev) => prev ? { ...prev, vehicle_type: data.drive } : null);
-      } else if (data.type) {
-        setProfile((prev) => prev ? { ...prev, vehicle_type: data.type } : null);
-      }
-      if (data.year) {
-        setProfile((prev) => prev ? { ...prev, vehicle_year: data.year } : null);
-      }
+      setProfile((prev) => prev ? { 
+        ...prev, 
+        vehicle_model: data.model || prev.vehicle_model,
+        vehicle_type: data.drive || data.type || prev.vehicle_type,
+        vehicle_year: data.year || prev.vehicle_year,
+      } : null);
 
-      toast.success(t.vinDecoded || "Vehicle data filled successfully");
+      if (!vinValue) {
+        toast.success(t.vinDecoded || "Vehicle data filled successfully");
+      }
     } catch (error) {
       console.error("Error decoding VIN:", error);
-      toast.error(t.vinDecodeFailed || "Failed to decode VIN");
+      if (!vinValue) toast.error(t.vinDecodeFailed || "Failed to decode VIN");
     } finally {
       setIsDecodingVin(false);
+    }
+  };
+
+  // Auto-decode VIN when user types 17 characters
+  const handleVinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const vin = e.target.value.toUpperCase().trim();
+    if (vin.length === 17) {
+      handleDecodeVin(vin);
     }
   };
 
@@ -678,12 +682,14 @@ const Profile = () => {
                             placeholder={t.vehicleVinPlaceholder || "Vehicle Identification Number"}
                             maxLength={17}
                             className="flex-1 font-mono uppercase"
-                            {...register("vehicle_vin")}
+                            {...register("vehicle_vin", {
+                              onChange: handleVinChange,
+                            })}
                           />
                           <Button
                             type="button"
                             variant="outline"
-                            onClick={handleDecodeVin}
+                            onClick={() => handleDecodeVin()}
                             disabled={isDecodingVin}
                           >
                             {isDecodingVin ? (
