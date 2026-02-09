@@ -211,11 +211,10 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
       description: "Tesla kiegészítők professzionális beszerelése",
       duration: "Egyedi",
     },
-    accessory_floormats: {
-      title: "Padlószőnyeg beszerelés",
-      description: "Tesla padlószőnyeg professzionális beszerelése",
-      duration: "15 perc",
-      price: "5 000 Ft",
+    s3xy_products: {
+      title: "S3XY termékek",
+      description: "Válassz a Tesla S3XY termékek közül",
+      duration: "15-30 perc",
     },
   },
 
@@ -668,11 +667,10 @@ Select which handle needs replacement on the interactive diagram!`,
       description: "Professional Tesla accessories installation",
       duration: "Custom",
     },
-    accessory_floormats: {
-      title: "Floor Mats Installation",
-      description: "Professional Tesla floor mats installation",
-      duration: "15 min",
-      price: "5 000 Ft",
+    s3xy_products: {
+      title: "S3XY Products",
+      description: "Choose from Tesla S3XY products",
+      duration: "15-30 min",
     },
   },
 

@@ -38,7 +38,7 @@ import {
 import DoorHandleSelector from "@/components/DoorHandleSelector";
 
 interface ServiceSelectorProps {
-  onSelect: (service: string, extras?: { doorHandles?: string[]; trunkLightNotWorking?: boolean }) => void;
+  onSelect: (service: string, extras?: { doorHandles?: string[]; trunkLightNotWorking?: boolean; s3xyProducts?: string[] }) => void;
   selected: string | null;
   selectedVehicle?: string | null;
   onBack?: () => void;
@@ -107,7 +107,7 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
     id: "accessories",
     icon: Package,
     services: [
-      { id: "accessory_floormats", icon: Package, vehicleRestriction: [] },
+      { id: "s3xy_products", icon: Package, vehicleRestriction: [] },
     ],
   },
 ];
@@ -119,6 +119,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [selectedDoorHandles, setSelectedDoorHandles] = useState<string[]>([]);
   const [trunkDialogOpen, setTrunkDialogOpen] = useState(false);
   const [trunkLightNotWorking, setTrunkLightNotWorking] = useState(false);
+  const [s3xyDialogOpen, setS3xyDialogOpen] = useState(false);
+  const [selectedS3xyProducts, setSelectedS3xyProducts] = useState<string[]>([]);
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
     details: string;
@@ -263,6 +265,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                             setDoorHandleDialogOpen(true);
                           } else if (service.id === 'body') {
                             setTrunkDialogOpen(true);
+                          } else if (service.id === 's3xy_products') {
+                            setS3xyDialogOpen(true);
                           } else {
                             onSelect(service.id);
                           }
@@ -431,6 +435,73 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               onClick={() => {
                 onSelect('body', { trunkLightNotWorking });
                 setTrunkDialogOpen(false);
+              }}
+            >
+              {language === "hu" ? "Tovább a foglaláshoz" : "Continue to booking"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* S3XY Products Dialog */}
+      <Dialog open={s3xyDialogOpen} onOpenChange={(open) => {
+        setS3xyDialogOpen(open);
+        if (!open) setSelectedS3xyProducts([]);
+      }}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-medium flex items-center gap-2">
+              <Package className="w-5 h-5" />
+              {language === "hu" ? "S3XY termékek" : "S3XY Products"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              {language === "hu" 
+                ? "Válaszd ki a beszerelni kívánt termékeket."
+                : "Select the products you want to install."}
+            </p>
+            
+            <div className="space-y-2">
+              {[
+                { id: "floormats", hu: "Padlószőnyeg", en: "Floor Mats" },
+                { id: "sunshade", hu: "Napellenző", en: "Sunshade" },
+                { id: "trunk_mat", hu: "Csomagtér szőnyeg", en: "Trunk Mat" },
+                { id: "screen_protector", hu: "Kijelzővédő", en: "Screen Protector" },
+                { id: "phone_mount", hu: "Telefontartó", en: "Phone Mount" },
+              ].map((product) => (
+                <div 
+                  key={product.id}
+                  className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border hover:bg-muted/50 transition-colors"
+                >
+                  <Checkbox 
+                    id={`s3xy-${product.id}`}
+                    checked={selectedS3xyProducts.includes(product.id)}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setSelectedS3xyProducts([...selectedS3xyProducts, product.id]);
+                      } else {
+                        setSelectedS3xyProducts(selectedS3xyProducts.filter(p => p !== product.id));
+                      }
+                    }}
+                  />
+                  <label 
+                    htmlFor={`s3xy-${product.id}`}
+                    className="text-sm font-medium leading-none cursor-pointer select-none flex-1"
+                  >
+                    {language === "hu" ? product.hu : product.en}
+                  </label>
+                </div>
+              ))}
+            </div>
+
+            <Button 
+              variant="tesla" 
+              className="w-full" 
+              disabled={selectedS3xyProducts.length === 0}
+              onClick={() => {
+                onSelect('s3xy_products', { s3xyProducts: selectedS3xyProducts });
+                setS3xyDialogOpen(false);
               }}
             >
               {language === "hu" ? "Tovább a foglaláshoz" : "Continue to booking"}
