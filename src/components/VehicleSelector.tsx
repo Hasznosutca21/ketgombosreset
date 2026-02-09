@@ -113,6 +113,22 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
+  // Listen for preselect events from nav
+  useEffect(() => {
+    const handlePreselect = (e: CustomEvent<string>) => {
+      const vehicleId = e.detail;
+      if (vehicles.find(v => v.id === vehicleId)) {
+        setSelectedVehicleId(vehicleId);
+        setSelectedYear(null);
+      }
+    };
+
+    window.addEventListener('preselect-vehicle', handlePreselect as EventListener);
+    return () => {
+      window.removeEventListener('preselect-vehicle', handlePreselect as EventListener);
+    };
+  }, []);
+
   // Load vehicle from profile
   useEffect(() => {
     const loadProfileVehicle = async () => {
