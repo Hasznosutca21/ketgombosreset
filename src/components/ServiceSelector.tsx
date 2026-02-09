@@ -589,11 +589,11 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                               </p>
                               <div className="grid grid-cols-2 gap-2">
                                 {[
-                                  { id: "model3", label: "Model 3" },
-                                  { id: "model3_highland", label: "Model 3 Highland" },
-                                  { id: "modely", label: "Model Y" },
-                                  { id: "modely_juniper", label: "Model Y Juniper" },
-                                ].map((variant) => (
+                                  { id: "model3", label: "Model 3", forVehicle: "model-3" },
+                                  { id: "model3_highland", label: "Model 3 Highland", forVehicle: "model-3" },
+                                  { id: "modely", label: "Model Y", forVehicle: "model-y" },
+                                  { id: "modely_juniper", label: "Model Y Juniper", forVehicle: "model-y" },
+                                ].filter(variant => variant.forVehicle === vehicleId).map((variant) => (
                                   <button
                                     key={variant.id}
                                     type="button"
