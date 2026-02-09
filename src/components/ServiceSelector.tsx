@@ -19,6 +19,7 @@ import {
   Package
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import {
@@ -36,7 +37,7 @@ import {
 import DoorHandleSelector from "@/components/DoorHandleSelector";
 
 interface ServiceSelectorProps {
-  onSelect: (service: string, extras?: { doorHandles?: string[] }) => void;
+  onSelect: (service: string, extras?: { doorHandles?: string[]; trunkLightNotWorking?: boolean }) => void;
   selected: string | null;
   selectedVehicle?: string | null;
   onBack?: () => void;
@@ -99,6 +100,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [doorHandleDialogOpen, setDoorHandleDialogOpen] = useState(false);
   const [selectedDoorHandles, setSelectedDoorHandles] = useState<string[]>([]);
+  const [trunkDialogOpen, setTrunkDialogOpen] = useState(false);
+  const [trunkLightNotWorking, setTrunkLightNotWorking] = useState(false);
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
     details: string;
@@ -242,6 +245,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                         onClick={() => {
                           if (service.id === 'doorhandle') {
                             setDoorHandleDialogOpen(true);
+                          } else if (service.id === 'body') {
+                            setTrunkDialogOpen(true);
                           } else {
                             onSelect(service.id);
                           }
@@ -363,6 +368,53 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               onClick={() => {
                 onSelect('doorhandle', { doorHandles: selectedDoorHandles });
                 setDoorHandleDialogOpen(false);
+              }}
+            >
+              {language === "hu" ? "Tovább a foglaláshoz" : "Continue to booking"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Trunk Lid Issue Dialog */}
+      <Dialog open={trunkDialogOpen} onOpenChange={(open) => {
+        setTrunkDialogOpen(open);
+        if (!open) setTrunkLightNotWorking(false);
+      }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-medium flex items-center gap-2">
+              <Package className="w-5 h-5" />
+              {language === "hu" ? "Hátsó csomagtérajtó probléma" : "Rear Trunk Lid Issue"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            <p className="text-sm text-muted-foreground">
+              {language === "hu" 
+                ? "A kábelköteg szakadása különböző tüneteket okozhat. Kérjük jelezze, ha a lámpa sem működik."
+                : "Cable harness breakage can cause various symptoms. Please indicate if the light is also not working."}
+            </p>
+            
+            <div className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border">
+              <Checkbox 
+                id="trunk-light" 
+                checked={trunkLightNotWorking}
+                onCheckedChange={(checked) => setTrunkLightNotWorking(checked === true)}
+              />
+              <label 
+                htmlFor="trunk-light" 
+                className="text-sm font-medium leading-none cursor-pointer select-none"
+              >
+                {language === "hu" ? "Nem világít a lámpa" : "Light is not working"}
+              </label>
+            </div>
+
+            <Button 
+              variant="tesla" 
+              className="w-full" 
+              onClick={() => {
+                onSelect('body', { trunkLightNotWorking });
+                setTrunkDialogOpen(false);
               }}
             >
               {language === "hu" ? "Tovább a foglaláshoz" : "Continue to booking"}
