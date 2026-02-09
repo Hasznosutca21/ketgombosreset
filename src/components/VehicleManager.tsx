@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import VehicleColorSelector, { TESLA_COLORS } from "@/components/VehicleColorSelector";
 
 interface Vehicle {
   id: string;
@@ -22,6 +23,7 @@ interface Vehicle {
   plate: string | null;
   image_url: string | null;
   is_primary: boolean;
+  color: string | null;
 }
 
 interface VehicleManagerProps {
@@ -50,6 +52,7 @@ const VehicleManager = ({ userId }: VehicleManagerProps) => {
     vin: "",
     plate: "",
     image_url: "",
+    color: "",
   });
 
   const t = {
@@ -83,6 +86,8 @@ const VehicleManager = ({ userId }: VehicleManagerProps) => {
     failedToDelete: language === "hu" ? "Törlés sikertelen" : "Failed to delete",
     decodeVin: language === "hu" ? "VIN dekódolás" : "Decode VIN",
     vehicleImage: language === "hu" ? "Jármű kép" : "Vehicle Image",
+    color: language === "hu" ? "Szín" : "Color",
+    selectColor: language === "hu" ? "Válassz színt" : "Select color",
   };
 
   useEffect(() => {
@@ -116,6 +121,7 @@ const VehicleManager = ({ userId }: VehicleManagerProps) => {
       vin: "",
       plate: "",
       image_url: "",
+      color: "",
     });
     setEditingVehicle(null);
   };
@@ -135,6 +141,7 @@ const VehicleManager = ({ userId }: VehicleManagerProps) => {
       vin: vehicle.vin || "",
       plate: vehicle.plate || "",
       image_url: vehicle.image_url || "",
+      color: vehicle.color || "",
     });
     setIsDialogOpen(true);
   };
@@ -231,6 +238,7 @@ const VehicleManager = ({ userId }: VehicleManagerProps) => {
         vin: formData.vin || null,
         plate: formData.plate || null,
         image_url: formData.image_url || null,
+        color: formData.color || null,
         is_primary: vehicles.length === 0, // First vehicle is primary
       };
 
@@ -413,6 +421,14 @@ const VehicleManager = ({ userId }: VehicleManagerProps) => {
                     placeholder={t.platePlaceholder}
                     value={formData.plate}
                     onChange={(e) => setFormData((prev) => ({ ...prev, plate: e.target.value.toUpperCase() }))}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>{t.color}</Label>
+                  <VehicleColorSelector
+                    value={formData.color}
+                    onChange={(colorId) => setFormData((prev) => ({ ...prev, color: colorId }))}
                   />
                 </div>
 
