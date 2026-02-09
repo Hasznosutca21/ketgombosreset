@@ -27,6 +27,7 @@ import {
   LucideIcon
 } from "lucide-react";
 import s3xyIcon from "@/assets/s3xy-icon.png";
+import s3xyCommanderImage from "@/assets/products/s3xy-commander.jpg";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -736,6 +737,13 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
+            <div className="rounded-lg overflow-hidden bg-muted/30">
+              <img 
+                src={s3xyCommanderImage} 
+                alt="S3XY Commander" 
+                className="w-full h-auto object-cover"
+              />
+            </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {language === "hu" 
                 ? "Az S3XY Commander egy multifunkciós vezérlőpanel, amely a Tesla középkonzoljára szerelhető. Lehetővé teszi a gyakran használt funkciók gyors elérését fizikai gombokkal, mint például a klíma, ablakfűtés, csomagtér nyitás és még sok más."
