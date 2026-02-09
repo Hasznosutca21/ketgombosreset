@@ -57,6 +57,20 @@ const vehicleLabels: Record<string, string> = {
   roadster: "Roadster",
 };
 
+const DEFAULT_DESCRIPTION = `Jelen munkalap a Tesla gyártmányú gépjárművek szervizelése, műszaki állapotfelmérése és diagnosztikai vizsgálata során végzett tevékenységek dokumentálására szolgál. A dokumentum célja az elvégzett ellenőrzések, mérések, beavatkozások és megállapítások pontos, egységes és visszakövethető rögzítése.
+
+A munkalap tartalmazza a jármű azonosításához szükséges adatokat, beleértve a gyártmányt, típust, alvázszámot (VIN), gyártási évet, futásteljesítményt, valamint a tulajdonos és a szervizszolgáltató azonosító adatait. Rögzíti továbbá a szervizelés időpontját, jogcímét és jellegét.
+
+A dokumentum kiterjed különösen az alábbi területekre:
+
+a nagyfeszültségű akkumulátorrendszer állapotának vizsgálata,
+a hajtáslánc és kapcsolódó rendszerek ellenőrzése,
+a jármű elektronikus és szoftveres diagnosztikája, hibakód-ellenőrzés,
+biztonsági és mechanikai elemek állapotának felmérése,
+a mért értékek, megállapítások és szakmai észrevételek rögzítése.
+
+A munkalap a szervizelési tevékenység hivatalos dokumentumának minősül, amely alkalmas belső nyilvántartási, ügyfél-tájékoztatási, valamint jogi és adminisztratív célú felhasználásra. A dokumentumban rögzített adatok az ellenőrzés időpontjában fennálló állapotot tükrözik.`;
+
 const getVehicleLabel = (v: string) => {
   const key = v.split("-").slice(0, 2).join("-");
   return vehicleLabels[key] || v;
@@ -82,7 +96,7 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
     vehicle_vin: "",
     service: "",
     service_date: format(new Date(), "yyyy-MM-dd"),
-    description: "",
+    description: DEFAULT_DESCRIPTION,
     notes: "",
   });
 
@@ -132,7 +146,7 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
         vehicle_vin: prefillAppointment.vehicle_vin || "",
         service: prefillAppointment.service,
         service_date: prefillAppointment.appointment_date,
-        description: "",
+        description: DEFAULT_DESCRIPTION,
         notes: "",
       });
       setSelectedAppointment(prefillAppointment.id);
@@ -184,7 +198,7 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
           vehicle_vin: apt.vehicle_vin || "",
           service: apt.service,
           service_date: apt.appointment_date,
-          description: "",
+          description: DEFAULT_DESCRIPTION,
           notes: "",
         });
       }
@@ -242,7 +256,7 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
       vehicle_vin: "",
       service: "",
       service_date: format(new Date(), "yyyy-MM-dd"),
-      description: "",
+      description: DEFAULT_DESCRIPTION,
       notes: "",
     });
   };
