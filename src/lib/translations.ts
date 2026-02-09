@@ -48,7 +48,7 @@ export const hu = {
     },
     batteryCategory: {
       title: "Akkumulátor",
-      description: "12V akkumulátor (Intel processzoros típusok)",
+      description: "12V akkumulátor (Intel processzoros típus)",
     },
   },
 
@@ -484,7 +484,7 @@ export const en = {
     },
     batteryCategory: {
       title: "Battery",
-      description: "12V battery (Intel processor types)",
+      description: "12V battery (Intel processor type)",
     },
   },
 
