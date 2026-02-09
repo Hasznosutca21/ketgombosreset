@@ -17,87 +17,100 @@ const HANDLE_POSITIONS = [
 
 const PRICE_PER_HANDLE = 25000;
 
-// Tesla Model 3 top-down silhouette SVG
+// Tesla Model 3 top-down silhouette SVG - accurate Model 3 shape
 const CarSilhouette = () => (
   <svg
-    viewBox="0 0 200 320"
-    className="w-full h-auto max-w-[280px] mx-auto"
+    viewBox="0 0 120 280"
+    className="w-full h-auto max-w-[200px] mx-auto"
     fill="currentColor"
   >
-    {/* Car body silhouette - top-down view */}
+    {/* Model 3 body - distinctive teardrop/aerodynamic shape */}
     <path
-      d="M100 10
-         C70 10 55 20 50 35
-         L45 60
-         C40 65 35 70 32 85
-         L30 120
-         L28 160
-         L28 200
-         L30 240
-         L35 270
-         C40 285 50 295 55 300
-         C70 310 130 310 145 300
-         C150 295 160 285 165 270
-         L170 240
-         L172 200
-         L172 160
-         L170 120
-         L168 85
-         C165 70 160 65 155 60
-         L150 35
-         C145 20 130 10 100 10
+      d="M60 8
+         C45 8 35 12 28 22
+         L22 45
+         L18 70
+         L15 100
+         L14 130
+         L14 170
+         L15 200
+         L18 225
+         L24 248
+         C30 262 42 270 60 272
+         C78 270 90 262 96 248
+         L102 225
+         L105 200
+         L106 170
+         L106 130
+         L105 100
+         L102 70
+         L98 45
+         L92 22
+         C85 12 75 8 60 8
          Z"
-      className="fill-muted-foreground/20"
+      className="fill-muted-foreground/15 stroke-muted-foreground/40"
+      strokeWidth="1.5"
     />
-    {/* Roof/glass area */}
+    
+    {/* Glass roof area - Model 3's signature glass roof */}
     <path
-      d="M100 45
-         C80 45 70 50 65 60
-         L60 90
-         L58 130
-         L58 180
-         L60 220
-         L65 250
-         C70 260 80 265 100 265
-         C120 265 130 260 135 250
-         L140 220
-         L142 180
-         L142 130
-         L140 90
-         L135 60
-         C130 50 120 45 100 45
+      d="M60 35
+         C48 35 40 40 36 50
+         L32 75
+         L30 110
+         L30 160
+         L32 195
+         L36 220
+         C40 230 48 235 60 235
+         C72 235 80 230 84 220
+         L88 195
+         L90 160
+         L90 110
+         L88 75
+         L84 50
+         C80 40 72 35 60 35
          Z"
-      className="fill-muted-foreground/10"
+      className="fill-muted-foreground/8"
     />
-    {/* Front windshield */}
+    
+    {/* Front windshield - Model 3 shape */}
     <path
-      d="M100 55
-         C85 55 75 58 70 65
-         L65 95
-         L135 95
-         L130 65
-         C125 58 115 55 100 55
+      d="M60 42
+         C50 42 43 45 39 52
+         L35 72
+         L85 72
+         L81 52
+         C77 45 70 42 60 42
          Z"
-      className="fill-foreground/20"
+      className="fill-foreground/15"
     />
-    {/* Rear windshield */}
+    
+    {/* Rear glass */}
     <path
-      d="M65 235
-         L70 255
-         C75 260 85 262 100 262
-         C115 262 125 260 130 255
-         L135 235
+      d="M36 205
+         L39 222
+         C43 228 50 230 60 230
+         C70 230 77 228 81 222
+         L84 205
          Z"
-      className="fill-foreground/20"
+      className="fill-foreground/15"
     />
-    {/* Side mirrors */}
-    <ellipse cx="25" cy="95" rx="8" ry="5" className="fill-muted-foreground/30" />
-    <ellipse cx="175" cy="95" rx="8" ry="5" className="fill-muted-foreground/30" />
-    {/* Door handle indicators - small lines */}
-    <rect x="28" y="118" width="6" height="2" rx="1" className="fill-muted-foreground/40" />
-    <rect x="28" y="178" width="6" height="2" rx="1" className="fill-muted-foreground/40" />
-    <rect x="166" y="118" width="6" height="2" rx="1" className="fill-muted-foreground/40" />
-    <rect x="166" y="178" width="6" height="2" rx="1" className="fill-muted-foreground/40" />
+    
+    {/* Side mirrors - Model 3 style */}
+    <ellipse cx="10" cy="78" rx="6" ry="4" className="fill-muted-foreground/25" />
+    <ellipse cx="110" cy="78" rx="6" ry="4" className="fill-muted-foreground/25" />
+    
+    {/* Chrome door handles - the ones that peel */}
+    <rect x="13" y="105" width="5" height="1.5" rx="0.75" className="fill-muted-foreground/50" />
+    <rect x="13" y="155" width="5" height="1.5" rx="0.75" className="fill-muted-foreground/50" />
+    <rect x="102" y="105" width="5" height="1.5" rx="0.75" className="fill-muted-foreground/50" />
+    <rect x="102" y="155" width="5" height="1.5" rx="0.75" className="fill-muted-foreground/50" />
+    
+    {/* Front Tesla emblem hint */}
+    <circle cx="60" cy="18" r="2" className="fill-muted-foreground/30" />
+    
+    {/* Charge port (left side) */}
+    <rect x="12" y="85" width="3" height="6" rx="1" className="fill-muted-foreground/20" />
   </svg>
 );
 
