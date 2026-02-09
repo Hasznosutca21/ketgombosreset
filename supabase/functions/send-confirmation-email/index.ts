@@ -201,113 +201,86 @@ serve(async (req) => {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>${t.appointmentConfirmed}</title>
         </head>
-        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0a0a; color: #ffffff;">
-          <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
-            <!-- Header -->
-            <div style="text-align: center; margin-bottom: 40px;">
-              <div style="display: inline-flex; align-items: center; gap: 8px;">
-                <span style="font-size: 32px;">⚡</span>
-                <span style="font-size: 24px; font-weight: 600; color: #e11d48;">${t.teslaService}</span>
-              </div>
+        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; color: #171717; -webkit-font-smoothing: antialiased;">
+          <div style="max-width: 560px; margin: 0 auto; padding: 48px 24px;">
+            
+            <!-- Logo -->
+            <div style="text-align: center; margin-bottom: 48px;">
+              <span style="font-size: 20px; font-weight: 300; letter-spacing: 4px; color: #171717;">TESLAND</span>
             </div>
 
-            <!-- Success Icon -->
-            <div style="text-align: center; margin-bottom: 32px;">
-              <div style="width: 80px; height: 80px; background: rgba(225, 29, 72, 0.2); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
-                <span style="font-size: 40px;">✓</span>
+            <!-- Main Card -->
+            <div style="background: #ffffff; border-radius: 4px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+              
+              <!-- Header -->
+              <div style="padding: 40px 40px 32px; text-align: center; border-bottom: 1px solid #e5e5e5;">
+                <div style="width: 56px; height: 56px; background: #171717; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: #ffffff; font-size: 24px; line-height: 56px;">✓</span>
+                </div>
+                <h1 style="margin: 0 0 8px; font-size: 24px; font-weight: 500; letter-spacing: -0.5px; color: #171717;">${t.appointmentConfirmed}</h1>
+                <p style="margin: 0; font-size: 15px; color: #737373; font-weight: 300;">${t.greeting(safeName)}</p>
               </div>
-            </div>
 
-            <!-- Main Content -->
-            <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 32px; margin-bottom: 32px;">
-              <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 700; text-align: center;">${t.appointmentConfirmed}</h1>
-              <p style="margin: 0 0 32px 0; color: #a1a1aa; text-align: center;">${t.greeting(safeName)}</p>
-
-              <!-- Appointment Details -->
-              <div style="display: grid; gap: 24px;">
+              <!-- Details -->
+              <div style="padding: 32px 40px;">
+                
                 <!-- Service -->
-                <div style="display: flex; gap: 16px; align-items: flex-start;">
-                  <div style="width: 40px; height: 40px; background: rgba(225, 29, 72, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <span>🔧</span>
-                  </div>
-                  <div>
-                    <div style="color: #a1a1aa; font-size: 14px;">${t.service}</div>
-                    <div style="font-weight: 500; font-size: 16px;">${serviceName}</div>
-                  </div>
+                <div style="margin-bottom: 24px;">
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #a3a3a3; margin-bottom: 4px;">${t.service}</div>
+                  <div style="font-size: 16px; font-weight: 400; color: #171717;">${serviceName}</div>
                 </div>
 
                 <!-- Vehicle -->
-                <div style="display: flex; gap: 16px; align-items: flex-start;">
-                  <div style="width: 40px; height: 40px; background: rgba(225, 29, 72, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <span>🚗</span>
-                  </div>
-                  <div>
-                    <div style="color: #a1a1aa; font-size: 14px;">${t.vehicle}</div>
-                    <div style="font-weight: 500; font-size: 16px;">Tesla ${vehicleName}</div>
-                  </div>
+                <div style="margin-bottom: 24px;">
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #a3a3a3; margin-bottom: 4px;">${t.vehicle}</div>
+                  <div style="font-size: 16px; font-weight: 400; color: #171717;">Tesla ${vehicleName}</div>
                 </div>
 
-                <!-- Date -->
-                <div style="display: flex; gap: 16px; align-items: flex-start;">
-                  <div style="width: 40px; height: 40px; background: rgba(225, 29, 72, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <span>📅</span>
+                <!-- Date & Time Row -->
+                <div style="display: flex; gap: 32px; margin-bottom: 24px;">
+                  <div style="flex: 1;">
+                    <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #a3a3a3; margin-bottom: 4px;">${t.date}</div>
+                    <div style="font-size: 16px; font-weight: 400; color: #171717;">${formattedDate}</div>
                   </div>
                   <div>
-                    <div style="color: #a1a1aa; font-size: 14px;">${t.date}</div>
-                    <div style="font-weight: 500; font-size: 16px;">${formattedDate}</div>
-                  </div>
-                </div>
-
-                <!-- Time -->
-                <div style="display: flex; gap: 16px; align-items: flex-start;">
-                  <div style="width: 40px; height: 40px; background: rgba(225, 29, 72, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <span>🕐</span>
-                  </div>
-                  <div>
-                    <div style="color: #a1a1aa; font-size: 14px;">${t.time}</div>
-                    <div style="font-weight: 500; font-size: 16px;">${data.appointmentTime}</div>
+                    <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #a3a3a3; margin-bottom: 4px;">${t.time}</div>
+                    <div style="font-size: 16px; font-weight: 400; color: #171717;">${data.appointmentTime}</div>
                   </div>
                 </div>
 
                 <!-- Location -->
-                <div style="display: flex; gap: 16px; align-items: flex-start;">
-                  <div style="width: 40px; height: 40px; background: rgba(225, 29, 72, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <span>📍</span>
-                  </div>
-                  <div>
-                    <div style="color: #a1a1aa; font-size: 14px;">${t.location}</div>
-                    <div style="font-weight: 500; font-size: 16px;">${locationData.name}</div>
-                    <div style="color: #a1a1aa; font-size: 14px;">${locationData.address}</div>
-                  </div>
+                <div style="padding-top: 24px; border-top: 1px solid #e5e5e5;">
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #a3a3a3; margin-bottom: 4px;">${t.location}</div>
+                  <div style="font-size: 16px; font-weight: 400; color: #171717;">${locationData.name}</div>
+                  <div style="font-size: 14px; color: #737373; margin-top: 2px;">${locationData.address}</div>
                 </div>
+
               </div>
+
+              <!-- CTA -->
+              <div style="padding: 24px 40px 40px; text-align: center;">
+                <p style="margin: 0 0 16px; font-size: 14px; color: #737373;">${t.needChanges}</p>
+                <a href="${manageUrl}" style="display: inline-block; background: #171717; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 4px; font-size: 14px; font-weight: 500; letter-spacing: 0.3px;">
+                  ${t.manageAppointment}
+                </a>
+              </div>
+
             </div>
 
-            <!-- Reminder Note -->
-            <div style="background: rgba(225, 29, 72, 0.1); border: 1px solid rgba(225, 29, 72, 0.2); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 32px;">
-              <p style="margin: 0; color: #fca5a5; font-size: 14px;">
+            <!-- Reminder -->
+            <div style="margin-top: 24px; padding: 20px; background: #ffffff; border-radius: 4px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+              <p style="margin: 0; font-size: 14px; color: #525252;">
                 ${t.reminder}
               </p>
             </div>
 
-            <!-- Manage Appointment Button -->
-            <div style="text-align: center; margin-bottom: 32px;">
-              <p style="margin: 0 0 16px 0; color: #a1a1aa; font-size: 14px;">
-                ${t.needChanges}
+            <!-- Footer -->
+            <div style="margin-top: 40px; text-align: center;">
+              <p style="margin: 0; font-size: 12px; color: #a3a3a3;">
+                © ${new Date().getFullYear()} TESLAND. All rights reserved.
               </p>
-              <a href="${manageUrl}" style="display: inline-block; background: #e11d48; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; font-size: 14px;">
-                ${t.manageAppointment}
-              </a>
             </div>
 
-            <!-- Footer -->
-            <div style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 32px;">
-              <div style="display: flex; justify-content: center; gap: 24px; color: #71717a; font-size: 12px;">
-                <span>${t.support}</span>
-                <span>${t.locations}</span>
-                <span>${t.contact}</span>
-              </div>
-            </div>
           </div>
         </body>
       </html>
