@@ -753,7 +753,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </div>
             <div className="pt-2 border-t border-border">
               <p className="text-sm font-medium">
-                {language === "hu" ? "Beszerelési díj:" : "Installation fee:"} 89 900 Ft
+                {language === "hu" ? "Termék ára beszereléssel:" : "Product price with installation:"} 89 900 Ft
               </p>
             </div>
           </div>
