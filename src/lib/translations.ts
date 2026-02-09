@@ -48,7 +48,7 @@ export const hu = {
     },
     batteryCategory: {
       title: "Akkumulátor",
-      description: "Model 3 akkumulátor szolgáltatások",
+      description: "12V akkumulátor (Intel processzoros típusok)",
     },
   },
 
@@ -484,7 +484,7 @@ export const en = {
     },
     batteryCategory: {
       title: "Battery",
-      description: "Model 3 battery services",
+      description: "12V battery (Intel processor types)",
     },
   },
 
