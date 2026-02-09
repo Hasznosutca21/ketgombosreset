@@ -221,6 +221,11 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
       description: "Elektromos ajtóbehúzó beszerelése",
       duration: "1-2 óra",
     },
+    seat_ventilation: {
+      title: "Ülés szellőztetés",
+      description: "Ülés szellőztetés beszerelése",
+      duration: "Egyedi",
+    },
   },
 
   // Vehicle Selector
@@ -681,6 +686,11 @@ Select which handle needs replacement on the interactive diagram!`,
       title: "Softclose",
       description: "Electric door closer installation",
       duration: "1-2 hours",
+    },
+    seat_ventilation: {
+      title: "Seat Ventilation",
+      description: "Seat ventilation installation",
+      duration: "Custom",
     },
   },
 
