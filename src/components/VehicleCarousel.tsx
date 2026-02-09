@@ -242,13 +242,31 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
                   </div>
                 )}
 
-                {/* Vehicle Image */}
-                <div className="flex justify-center mb-4">
-                  <img
-                    src={vehicleImage}
-                    alt={vehicle.model}
-                    className="w-full max-w-[180px] h-auto object-contain"
-                  />
+                {/* Vehicle Image with Color Overlay */}
+                <div className="flex justify-center mb-4 relative">
+                  <div className="relative">
+                    <img
+                      src={vehicleImage}
+                      alt={vehicle.model}
+                      className="w-full max-w-[180px] h-auto object-contain"
+                    />
+                    {vehicle.color && getColorHex(vehicle.color) && (
+                      <div 
+                        className="absolute inset-0 mix-blend-multiply opacity-60 pointer-events-none"
+                        style={{ 
+                          backgroundColor: getColorHex(vehicle.color) || undefined,
+                          maskImage: `url(${vehicleImage})`,
+                          WebkitMaskImage: `url(${vehicleImage})`,
+                          maskSize: 'contain',
+                          WebkitMaskSize: 'contain',
+                          maskRepeat: 'no-repeat',
+                          WebkitMaskRepeat: 'no-repeat',
+                          maskPosition: 'center',
+                          WebkitMaskPosition: 'center',
+                        }}
+                      />
+                    )}
+                  </div>
                 </div>
 
                 {/* Vehicle Info */}
