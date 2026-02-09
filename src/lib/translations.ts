@@ -59,7 +59,7 @@ export const hu = {
       title: "Alacsony feszültségű akkumulátor csere",
       description: "12V akkumulátor diagnosztika és csere",
       price: "89 900 Ft",
-      duration: "30 perc",
+      duration: "10 perc",
     },
     // Karbantartás
     maintenance: {
@@ -495,7 +495,7 @@ export const en = {
       title: "Low Voltage Battery Replacement",
       description: "12V battery diagnostics and replacement",
       price: "89 900 Ft",
-      duration: "30 min",
+      duration: "10 min",
     },
     // Maintenance
     maintenance: {
