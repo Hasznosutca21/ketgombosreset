@@ -66,6 +66,18 @@ serve(async (req) => {
   }
 
   try {
+    // Authentication: Require secret token for cron jobs
+    const cronSecret = Deno.env.get("CRON_SECRET_TOKEN");
+    const providedToken = req.headers.get("X-Cron-Secret");
+    
+    if (!cronSecret || providedToken !== cronSecret) {
+      console.log("[REMINDER] Unauthorized request - missing or invalid cron secret");
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401,
+      });
+    }
+
     const resendKey = Deno.env.get("RESEND_API_KEY");
     if (!resendKey) throw new Error("RESEND_API_KEY not configured");
 
