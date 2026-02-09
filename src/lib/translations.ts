@@ -462,6 +462,13 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
   failedToDelete: "Időpont törlése sikertelen",
   failedToLoad: "Időpontok betöltése sikertelen",
   onlyAdminsCanDelete: "Csak adminok törölhetnek időpontokat",
+  
+  // Vehicle VIN Lock
+  yourVehicle: "Az Ön járműve",
+  vinLockedVehicle: "VIN alapján azonosítva",
+  vinVerified: "VIN ellenőrizve",
+  vinLockedInfo: "A jármű a profilban megadott VIN alapján van rögzítve. Módosításhoz látogassa meg a profil beállításait.",
+  continue: "Tovább",
 };
 
 export const en = {
@@ -928,6 +935,13 @@ Select which handle needs replacement on the interactive diagram!`,
   failedToDelete: "Failed to delete appointment",
   failedToLoad: "Failed to load appointments",
   onlyAdminsCanDelete: "Only admins can delete appointments",
+  
+  // Vehicle VIN Lock
+  yourVehicle: "Your Vehicle",
+  vinLockedVehicle: "Identified by VIN",
+  vinVerified: "VIN verified",
+  vinLockedInfo: "The vehicle is locked based on the VIN in your profile. Visit profile settings to change.",
+  continue: "Continue",
 };
 
 export type Language = "hu" | "en";
