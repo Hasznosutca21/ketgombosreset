@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { ArrowLeft, MapPin, Navigation, Loader2 } from "lucide-react";
+import { ArrowLeft, MapPin, Navigation, Loader2, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -71,6 +71,8 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
   const [phone, setPhone] = useState("");
   const [bookedAppointments, setBookedAppointments] = useState<BookedAppointment[]>([]);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
+  const [isLoadingCustomer, setIsLoadingCustomer] = useState(false);
+  const [customerAutoFilled, setCustomerAutoFilled] = useState(false);
 
   // Get duration of current selected service
   const currentServiceDuration = useMemo(() => {
@@ -165,6 +167,46 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
 
     loadProfileData();
   }, [user]);
+
+  // Auto-fill from customers table when email changes (for non-logged-in users or to supplement profile data)
+  useEffect(() => {
+    const lookupCustomerByEmail = async () => {
+      // Only look up if we have a valid email and don't have name filled already
+      if (!email || email.length < 5 || !email.includes('@')) return;
+      if (name && phone) return; // Already have data, skip lookup
+      
+      setIsLoadingCustomer(true);
+      try {
+        const { data: customer } = await supabase
+          .from("customers")
+          .select("first_name, last_name, phone")
+          .eq("email", email.toLowerCase().trim())
+          .maybeSingle();
+
+        if (customer) {
+          // Only fill if fields are empty
+          if (!name && (customer.first_name || customer.last_name)) {
+            const fullName = [customer.first_name, customer.last_name].filter(Boolean).join(' ');
+            setName(fullName);
+            setCustomerAutoFilled(true);
+          }
+          if (!phone && customer.phone) {
+            setPhone(customer.phone);
+            setCustomerAutoFilled(true);
+          }
+        }
+      } catch (error) {
+        // Silent fail - customer lookup is optional enhancement
+        console.error("Error looking up customer:", error);
+      } finally {
+        setIsLoadingCustomer(false);
+      }
+    };
+
+    // Debounce the lookup
+    const timeoutId = setTimeout(lookupCustomerByEmail, 500);
+    return () => clearTimeout(timeoutId);
+  }, [email, name, phone]);
 
   // Fetch booked appointments when date or location changes
   useEffect(() => {
@@ -343,12 +385,24 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">{t.email}</Label>
+              <Label htmlFor="email" className="flex items-center gap-2">
+                {t.email}
+                {isLoadingCustomer && <Loader2 className="w-3 h-3 animate-spin text-muted-foreground" />}
+                {customerAutoFilled && !isLoadingCustomer && (
+                  <span className="flex items-center gap-1 text-xs text-primary">
+                    <UserCheck className="w-3 h-3" />
+                    {language === "hu" ? "Ügyfél megtalálva" : "Customer found"}
+                  </span>
+                )}
+              </Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setCustomerAutoFilled(false); // Reset on manual change
+                }}
                 placeholder={language === "hu" ? "kovacs.janos@example.com" : "john@example.com"}
                 className="bg-muted/30 border-border h-12"
               />
