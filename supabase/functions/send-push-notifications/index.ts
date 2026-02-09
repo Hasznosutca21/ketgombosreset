@@ -53,6 +53,18 @@ serve(async (req) => {
   }
 
   try {
+    // Authentication: Require secret token for cron jobs
+    const cronSecret = Deno.env.get("CRON_SECRET_TOKEN");
+    const providedToken = req.headers.get("X-Cron-Secret");
+    
+    if (!cronSecret || providedToken !== cronSecret) {
+      console.log("[PUSH] Unauthorized request - missing or invalid cron secret");
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 401 }
+      );
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const fcmServerKey = Deno.env.get('FCM_SERVER_KEY');
