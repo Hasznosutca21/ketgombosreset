@@ -11,15 +11,15 @@ interface DoorHandleSelectorProps {
   onChange: (handles: string[]) => void;
 }
 
-// Handle positions as percentages on the images - adjusted to point at door handles
+// Handle positions as percentages on the images - precisely at door handles
 const LEFT_SIDE_HANDLES = [
-  { id: "front-left", label: "Bal első", labelEn: "Front Left", x: 78, y: 48 },
-  { id: "rear-left", label: "Bal hátsó", labelEn: "Rear Left", x: 45, y: 50 },
+  { id: "front-left", label: "Bal első", labelEn: "Front Left", x: 80, y: 52 },
+  { id: "rear-left", label: "Bal hátsó", labelEn: "Rear Left", x: 47, y: 54 },
 ];
 
 const RIGHT_SIDE_HANDLES = [
-  { id: "front-right", label: "Jobb első", labelEn: "Front Right", x: 22, y: 48 },
-  { id: "rear-right", label: "Jobb hátsó", labelEn: "Rear Right", x: 55, y: 50 },
+  { id: "front-right", label: "Jobb első", labelEn: "Front Right", x: 20, y: 52 },
+  { id: "rear-right", label: "Jobb hátsó", labelEn: "Rear Right", x: 53, y: 54 },
 ];
 
 const ALL_HANDLES = [
@@ -78,14 +78,18 @@ const DoorHandleSelector = ({ value, onChange }: DoorHandleSelectorProps) => {
       {/* Visual Car Images */}
       <div className="space-y-4">
         {/* Left side view */}
-        <div className="relative rounded-xl overflow-hidden">
+        <div className="relative rounded-xl overflow-hidden bg-background">
           <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium z-10">
             {isHu ? "Bal oldal" : "Left side"}
           </p>
           <img
             src={model3LeftSide}
             alt="Tesla Model 3 Left Side"
-            className="w-full h-auto mix-blend-lighten dark:mix-blend-lighten opacity-90"
+            className="w-full h-auto dark:opacity-90"
+            style={{ 
+              filter: 'invert(1)',
+              mixBlendMode: 'multiply'
+            }}
           />
           {LEFT_SIDE_HANDLES.map((handle) =>
             renderMarker(handle, value.includes(handle.id))
@@ -93,14 +97,18 @@ const DoorHandleSelector = ({ value, onChange }: DoorHandleSelectorProps) => {
         </div>
 
         {/* Right side view */}
-        <div className="relative rounded-xl overflow-hidden">
+        <div className="relative rounded-xl overflow-hidden bg-background">
           <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium z-10">
             {isHu ? "Jobb oldal" : "Right side"}
           </p>
           <img
             src={model3RightSide}
             alt="Tesla Model 3 Right Side"
-            className="w-full h-auto mix-blend-lighten dark:mix-blend-lighten opacity-90"
+            className="w-full h-auto dark:opacity-90"
+            style={{ 
+              filter: 'invert(1)',
+              mixBlendMode: 'multiply'
+            }}
           />
           {RIGHT_SIDE_HANDLES.map((handle) =>
             renderMarker(handle, value.includes(handle.id))
