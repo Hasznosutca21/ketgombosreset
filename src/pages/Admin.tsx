@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Zap, ArrowLeft, Calendar, Car, MapPin, Clock, Trash2, Loader2, RefreshCw, LogOut, Shield, X, CalendarClock, Bell, BellOff, Check, Users } from "lucide-react";
+import { Zap, ArrowLeft, Calendar, Car, MapPin, Clock, Trash2, Loader2, RefreshCw, LogOut, Shield, X, CalendarClock, Bell, BellOff, Check, Users, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -13,6 +13,7 @@ import { usePushNotifications } from "@/hooks/usePushNotifications";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import AdminRescheduleDialog from "@/components/AdminRescheduleDialog";
 import AdminCustomers from "@/components/AdminCustomers";
+import AdminWorkSheets from "@/components/AdminWorkSheets";
 import { supabase } from "@/integrations/supabase/client";
 import { cancelAppointment, rescheduleAppointment } from "@/lib/appointments";
 import { toast } from "sonner";
@@ -313,7 +314,7 @@ const Admin = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
         <Tabs defaultValue="appointments" className="space-y-6">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsList className="grid w-full max-w-lg grid-cols-3">
             <TabsTrigger value="appointments" className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               {t.appointmentsDashboard || "Időpontok"}
@@ -321,6 +322,10 @@ const Admin = () => {
             <TabsTrigger value="customers" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               {language === "hu" ? "Ügyfelek" : "Customers"}
+            </TabsTrigger>
+            <TabsTrigger value="worksheets" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              {language === "hu" ? "Munkalapok" : "Work Sheets"}
             </TabsTrigger>
           </TabsList>
 
@@ -481,6 +486,10 @@ const Admin = () => {
 
           <TabsContent value="customers">
             <AdminCustomers language={language} />
+          </TabsContent>
+
+          <TabsContent value="worksheets">
+            <AdminWorkSheets language={language} />
           </TabsContent>
         </Tabs>
       </main>
