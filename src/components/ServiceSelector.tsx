@@ -472,6 +472,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               {[
                 { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2 },
                 { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle },
+                { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package },
                 { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus },
                 { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation },
                 { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard },
