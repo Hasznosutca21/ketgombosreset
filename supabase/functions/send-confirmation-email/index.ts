@@ -314,8 +314,9 @@ serve(async (req) => {
     `;
 
     // Send email to customer AND cc to admin
+    // Using Resend test domain until tesland.hu is verified
     const { data: emailResult, error } = await resend.emails.send({
-      from: 'TESLAND <info@tesland.hu>',
+      from: 'TESLAND <onboarding@resend.dev>',
       to: [data.customerEmail],
       cc: [ADMIN_EMAIL],
       subject: t.subject(serviceName, formattedDate),
