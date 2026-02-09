@@ -88,9 +88,9 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
     id: "batteryCategory",
     icon: Battery,
     services: [
-      { id: "lowvoltagebattery", icon: Battery, vehicleRestriction: ["model-3"] },
+      { id: "lowvoltagebattery", icon: Battery, vehicleRestriction: ["model-3", "model-y"] },
     ],
-    vehicleRestriction: ["model-3"],
+    vehicleRestriction: ["model-3", "model-y"],
   },
   {
     id: "other",
