@@ -729,29 +729,29 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
 
       {/* S3XY Commander Info Dialog */}
       <Dialog open={commanderInfoOpen} onOpenChange={setCommanderInfoOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-sm mx-4">
           <DialogHeader>
-            <DialogTitle className="text-xl font-medium flex items-center gap-2">
-              <Gamepad2 className="w-5 h-5" />
+            <DialogTitle className="text-lg font-medium flex items-center gap-2">
+              <Gamepad2 className="w-4 h-4" />
               S3XY Commander
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="rounded-lg overflow-hidden bg-muted/30">
               <img 
                 src={s3xyCommanderImage} 
                 alt="S3XY Commander" 
-                className="w-full h-auto object-cover"
+                className="w-full h-auto object-cover max-h-40"
               />
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               {language === "hu" 
                 ? "A Commander a teljes S3XY ökoszisztéma agya. Hozzáférést biztosít az összes funkcióhoz, automatizációhoz és valós idejű statisztikához."
                 : "The Commander is the brain behind the entire S3XY ecosystem. It gives you access to all features, automations, and real-time stats."}
             </p>
             <div className="pt-2 border-t border-border flex items-center justify-between">
-              <p className="text-sm font-medium">
-                {language === "hu" ? "Termék ára beszereléssel:" : "Product price with installation:"} 89 900 Ft
+              <p className="text-xs font-medium">
+                {language === "hu" ? "Ár beszereléssel:" : "Price with installation:"} 89 900 Ft
               </p>
               <Button 
                 variant="outline" 
