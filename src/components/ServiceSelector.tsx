@@ -117,6 +117,7 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
     services: [
       { id: "s3xy_products", icon: Package, vehicleRestriction: [] },
       { id: "softclose", icon: DoorClosed, vehicleRestriction: ["model-3", "model-y"] },
+      { id: "seat_ventilation", icon: Fan, vehicleRestriction: [] },
     ],
   },
 ];
