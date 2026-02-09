@@ -669,27 +669,30 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             
             <div className="space-y-2">
               {[
-                { id: "front_2", label: language === "hu" ? "Első 2 ajtó" : "Front 2 doors", iconCount: 2 },
-                { id: "rear_2", label: language === "hu" ? "Hátsó 2 ajtó" : "Rear 2 doors", iconCount: 2 },
-                { id: "all_4", label: language === "hu" ? "Mind a 4 ajtó" : "All 4 doors", iconCount: 4 },
+                { id: "front_2", label: language === "hu" ? "Első 2 ajtó" : "Front 2 doors", iconCount: 2, price: "140 000 Ft" },
+                { id: "rear_2", label: language === "hu" ? "Hátsó 2 ajtó" : "Rear 2 doors", iconCount: 2, price: "140 000 Ft" },
+                { id: "all_4", label: language === "hu" ? "Mind a 4 ajtó" : "All 4 doors", iconCount: 4, price: "250 000 Ft" },
               ].map((option) => (
                 <button
                   key={option.id}
                   type="button"
                   onClick={() => setSelectedSoftcloseOption(option.id)}
                   className={cn(
-                    "w-full p-4 text-sm rounded-lg border transition-colors flex items-center justify-center gap-3",
+                    "w-full p-4 text-sm rounded-lg border transition-colors flex items-center justify-between",
                     selectedSoftcloseOption === option.id
                       ? "bg-foreground text-background border-foreground"
                       : "bg-muted/30 border-border hover:border-foreground/50"
                   )}
                 >
-                  <div className="flex gap-1">
-                    {Array.from({ length: option.iconCount }).map((_, i) => (
-                      <DoorClosed key={i} className="w-4 h-4" />
-                    ))}
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1">
+                      {Array.from({ length: option.iconCount }).map((_, i) => (
+                        <DoorClosed key={i} className="w-4 h-4" />
+                      ))}
+                    </div>
+                    <span>{option.label}</span>
                   </div>
-                  <span>{option.label}</span>
+                  <span className="font-medium">{option.price}</span>
                 </button>
               ))}
             </div>
