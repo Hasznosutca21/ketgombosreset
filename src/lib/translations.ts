@@ -44,7 +44,7 @@ export const hu = {
     },
     other: {
       title: "Egyéb javítások",
-      description: "Karosszéria, garancia és egyebek",
+      description: "Tipikus problémák",
     },
   },
 
