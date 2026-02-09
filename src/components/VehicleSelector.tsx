@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, Car, Info, Check, Calendar } from "lucide-react";
+import { ArrowLeft, Car, Info, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -11,18 +11,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { YearPicker } from "@/components/ui/year-picker";
 
 // Import vehicle images
 import modelSImage from "@/assets/vehicles/model-s.png";
 import model3Image from "@/assets/vehicles/model-3.png";
-import model3ChromeImage from "@/assets/vehicles/model-3-chrome.png";
 import modelXImage from "@/assets/vehicles/model-x.png";
 import modelYImage from "@/assets/vehicles/model-y.png";
 
@@ -39,17 +31,13 @@ const vehicles = [
     image: modelSImage,
     description: "Prémium szedán, nagy hatótáv",
     info: "Plaid és Long Range változatok",
-    yearRange: { from: 2012, to: 2026 }
   },
   { 
     id: "model-3", 
     name: "Model 3", 
     image: model3Image,
-    chromeImage: model3ChromeImage,
-    chromeYearRange: { from: 2018, to: 2020 },
     description: "A legnépszerűbb, főleg fehérben",
     info: "Standard, Long Range és Performance",
-    yearRange: { from: 2018, to: 2026 }
   },
   { 
     id: "model-x", 
@@ -57,7 +45,6 @@ const vehicles = [
     image: modelXImage,
     description: "SUV, Falcon Wing ajtók",
     info: "Plaid és Long Range változatok",
-    yearRange: { from: 2016, to: 2026 }
   },
   { 
     id: "model-y", 
@@ -65,7 +52,6 @@ const vehicles = [
     image: modelYImage,
     description: "Kompakt SUV, családbarát",
     info: "Long Range és Performance",
-    yearRange: { from: 2020, to: 2026 }
   },
 ];
 
@@ -86,23 +72,12 @@ const findVehicleIdFromModel = (modelName: string): string | null => {
   if (normalized.includes('model x')) return 'model-x';
   if (normalized.includes('model y')) return 'model-y';
   
-  // Fallback - check if model name is just the model part (e.g., "3" for Model 3)
-  const modelMatch = normalized.match(/model\s*([3sxy])/i);
-  if (modelMatch) {
-    const modelLetter = modelMatch[1].toLowerCase();
-    if (modelLetter === 's') return 'model-s';
-    if (modelLetter === '3') return 'model-3';
-    if (modelLetter === 'x') return 'model-x';
-    if (modelLetter === 'y') return 'model-y';
-  }
-  
   return null;
 };
 
 interface ProfileVehicle {
   model: string;
   plate: string | null;
-  year: number | null;
 }
 
 const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) => {
@@ -111,23 +86,6 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
   const [profileVehicle, setProfileVehicle] = useState<ProfileVehicle | null>(null);
   const [hasAutoSelected, setHasAutoSelected] = useState(false);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
-
-  // Listen for preselect events from nav
-  useEffect(() => {
-    const handlePreselect = (e: CustomEvent<string>) => {
-      const vehicleId = e.detail;
-      if (vehicles.find(v => v.id === vehicleId)) {
-        setSelectedVehicleId(vehicleId);
-        setSelectedYear(null);
-      }
-    };
-
-    window.addEventListener('preselect-vehicle', handlePreselect as EventListener);
-    return () => {
-      window.removeEventListener('preselect-vehicle', handlePreselect as EventListener);
-    };
-  }, []);
 
   // Load vehicle from profile
   useEffect(() => {
@@ -137,7 +95,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
       try {
         const { data: profile } = await supabase
           .from("profiles")
-          .select("vehicle_model, vehicle_plate, vehicle_year")
+          .select("vehicle_model, vehicle_plate")
           .eq("user_id", user.id)
           .maybeSingle();
 
@@ -145,7 +103,6 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
           setProfileVehicle({
             model: profile.vehicle_model,
             plate: profile.vehicle_plate,
-            year: profile.vehicle_year,
           });
 
           // Auto-select if no vehicle is selected yet
@@ -153,10 +110,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
             const vehicleId = findVehicleIdFromModel(profile.vehicle_model);
             if (vehicleId) {
               setSelectedVehicleId(vehicleId);
-              if (profile.vehicle_year) {
-                setSelectedYear(profile.vehicle_year);
-                onSelect(`${vehicleId}-${profile.vehicle_year}`);
-              }
+              onSelect(vehicleId);
               setHasAutoSelected(true);
             }
           }
@@ -171,38 +125,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
 
   const handleVehicleClick = (vehicleId: string) => {
     setSelectedVehicleId(vehicleId);
-    setSelectedYear(null); // Reset year when changing vehicle
-  };
-
-  const [tempYear, setTempYear] = useState<number | null>(null);
-
-  const handleYearSelect = (year: number) => {
-    setTempYear(year);
-  };
-
-  const handleYearConfirm = () => {
-    if (tempYear && selectedVehicleId) {
-      setSelectedYear(tempYear);
-      onSelect(`${selectedVehicleId}-${tempYear}`);
-    }
-  };
-
-  const selectedVehicle = vehicles.find(v => v.id === selectedVehicleId);
-  const yearOptions = selectedVehicle 
-    ? Array.from(
-        { length: selectedVehicle.yearRange.to - selectedVehicle.yearRange.from + 1 }, 
-        (_, i) => selectedVehicle.yearRange.to - i
-      )
-    : [];
-
-  // Get the appropriate image based on year (for Model 3 chrome trim)
-  const getVehicleImage = (vehicle: typeof vehicles[0], year: number | null) => {
-    if (vehicle.chromeImage && vehicle.chromeYearRange && year) {
-      if (year >= vehicle.chromeYearRange.from && year <= vehicle.chromeYearRange.to) {
-        return vehicle.chromeImage;
-      }
-    }
-    return vehicle.image;
+    onSelect(vehicleId);
   };
 
   return (
@@ -222,10 +145,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
         <div className="tesla-card p-4 mb-8 flex items-center gap-3 border-foreground/20 max-w-md mx-auto">
           <Car className="w-5 h-5 text-foreground/60 flex-shrink-0" />
           <div className="flex-1">
-            <div className="font-medium">
-              {profileVehicle.model}
-              {profileVehicle.year && ` (${profileVehicle.year})`}
-            </div>
+            <div className="font-medium">{profileVehicle.model}</div>
             {profileVehicle.plate && (
               <div className="text-sm text-muted-foreground">{profileVehicle.plate}</div>
             )}
@@ -297,81 +217,6 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
           })}
         </TooltipProvider>
       </div>
-
-      {/* Year selector - shows after vehicle is selected */}
-      {/* Year selector dialog */}
-      <Dialog 
-        open={!!selectedVehicleId && !selectedYear} 
-        onOpenChange={(open) => {
-          if (!open && !selectedYear) {
-            setSelectedVehicleId(null);
-            setTempYear(null);
-          }
-        }}
-      >
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-center gap-2 text-xl">
-              <Calendar className="w-5 h-5" />
-              {t.selectYear}
-            </DialogTitle>
-          </DialogHeader>
-          
-          {selectedVehicle && (
-            <div className="flex items-center justify-center gap-3 p-3 bg-muted/50 rounded-lg mb-2">
-              <img 
-                src={selectedVehicle.image} 
-                alt={selectedVehicle.name}
-                className="w-16 h-12 object-contain"
-              />
-              <span className="font-medium">{selectedVehicle.name}</span>
-            </div>
-          )}
-          
-          <YearPicker
-            years={yearOptions}
-            value={tempYear}
-            onChange={handleYearSelect}
-            className="my-4"
-          />
-
-          <Button 
-            onClick={handleYearConfirm}
-            disabled={!tempYear}
-            className="w-full"
-          >
-            {t.confirm || "Megerősítés"}
-          </Button>
-        </DialogContent>
-      </Dialog>
-
-      {/* Selected vehicle and year display */}
-      {selectedVehicleId && selectedYear && (
-        <div className="mt-8 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 p-4 bg-muted/30 rounded-xl max-w-md mx-auto">
-            {selectedVehicle && (
-              <>
-                <img 
-                  src={getVehicleImage(selectedVehicle, selectedYear)} 
-                  alt={selectedVehicle.name}
-                  className="w-20 h-14 object-contain"
-                />
-                <div className="flex-1">
-                  <div className="font-semibold">{selectedVehicle.name}</div>
-                  <div className="text-sm text-muted-foreground">{selectedYear}</div>
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => setSelectedYear(null)}
-                >
-                  {t.change || "Módosítás"}
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
