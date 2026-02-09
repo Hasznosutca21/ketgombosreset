@@ -41,7 +41,7 @@ const DoorHandleSelector = ({ value, onChange }: DoorHandleSelectorProps) => {
         <img 
           src={model3Outline} 
           alt="Tesla Model 3 Top View" 
-          className="w-full h-auto max-w-[320px] mx-auto"
+          className="w-full h-auto max-w-[180px] mx-auto"
         />
         {/* Door handle markers */}
         {HANDLE_POSITIONS.map((handle) => {
