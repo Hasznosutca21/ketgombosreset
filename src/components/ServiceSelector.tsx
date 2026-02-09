@@ -746,17 +746,16 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {language === "hu" 
-                ? "Az S3XY Commander egy multifunkciós vezérlőpanel, amely a Tesla középkonzoljára szerelhető. Lehetővé teszi a gyakran használt funkciók gyors elérését fizikai gombokkal, mint például a klíma, ablakfűtés, csomagtér nyitás és még sok más."
-                : "The S3XY Commander is a multifunctional control panel that mounts on the Tesla center console. It allows quick access to frequently used functions with physical buttons, such as climate, window heating, trunk opening, and much more."}
+                ? "A Commander a teljes S3XY ökoszisztéma agya. Hozzáférést biztosít az összes funkcióhoz, automatizációhoz és valós idejű statisztikához. Egy erőteljes Dashboard alkalmazással is rendelkezik, így remek fejlesztés bármely Model 3 vagy Model Y számára."
+                : "The Commander is the brain behind the entire S3XY ecosystem. It gives you access to all features, automations, and real-time stats. It also comes with a powerful Dashboard app, making it a great upgrade for any Model 3 or Model Y."}
             </p>
             <div className="space-y-2 text-sm">
-              <h4 className="font-medium">{language === "hu" ? "Főbb funkciók:" : "Main features:"}</h4>
+              <h4 className="font-medium">{language === "hu" ? "Egyedi automatizációk:" : "Unique automations:"}</h4>
               <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                <li>{language === "hu" ? "Programozható fizikai gombok" : "Programmable physical buttons"}</li>
-                <li>{language === "hu" ? "Klíma és ablakfűtés vezérlés" : "Climate and window heating control"}</li>
-                <li>{language === "hu" ? "Csomagtér és frunk nyitás" : "Trunk and frunk opening"}</li>
-                <li>{language === "hu" ? "Ülésállítás és memória funkciók" : "Seat adjustment and memory functions"}</li>
-                <li>{language === "hu" ? "Vezetési mód váltás" : "Driving mode switching"}</li>
+                <li>{language === "hu" ? "ISA rendszer automatikus némítása minden 2024-től gyártott EU modellen (elülső beszerelés szükséges)" : "Automatically muting the ISA system on all EU models made from 2024 onward (front installation required)"}</li>
+                <li>{language === "hu" ? "Ambient fényeffektek a LED szalaghoz Highland és Juniper modelleken" : "Ambient light effects for the LED strip on Highland and Juniper models"}</li>
+                <li>{language === "hu" ? "Gyorsparancs a Frunk nyitásához a vezetőoldali kilincs meghúzásával" : "A shortcut to open your Frunk by pulling the driver's door handle"}</li>
+                <li>{language === "hu" ? "Automatikus csomagtér nyitás közeledéskor régebbi Model 3 vagy Y esetén" : "Automatically open the trunk when approaching an older Model 3 or Y"}</li>
               </ul>
             </div>
             <div className="pt-2 border-t border-border">
