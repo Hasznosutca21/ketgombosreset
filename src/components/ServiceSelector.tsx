@@ -749,10 +749,17 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 ? "A Commander a teljes S3XY ökoszisztéma agya. Hozzáférést biztosít az összes funkcióhoz, automatizációhoz és valós idejű statisztikához."
                 : "The Commander is the brain behind the entire S3XY ecosystem. It gives you access to all features, automations, and real-time stats."}
             </p>
-            <div className="pt-2 border-t border-border">
+            <div className="pt-2 border-t border-border flex items-center justify-between">
               <p className="text-sm font-medium">
                 {language === "hu" ? "Termék ára beszereléssel:" : "Product price with installation:"} 89 900 Ft
               </p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setCommanderInfoOpen(false)}
+              >
+                {language === "hu" ? "Bezárás" : "Close"}
+              </Button>
             </div>
           </div>
         </DialogContent>
