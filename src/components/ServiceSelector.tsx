@@ -17,7 +17,13 @@ import {
   ChevronDown,
   DoorOpen,
   Package,
-  Battery
+  Battery,
+  Gamepad2,
+  Circle,
+  Minus,
+  Navigation,
+  LayoutDashboard,
+  LucideIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -464,35 +470,39 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             
             <div className="space-y-2">
               {[
-                { id: "commander", hu: "S3XY Commander", en: "S3XY Commander" },
-                { id: "knob", hu: "S3XY Knob", en: "S3XY Knob" },
-                { id: "strip", hu: "S3XY Strip", en: "S3XY Strip" },
-                { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk" },
-                { id: "dash", hu: "S3XY Dash", en: "S3XY Dash" },
-              ].map((product) => (
-                <div 
-                  key={product.id}
-                  className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border hover:bg-muted/50 transition-colors"
-                >
-                  <Checkbox 
-                    id={`s3xy-${product.id}`}
-                    checked={selectedS3xyProducts.includes(product.id)}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        setSelectedS3xyProducts([...selectedS3xyProducts, product.id]);
-                      } else {
-                        setSelectedS3xyProducts(selectedS3xyProducts.filter(p => p !== product.id));
-                      }
-                    }}
-                  />
-                  <label 
-                    htmlFor={`s3xy-${product.id}`}
-                    className="text-sm font-medium leading-none cursor-pointer select-none flex-1"
+                { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2 },
+                { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle },
+                { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus },
+                { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation },
+                { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard },
+              ].map((product) => {
+                const ProductIcon = product.icon;
+                return (
+                  <div 
+                    key={product.id}
+                    className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border hover:bg-muted/50 transition-colors"
                   >
-                    {language === "hu" ? product.hu : product.en}
-                  </label>
-                </div>
-              ))}
+                    <Checkbox 
+                      id={`s3xy-${product.id}`}
+                      checked={selectedS3xyProducts.includes(product.id)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedS3xyProducts([...selectedS3xyProducts, product.id]);
+                        } else {
+                          setSelectedS3xyProducts(selectedS3xyProducts.filter(p => p !== product.id));
+                        }
+                      }}
+                    />
+                    <ProductIcon className="w-4 h-4 text-muted-foreground" />
+                    <label 
+                      htmlFor={`s3xy-${product.id}`}
+                      className="text-sm font-medium leading-none cursor-pointer select-none flex-1"
+                    >
+                      {language === "hu" ? product.hu : product.en}
+                    </label>
+                  </div>
+                );
+              })}
             </div>
 
             <Button 
