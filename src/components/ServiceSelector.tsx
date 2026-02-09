@@ -5,7 +5,6 @@ import {
   Settings, 
   Disc, 
   Shield, 
-  Paintbrush, 
   Thermometer, 
   Fan, 
   Flame,
@@ -16,7 +15,8 @@ import {
   Donut,
   ArrowLeft,
   ChevronDown,
-  DoorOpen
+  DoorOpen,
+  Package
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -87,7 +87,7 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[] }[] 
     icon: Shield,
     services: [
       { id: "doorhandle", icon: DoorOpen, vehicleRestriction: ["model-3"], yearRestriction: { from: 2018, to: 2020 } },
-      { id: "body", icon: Paintbrush, vehicleRestriction: [] },
+      { id: "body", icon: Package, vehicleRestriction: [] },
       { id: "warranty", icon: Shield, vehicleRestriction: [] },
       { id: "tires", icon: CircleDot, vehicleRestriction: [] },
     ],
