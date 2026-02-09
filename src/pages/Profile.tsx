@@ -441,12 +441,34 @@ const Profile = () => {
         return;
       }
 
-      // Update profile state with decoded data
+      // Prepare the decoded data
+      const decodedData = {
+        vehicle_model: data.model || null,
+        vehicle_type: data.drive || data.type || null,
+        vehicle_year: data.year || null,
+        vehicle_vin: vin.toUpperCase(),
+      };
+
+      // Save to database immediately
+      if (user) {
+        const { error: saveError } = await supabase
+          .from("profiles")
+          .upsert({
+            user_id: user.id,
+            ...decodedData,
+          }, { onConflict: 'user_id' });
+
+        if (saveError) {
+          console.error("Error saving decoded VIN data:", saveError);
+          toast.error(t.failedToSaveProfile || "Failed to save profile");
+          return;
+        }
+      }
+
+      // Update local profile state
       setProfile((prev) => prev ? { 
         ...prev, 
-        vehicle_model: data.model || prev.vehicle_model,
-        vehicle_type: data.drive || data.type || prev.vehicle_type,
-        vehicle_year: data.year || prev.vehicle_year,
+        ...decodedData,
       } : null);
 
       if (!vinValue) {
