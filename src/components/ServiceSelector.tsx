@@ -242,7 +242,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                     hasSelectedService ? "bg-foreground text-background" : "bg-muted"
                   )}>
                     {category.id === 'accessories' ? (
-                      <img src={s3xyIcon} alt="S3XY" className="w-6 h-6 object-contain" />
+                      <img src={s3xyIcon} alt="S3XY" className="w-6 h-6 object-contain dark:invert-0 invert" />
                     ) : (
                       <CategoryIcon className="w-5 h-5" />
                     )}
@@ -311,7 +311,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                             )}
                           >
                             {service.id === 's3xy_products' ? (
-                              <img src={s3xyIcon} alt="S3XY" className="w-6 h-6 object-contain" />
+                              <img src={s3xyIcon} alt="S3XY" className="w-6 h-6 object-contain dark:invert-0 invert" />
                             ) : (
                               <Icon className="w-5 h-5" />
                             )}
