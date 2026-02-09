@@ -90,7 +90,8 @@ const ConfirmationView = ({ service, vehicle, appointment, appointmentId, onStar
       }
 
       if (data?.url) {
-        window.open(data.url, "_blank");
+        // Use window.location.href instead of window.open to avoid Safari popup blocker
+        window.location.href = data.url;
       } else {
         toast.error(t.paymentFailed);
       }
