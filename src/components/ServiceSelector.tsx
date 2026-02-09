@@ -405,7 +405,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 htmlFor="trunk-light" 
                 className="text-sm font-medium leading-none cursor-pointer select-none"
               >
-                {language === "hu" ? "Nem világít a lámpa" : "Light is not working"}
+                {language === "hu" ? "Nem világít a lámpa?" : "Light is not working?"}
               </label>
             </div>
 
