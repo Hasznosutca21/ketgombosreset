@@ -162,14 +162,17 @@ function decodeTeslaVin(vin: string): DecodedVehicle | null {
     return null;
   }
 
-  // Position 7: Motor/drive
-  const motorCode = upperVin.charAt(6);
-  const modelMotorCodes = motorCodes[model] || {};
-  const drive = modelMotorCodes[motorCode] || undefined;
-
   // Position 8: Battery
   const batteryCode = upperVin.charAt(7);
   const battery = batteryCodes[batteryCode] || undefined;
+
+  // Position 7: Motor/drive
+  const motorCode = upperVin.charAt(6);
+  const modelMotorCodes = motorCodes[model] || {};
+  const driveFromMap = modelMotorCodes[motorCode];
+
+  // Fallback: still return a meaningful variant even if the motor code is unknown
+  const drive = driveFromMap ?? `Unknown variant (code ${motorCode})`;
 
   return {
     model,
