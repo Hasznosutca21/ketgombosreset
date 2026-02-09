@@ -43,7 +43,7 @@ export const hu = {
       description: "Software és intelligens rendszerek",
     },
     other: {
-      title: "Egyéb szolgáltatások",
+      title: "Egyéb javítások",
       description: "Karosszéria, garancia és egyebek",
     },
   },
