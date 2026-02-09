@@ -379,6 +379,65 @@ export type Database = {
         }
         Relationships: []
       }
+      work_sheets: {
+        Row: {
+          appointment_id: string | null
+          created_at: string
+          created_by: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          description: string | null
+          id: string
+          notes: string | null
+          service: string
+          service_date: string
+          updated_at: string
+          vehicle: string
+          vehicle_vin: string | null
+        }
+        Insert: {
+          appointment_id?: string | null
+          created_at?: string
+          created_by: string
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          description?: string | null
+          id?: string
+          notes?: string | null
+          service: string
+          service_date: string
+          updated_at?: string
+          vehicle: string
+          vehicle_vin?: string | null
+        }
+        Update: {
+          appointment_id?: string | null
+          created_at?: string
+          created_by?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          description?: string | null
+          id?: string
+          notes?: string | null
+          service?: string
+          service_date?: string
+          updated_at?: string
+          vehicle?: string
+          vehicle_vin?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_sheets_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
