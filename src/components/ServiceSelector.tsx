@@ -31,6 +31,7 @@ import s3xyCommanderImage from "@/assets/products/s3xy-commander.jpg";
 import s3xyDashImage from "@/assets/products/s3xy-dash.webp";
 import s3xyDashCommanderImage from "@/assets/products/s3xy-dash-commander.webp";
 import s3xyKnobImage from "@/assets/products/s3xy-knob.webp";
+import s3xyKnobCommanderImage from "@/assets/products/s3xy-knob-commander.webp";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -849,6 +850,13 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
+            <div className="rounded-lg overflow-hidden bg-muted/30">
+              <img 
+                src={s3xyKnobCommanderImage} 
+                alt="S3XY Knob + Commander" 
+                className="w-full h-auto object-cover max-h-40"
+              />
+            </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
               {language === "hu" 
                 ? "A Commander és az S3XY Knob együtt alkotják a teljes S3XY vezérlőrendszert. A Commander a rendszer agya, míg az S3XY Knob az intuitív, fizikai kezelőfelület."
