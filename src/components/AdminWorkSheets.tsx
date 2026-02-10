@@ -9,11 +9,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Plus, Printer, Loader2, RefreshCw, Trash2, Eye } from "lucide-react";
+import { FileText, Plus, Printer, Loader2, RefreshCw, Trash2, Eye, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { hu, enUS } from "date-fns/locale";
 import { useAuth } from "@/hooks/useAuth";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import teslandLogo from "@/assets/tesland-logo.png";
 
 interface WorkSheet {
@@ -71,6 +73,58 @@ a mért értékek, megállapítások és szakmai észrevételek rögzítése.
 
 A munkalap a szervizelési tevékenység hivatalos dokumentumának minősül, amely alkalmas belső nyilvántartási, ügyfél-tájékoztatási, valamint jogi és adminisztratív célú felhasználásra. A dokumentumban rögzített adatok az ellenőrzés időpontjában fennálló állapotot tükrözik.`;
 
+// Service/product catalog for checklist
+const SERVICE_CATALOG = [
+  { category: "Karbantartás", items: [
+    { id: "maintenance", name: "Általános átvizsgálás", price: "31 750 Ft" },
+    { id: "battery", name: "Éves felülvizsgálat", price: "31 750 Ft" },
+    { id: "brake", name: "Fékszerviz", price: "" },
+  ]},
+  { category: "Fűtés, hűtés", items: [
+    { id: "ac", name: "Klíma szerviz", price: "" },
+    { id: "heatpump", name: "Supermanifold hiba", price: "" },
+    { id: "heating", name: "Pollen szűrő csere", price: "19 900 Ft" },
+    { id: "hepa", name: "HEPA szűrő csere", price: "58 000 Ft" },
+    { id: "ptcheater", name: "PTC heater csere", price: "370 000 Ft" },
+  ]},
+  { category: "Extra funkciók", items: [
+    { id: "software", name: "Boombox aktiválás", price: "10 000 Ft" },
+    { id: "autopilot", name: "Belső világítás aktiválás", price: "10 000 Ft" },
+    { id: "multimedia", name: "Multimédia frissítés", price: "" },
+  ]},
+  { category: "Akkumulátor", items: [
+    { id: "lowvoltagebattery", name: "Alacsony feszültségű akkumulátor csere", price: "89 900 Ft" },
+  ]},
+  { category: "Egyéb szolgáltatások", items: [
+    { id: "doorhandle", name: "Króm kilincs csere", price: "25 000 Ft / db" },
+    { id: "body", name: "Hátsó csomagtérajtó probléma", price: "30 000 Ft" },
+    { id: "canbus", name: "CAN bus probléma javítása", price: "80 000 Ft" },
+    { id: "warranty", name: "Hátsó csomagtér motor hiba", price: "55 000 Ft" },
+    { id: "tires", name: "Abroncs szerviz", price: "" },
+  ]},
+  { category: "Kiegészítők", items: [
+    { id: "softclose", name: "Softclose", price: "" },
+    { id: "seat_ventilation", name: "Ülés szellőztetés", price: "" },
+    { id: "s3xy_products", name: "S3XY termékek", price: "" },
+  ]},
+];
+
+const getServiceName = (id: string): string => {
+  for (const cat of SERVICE_CATALOG) {
+    const item = cat.items.find(i => i.id === id);
+    if (item) return item.name;
+  }
+  return id;
+};
+
+const getServicePrice = (id: string): string => {
+  for (const cat of SERVICE_CATALOG) {
+    const item = cat.items.find(i => i.id === id);
+    if (item) return item.price;
+  }
+  return "";
+};
+
 const getVehicleLabel = (v: string) => {
   const key = v.split("-").slice(0, 2).join("-");
   return vehicleLabels[key] || v;
@@ -85,6 +139,7 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
   const [viewSheet, setViewSheet] = useState<WorkSheet | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const printRef = useRef<HTMLDivElement>(null);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
   // Form state
   const [selectedAppointment, setSelectedAppointment] = useState<string>("manual");
@@ -171,13 +226,18 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
   // Handle prefill from appointment
   useEffect(() => {
     if (prefillAppointment) {
+      // Try to match the appointment service to catalog items
+      const matchedId = SERVICE_CATALOG.flatMap(c => c.items).find(
+        i => i.id === prefillAppointment.service || i.name === prefillAppointment.service
+      )?.id;
+      setSelectedServices(matchedId ? [matchedId] : []);
       setForm({
         customer_name: prefillAppointment.name,
         customer_email: prefillAppointment.email,
         customer_phone: prefillAppointment.phone || "",
         vehicle: prefillAppointment.vehicle,
         vehicle_vin: prefillAppointment.vehicle_vin || "",
-        service: prefillAppointment.service,
+        service: matchedId ? "" : prefillAppointment.service,
         service_date: prefillAppointment.appointment_date,
         description: DEFAULT_DESCRIPTION,
         notes: "",
@@ -223,13 +283,17 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
     if (value !== "manual") {
       const apt = appointments.find((a) => a.id === value);
       if (apt) {
+        const matchedId = SERVICE_CATALOG.flatMap(c => c.items).find(
+          i => i.id === apt.service || i.name === apt.service
+        )?.id;
+        setSelectedServices(matchedId ? [matchedId] : []);
         setForm({
           customer_name: apt.name,
           customer_email: apt.email,
           customer_phone: apt.phone || "",
           vehicle: apt.vehicle,
           vehicle_vin: apt.vehicle_vin || "",
-          service: apt.service,
+          service: matchedId ? "" : apt.service,
           service_date: apt.appointment_date,
           description: DEFAULT_DESCRIPTION,
           notes: "",
@@ -239,7 +303,7 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
   };
 
   const handleSave = async () => {
-    if (!form.customer_name || !form.vehicle || !form.service || !user) return;
+    if (!form.customer_name || !form.vehicle || (selectedServices.length === 0 && !form.service) || !user) return;
     setIsSaving(true);
     try {
       const { error } = await supabase.from("work_sheets").insert({
@@ -249,7 +313,10 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
         customer_phone: form.customer_phone || null,
         vehicle: form.vehicle,
         vehicle_vin: form.vehicle_vin || null,
-        service: form.service,
+        service: [
+          ...selectedServices.map(getServiceName),
+          ...(form.service ? [form.service] : []),
+        ].join(", "),
         service_date: form.service_date,
         description: form.description || null,
         notes: form.notes || null,
@@ -281,6 +348,7 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
 
   const resetForm = () => {
     setSelectedAppointment("manual");
+    setSelectedServices([]);
     setForm({
       customer_name: "",
       customer_email: "",
@@ -408,15 +476,16 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
               </tr>
             </thead>
             <tbody>
+              ${sheet.service.split(", ").map((svc: string, idx: number) => `
               <tr>
-                <td>01</td>
-                <td>${sheet.service}</td>
-                <td></td>
+                <td>${String(idx + 1).padStart(2, "0")}</td>
+                <td>${svc}</td>
+                <td>1</td>
                 <td></td>
                 <td></td>
                 <td>27%</td>
                 <td></td>
-              </tr>
+              </tr>`).join("")}
             </tbody>
           </table>
           <div class="totals">
@@ -619,8 +688,48 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
             </div>
 
             <div>
-              <Label>{t.service}</Label>
-              <Input value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} />
+              <Label>{language === "hu" ? "Termékek / Szolgáltatások" : "Products / Services"}</Label>
+              <div className="border rounded-md p-3 space-y-2 max-h-[200px] overflow-y-auto mt-1">
+                {SERVICE_CATALOG.map((cat) => (
+                  <Collapsible key={cat.category}>
+                    <CollapsibleTrigger className="flex items-center gap-2 w-full text-sm font-medium py-1 hover:text-primary transition-colors">
+                      <ChevronDown className="h-3 w-3" />
+                      {cat.category}
+                      {cat.items.some(i => selectedServices.includes(i.id)) && (
+                        <Badge variant="secondary" className="ml-auto text-xs">
+                          {cat.items.filter(i => selectedServices.includes(i.id)).length}
+                        </Badge>
+                      )}
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pl-5 space-y-1 pt-1">
+                      {cat.items.map((item) => (
+                        <label key={item.id} className="flex items-center gap-2 text-sm cursor-pointer py-0.5">
+                          <Checkbox
+                            checked={selectedServices.includes(item.id)}
+                            onCheckedChange={(checked) => {
+                              setSelectedServices(prev =>
+                                checked ? [...prev, item.id] : prev.filter(id => id !== item.id)
+                              );
+                            }}
+                          />
+                          <span className="flex-1">{item.name}</span>
+                          {item.price && <span className="text-xs text-muted-foreground">{item.price}</span>}
+                        </label>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                ))}
+              </div>
+              {selectedServices.length > 0 && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  {selectedServices.length} {language === "hu" ? "kiválasztva" : "selected"}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <Label>{language === "hu" ? "Egyéb szolgáltatás (szabad szöveg)" : "Other service (free text)"}</Label>
+              <Input value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} placeholder={language === "hu" ? "Ha nem szerepel a listában..." : "If not in the list..."} />
             </div>
 
             <div>
@@ -648,7 +757,7 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
             <Button variant="outline" onClick={() => setCreateOpen(false)}>
               {language === "hu" ? "Mégse" : "Cancel"}
             </Button>
-            <Button onClick={handleSave} disabled={isSaving || !form.customer_name || !form.vehicle || !form.service}>
+            <Button onClick={handleSave} disabled={isSaving || !form.customer_name || !form.vehicle || (selectedServices.length === 0 && !form.service)}>
               {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t.save}
             </Button>
