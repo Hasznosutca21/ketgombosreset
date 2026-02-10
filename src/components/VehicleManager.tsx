@@ -90,6 +90,22 @@ const VehicleManager = ({ userId }: VehicleManagerProps) => {
     selectColor: language === "hu" ? "Válassz színt" : "Select color",
   };
 
+  const getSignedUrl = async (publicUrl: string): Promise<string> => {
+    try {
+      // Extract the path from the public URL (after /vehicle-images/)
+      const match = publicUrl.match(/vehicle-images\/(.+)$/);
+      if (!match) return publicUrl;
+      const path = match[1];
+      const { data, error } = await supabase.storage
+        .from("vehicle-images")
+        .createSignedUrl(path, 3600); // 1 hour expiry
+      if (error || !data?.signedUrl) return publicUrl;
+      return data.signedUrl;
+    } catch {
+      return publicUrl;
+    }
+  };
+
   useEffect(() => {
     fetchVehicles();
   }, [userId]);
@@ -104,7 +120,20 @@ const VehicleManager = ({ userId }: VehicleManagerProps) => {
         .order("created_at", { ascending: true });
 
       if (error) throw error;
-      setVehicles((data as Vehicle[]) || []);
+      const vehiclesData = (data as Vehicle[]) || [];
+      
+      // Generate signed URLs for private bucket images
+      const vehiclesWithSignedUrls = await Promise.all(
+        vehiclesData.map(async (v) => {
+          if (v.image_url) {
+            const signedUrl = await getSignedUrl(v.image_url);
+            return { ...v, image_url: signedUrl };
+          }
+          return v;
+        })
+      );
+      
+      setVehicles(vehiclesWithSignedUrls);
     } catch (error) {
       console.error("Error fetching vehicles:", error);
     } finally {
@@ -211,7 +240,13 @@ const VehicleManager = ({ userId }: VehicleManagerProps) => {
         .from("vehicle-images")
         .getPublicUrl(filePath);
 
-      setFormData((prev) => ({ ...prev, image_url: publicUrl }));
+      // Generate signed URL for immediate preview
+      const { data: signedData } = await supabase.storage
+        .from("vehicle-images")
+        .createSignedUrl(filePath, 3600);
+
+      // Store public URL in DB for path extraction; show signed URL in form preview
+      setFormData((prev) => ({ ...prev, image_url: signedData?.signedUrl || publicUrl }));
       toast.success(language === "hu" ? "Kép feltöltve" : "Image uploaded");
     } catch (error) {
       console.error("Error uploading image:", error);

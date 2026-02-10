@@ -119,25 +119,39 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
           .order("is_primary", { ascending: false })
           .order("created_at", { ascending: true });
 
-        if (vehicles && vehicles.length >= 2) {
-          // User has 2+ vehicles - show vehicle selector
-          setUserVehicles(vehicles as UserVehicle[]);
+        // Generate signed URLs for private bucket images
+        const vehiclesWithSignedUrls = vehicles ? await Promise.all(
+          (vehicles as UserVehicle[]).map(async (v) => {
+            if (v.image_url) {
+              const match = v.image_url.match(/vehicle-images\/(.+)$/);
+              if (match) {
+                const { data } = await supabase.storage
+                  .from("vehicle-images")
+                  .createSignedUrl(match[1], 3600);
+                if (data?.signedUrl) {
+                  return { ...v, image_url: data.signedUrl };
+                }
+              }
+            }
+            return v;
+          })
+        ) : [];
+
+        if (vehiclesWithSignedUrls.length >= 2) {
+          setUserVehicles(vehiclesWithSignedUrls);
           setShowUserVehicles(true);
           
-          // Pre-select primary vehicle
-          const primary = vehicles.find(v => v.is_primary) || vehicles[0];
+          const primary = vehiclesWithSignedUrls.find(v => v.is_primary) || vehiclesWithSignedUrls[0];
           if (primary) {
-            setSelectedUserVehicle(primary as UserVehicle);
+            setSelectedUserVehicle(primary);
           }
-        } else if (vehicles && vehicles.length === 1) {
-          // Single vehicle with VIN - lock to it
-          const singleVehicle = vehicles[0] as UserVehicle;
+        } else if (vehiclesWithSignedUrls.length === 1) {
+          const singleVehicle = vehiclesWithSignedUrls[0];
           if (singleVehicle.vin && singleVehicle.vin.length === 17) {
             setUserVehicles([singleVehicle]);
             setSelectedUserVehicle(singleVehicle);
             setShowUserVehicles(true);
           } else {
-            // Single vehicle without VIN - just pre-select in carousel
             const vehicleId = findVehicleIdFromModel(singleVehicle.model);
             if (vehicleId && emblaApi && !hasAutoSelected) {
               const index = defaultVehicles.findIndex(v => v.id === vehicleId);
