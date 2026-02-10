@@ -516,6 +516,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                       { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: false },
                       { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, hasInfo: false },
                       { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, availableForSX: false, hasInfo: false },
+                      { id: "dash_commander", hu: "S3XY Dash + Commander", en: "S3XY Dash + Commander", icon: Package, price: "204 990 Ft", availableForSX: false, hasInfo: false },
                     ].filter(product => {
                       // For Model S/X: only Commander is available
                       if (isModelSX) {
