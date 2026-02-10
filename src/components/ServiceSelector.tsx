@@ -33,6 +33,7 @@ import s3xyDashCommanderImage from "@/assets/products/s3xy-dash-commander.webp";
 import s3xyKnobImage from "@/assets/products/s3xy-knob.webp";
 import s3xyKnobCommanderImage from "@/assets/products/s3xy-knob-commander.webp";
 import s3xyStripImage from "@/assets/products/s3xy-strip.webp";
+import s3xyStalkLeftImage from "@/assets/products/s3xy-stalk-left.webp";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -969,6 +970,15 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
+            {(selectedStalkSide === "" || selectedStalkSide === "left") && (
+              <div className="rounded-lg overflow-hidden bg-muted/30">
+                <img 
+                  src={s3xyStalkLeftImage} 
+                  alt="S3XY Stalk - Bal oldal" 
+                  className="w-full h-auto object-cover max-h-40"
+                />
+              </div>
+            )}
             <p className="text-xs text-muted-foreground leading-relaxed">
               {language === "hu" 
                 ? "S3XY Stalks – a vezérlés visszakerül a kezedbe. Irányítsd az irányjelzőket, menetállapotokat és válassz több mint 200 funkció közül – ablaktörlők, távolsági fényszóró, akkumulátor-előmelegítés, ülésmozgatás, regeneráció állítása és még sok más."
