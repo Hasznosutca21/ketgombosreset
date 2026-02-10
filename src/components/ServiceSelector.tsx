@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import s3xyIcon from "@/assets/s3xy-icon.png";
 import s3xyCommanderImage from "@/assets/products/s3xy-commander.jpg";
+import s3xyDashImage from "@/assets/products/s3xy-dash.webp";
 import s3xyDashCommanderImage from "@/assets/products/s3xy-dash-commander.webp";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -785,6 +786,13 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
+            <div className="rounded-lg overflow-hidden bg-muted/30">
+              <img 
+                src={s3xyDashImage} 
+                alt="S3XY Dash" 
+                className="w-full h-auto object-cover max-h-40"
+              />
+            </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
               {language === "hu" 
                 ? "Az S3XY Dash egy intelligens, teljes mértékben testreszabható kiegészítő műszerfal, amely támogatja az Apple CarPlay és az Android Auto rendszereket. Tökéletesen illeszkedik minden Tesla Model 3 és Model Y járműhöz, beleértve a Highland és Juniper verziókat is."
