@@ -519,7 +519,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                       { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false, hasInfo: false, infoTarget: "" },
                       { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: false, infoTarget: "" },
                       { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, hasInfo: false, infoTarget: "" },
-                      { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, availableForSX: false, hasInfo: true, infoTarget: "dash" },
+                      { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: "169 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash" },
                       { id: "dash_commander", hu: "S3XY Dash + Commander", en: "S3XY Dash + Commander", icon: Package, price: "204 990 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash_commander" },
                     ].filter(product => {
                       // For Model S/X: only Commander is available
@@ -820,7 +820,10 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 {language === "hu" ? "OTA frissítések" : "OTA updates"}
               </li>
             </ul>
-            <div className="pt-2 border-t border-border flex justify-end">
+            <div className="pt-2 border-t border-border flex items-center justify-between">
+              <p className="text-xs font-medium">
+                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} 169 900 Ft
+              </p>
               <Button 
                 variant="outline" 
                 size="sm" 
