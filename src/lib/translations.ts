@@ -62,7 +62,7 @@ export const hu = {
     lowvoltagebattery: {
       title: "Alacsony feszültségű akkumulátor csere",
       description: "12V akkumulátor diagnosztika és csere",
-      price: "89 900 Ft",
+      price: "bruttó 89 900 Ft",
       duration: "10 perc",
     },
     // Karbantartás
@@ -70,7 +70,7 @@ export const hu = {
       title: "Általános átvizsgálás",
       description: "Pontos kép Teslád állapotáról – meglepetések nélkül",
       duration: "45 perc",
-      price: "31 750 Ft",
+      price: "bruttó 31 750 Ft",
       details: `A Tesland általános átvizsgálás egy átfogó ellenőrzési szolgáltatás Tesla modellekhez (Model 3 / Y / S / X), amely segít feltárni az autó aktuális műszaki állapotát, és időben felismerni az esetleges hibákat.
 
 Gyári szintű diagnosztikával és célzott műszaki vizsgálattal átnézzük a jármű legfontosabb rendszereit, hogy átlátható, érthető képet kapj Teslád állapotáról – még azelőtt, hogy komolyabb problémák jelentkeznének.
@@ -88,7 +88,7 @@ Gyári szintű diagnosztikával és célzott műszaki vizsgálattal átnézzük 
       title: "Éves felülvizsgálat",
       description: "Kötelező éves akkumulátor és rendszer ellenőrzés",
       duration: "45 perc",
-      price: "31 750 Ft",
+      price: "bruttó 31 750 Ft",
       details: `Az éves Tesla felülvizsgálat célja, hogy biztosítsd járműved hosszú távú megbízhatóságát és értékállóságát. Ez a szolgáltatás különösen fontos használt Tesla vásárlás előtt, garancia lejárta után, vagy egyszerűen a nyugalom érdekében.
 
 Miért fontos az éves felülvizsgálat?
@@ -131,32 +131,32 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
       title: "Pollen szűrő csere",
       description: "Utastér szűrő csere a tiszta levegőért",
       duration: "30 perc",
-      price: "19 900 Ft",
+      price: "bruttó 19 900 Ft",
     },
     hepa: {
       title: "HEPA szűrő csere",
       description: "Prémium HEPA szűrő csere Model Y-hoz",
       duration: "30 perc",
-      price: "58 000 Ft",
+      price: "bruttó 58 000 Ft",
     },
     ptcheater: {
       title: "PTC heater csere",
       description: "Elektromos kiegészítő fűtőelem csere, hideg időben biztosítja a hatékony fűtést",
       duration: "3-4 óra",
-      price: "370 000 Ft",
+      price: "bruttó 370 000 Ft",
     },
     // Extra funkciók
     software: {
       title: "Boombox aktiválás",
       description: "Egyedi hangok és dallamok külső hangszóróra",
       duration: "10 perc",
-      price: "10 000 Ft",
+      price: "bruttó 10 000 Ft",
     },
     autopilot: {
       title: "Belső világítás aktiválás",
       description: "Egyedi ambient világítás beállítása",
       duration: "10 perc",
-      price: "10 000 Ft",
+      price: "bruttó 10 000 Ft",
     },
     multimedia: {
       title: "Multimédia frissítés",
@@ -168,7 +168,7 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
       title: "Króm kilincs csere",
       description: "A 2018-2020 Model 3 króm kilincs felülete lepereg",
       duration: "1-2 óra",
-      price: "25 000 Ft / db",
+      price: "bruttó 25 000 Ft / db",
       details: `A 2018-2020 között gyártott Tesla Model 3 járművek króm bevonatú kilincseinél gyakori probléma, hogy a felület idővel lepereg, lepattogzik.
 
 Ez nemcsak esztétikai hiba, hanem a kilincsmechanizmus élettartamát is befolyásolhatja.
@@ -179,26 +179,26 @@ A Tesland kilincs csere szolgáltatás:
 • Garanciális munka
 • Akár egy, akár mind a négy kilincs cserélhető
 
-Ár: 25 000 Ft / darab
+Ár: bruttó 25 000 Ft / darab
 
 Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
     },
     body: {
       title: "Hátsó csomagtérajtó probléma",
       description: "Kábelköteg szakadás okozta hibák javítása",
-      price: "30 000 Ft",
+      price: "bruttó 30 000 Ft",
       duration: "2-3 óra",
     },
     canbus: {
       title: "CAN bus probléma javítása",
       description: "CAN bus kommunikációs hibák diagnosztikája és javítása",
-      price: "80 000 Ft",
+      price: "bruttó 80 000 Ft",
       duration: "2 óra",
     },
     warranty: {
       title: "Hátsó csomagtér motor hiba",
       description: "Motor csere facelift modellekhez",
-      price: "55 000 Ft",
+      price: "bruttó 55 000 Ft",
       duration: "10 perc",
     },
     tires: {
@@ -538,7 +538,7 @@ export const en = {
     lowvoltagebattery: {
       title: "Low Voltage Battery Replacement",
       description: "12V battery diagnostics and replacement",
-      price: "89 900 Ft",
+      price: "bruttó 89 900 Ft",
       duration: "10 min",
     },
     // Maintenance
@@ -546,7 +546,7 @@ export const en = {
       title: "General Inspection",
       description: "A clear picture of your Tesla's condition – no surprises",
       duration: "45 min",
-      price: "31 750 Ft",
+      price: "bruttó 31 750 Ft",
       details: `Tesland General Inspection is a comprehensive checkup service for Tesla models (Model 3 / Y / S / X), helping to reveal your car's current technical condition and identify potential issues early.
 
 Using factory-level diagnostics and targeted technical inspection, we review your vehicle's most important systems to give you a clear, understandable picture of your Tesla's condition – before any major problems arise.
@@ -564,7 +564,7 @@ Using factory-level diagnostics and targeted technical inspection, we review you
       title: "Annual Inspection",
       description: "Mandatory annual battery and system check",
       duration: "45 min",
-      price: "31 750 Ft",
+      price: "bruttó 31 750 Ft",
       details: `The annual Tesla inspection ensures your vehicle's long-term reliability and value retention. This service is especially important before buying a used Tesla, after warranty expiration, or simply for peace of mind.
 
 Why is the annual inspection important?
@@ -607,32 +607,32 @@ The price includes a personal consultation where we discuss the results and answ
       title: "Pollen Filter Replacement",
       description: "Cabin air filter replacement for clean air",
       duration: "30 min",
-      price: "19 900 Ft",
+      price: "bruttó 19 900 Ft",
     },
     hepa: {
       title: "HEPA Filter Replacement",
       description: "Premium HEPA filter replacement for Model Y",
       duration: "30 min",
-      price: "58 000 Ft",
+      price: "bruttó 58 000 Ft",
     },
     ptcheater: {
       title: "PTC Heater Replacement",
       description: "Electric auxiliary heater replacement for efficient heating in cold weather",
       duration: "3-4 hours",
-      price: "370 000 Ft",
+      price: "bruttó 370 000 Ft",
     },
     // Extra Features
     software: {
       title: "Boombox Activation",
       description: "Custom sounds and melodies for external speaker",
       duration: "10 min",
-      price: "10 000 Ft",
+      price: "bruttó 10 000 Ft",
     },
     autopilot: {
       title: "Interior Lighting Activation",
       description: "Custom ambient lighting setup",
       duration: "10 min",
-      price: "10 000 Ft",
+      price: "bruttó 10 000 Ft",
     },
     multimedia: {
       title: "Multimedia Update",
@@ -644,7 +644,7 @@ The price includes a personal consultation where we discuss the results and answ
       title: "Chrome Handle Replacement",
       description: "2018-2020 Model 3 chrome door handle surface peels off",
       duration: "1-2 hours",
-      price: "25 000 Ft / pc",
+      price: "bruttó 25 000 Ft / pc",
       details: `Tesla Model 3 vehicles manufactured between 2018-2020 with chrome-coated door handles often experience surface peeling and flaking over time.
 
 This is not just an aesthetic issue – it can also affect the lifespan of the handle mechanism.
@@ -655,26 +655,26 @@ Tesland door handle replacement service:
 • Warranty covered work
 • One or all four handles can be replaced
 
-Price: 25,000 Ft / piece
+Price: 25,000 Ft / piece (gross)
 
 Select which handle needs replacement on the interactive diagram!`,
     },
     body: {
       title: "Rear Trunk Lid Issue",
       description: "Cable harness breakage repair",
-      price: "30 000 Ft",
+      price: "bruttó 30 000 Ft",
       duration: "2-3 hours",
     },
     canbus: {
       title: "CAN Bus Problem Repair",
       description: "CAN bus communication diagnostics and repair",
-      price: "80 000 Ft",
+      price: "bruttó 80 000 Ft",
       duration: "2 hours",
     },
     warranty: {
       title: "Rear Trunk Motor Issue",
       description: "Motor replacement for facelift models",
-      price: "55 000 Ft",
+      price: "bruttó 55 000 Ft",
       duration: "10 min",
     },
     tires: {
