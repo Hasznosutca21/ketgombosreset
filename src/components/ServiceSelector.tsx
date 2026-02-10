@@ -718,9 +718,9 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             
             <div className="space-y-2">
               {[
-                { id: "front_2", label: language === "hu" ? "Első 2 ajtó" : "Front 2 doors", iconCount: 2, price: "140 000 Ft" },
-                { id: "rear_2", label: language === "hu" ? "Hátsó 2 ajtó" : "Rear 2 doors", iconCount: 2, price: "140 000 Ft" },
-                { id: "all_4", label: language === "hu" ? "Mind a 4 ajtó" : "All 4 doors", iconCount: 4, price: "250 000 Ft" },
+                { id: "front_2", label: language === "hu" ? "Első 2 ajtó" : "Front 2 doors", iconCount: 2, price: "bruttó 140 000 Ft" },
+                { id: "rear_2", label: language === "hu" ? "Hátsó 2 ajtó" : "Rear 2 doors", iconCount: 2, price: "bruttó 140 000 Ft" },
+                { id: "all_4", label: language === "hu" ? "Mind a 4 ajtó" : "All 4 doors", iconCount: 4, price: "bruttó 250 000 Ft" },
               ].map((option) => (
                 <button
                   key={option.id}
@@ -785,7 +785,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </p>
             <div className="pt-2 border-t border-border flex items-center justify-between">
               <p className="text-xs font-medium">
-                {language === "hu" ? "Ár beszereléssel:" : "Price with installation:"} 89 900 Ft
+                {language === "hu" ? "Ár beszereléssel:" : "Price with installation:"} bruttó 89 900 Ft
               </p>
               <Button 
                 variant="outline" 
@@ -841,7 +841,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </ul>
             <div className="pt-2 border-t border-border flex items-center justify-between">
               <p className="text-xs font-medium">
-                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} 89 900 Ft
+                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} bruttó 89 900 Ft
               </p>
               <Button 
                 variant="outline" 
@@ -897,7 +897,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </ul>
             <div className="pt-2 border-t border-border flex items-center justify-between">
               <p className="text-xs font-medium">
-                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} 145 900 Ft
+                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} bruttó 145 900 Ft
               </p>
               <Button 
                 variant="outline" 
@@ -949,7 +949,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </ul>
             <div className="pt-2 border-t border-border flex items-center justify-between">
               <p className="text-xs font-medium">
-                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} 59 900 Ft
+                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} bruttó 59 900 Ft
               </p>
               <Button 
                 variant="outline" 
@@ -1124,7 +1124,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </ul>
             <div className="pt-2 border-t border-border flex items-center justify-between">
               <p className="text-xs font-medium">
-                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} 169 900 Ft
+                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} bruttó 169 900 Ft
               </p>
               <Button 
                 variant="outline" 
@@ -1184,7 +1184,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </ul>
             <div className="pt-2 border-t border-border flex items-center justify-between">
               <p className="text-xs font-medium">
-                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} 204 990 Ft
+                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} bruttó 204 990 Ft
               </p>
               <Button 
                 variant="outline" 

@@ -125,7 +125,7 @@ const DoorHandleSelector = ({ value, onChange }: DoorHandleSelectorProps) => {
                     {isHu ? handle.label : handle.labelEn}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    25 000 Ft
+                    bruttó 25 000 Ft
                   </div>
                 </div>
                 {isSelected && (
@@ -152,7 +152,7 @@ const DoorHandleSelector = ({ value, onChange }: DoorHandleSelectorProps) => {
               </span>
             </div>
             <div className="text-lg font-semibold">
-              {formattedPrice} Ft
+              bruttó {formattedPrice} Ft
             </div>
           </div>
         </div>
