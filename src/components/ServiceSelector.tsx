@@ -989,6 +989,24 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 />
               </div>
             )}
+            {selectedStalkSide === "both" && (
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-lg overflow-hidden bg-muted/30">
+                  <img 
+                    src={s3xyStalkLeftImage} 
+                    alt="S3XY Stalk - Bal oldal" 
+                    className="w-full h-auto object-cover max-h-40"
+                  />
+                </div>
+                <div className="rounded-lg overflow-hidden bg-muted/30">
+                  <img 
+                    src={s3xyStalkRightImage} 
+                    alt="S3XY Stalk - Jobb oldal" 
+                    className="w-full h-auto object-cover max-h-40"
+                  />
+                </div>
+              </div>
+            )}
             <p className="text-xs text-muted-foreground leading-relaxed">
               {language === "hu" 
                 ? "S3XY Stalks – a vezérlés visszakerül a kezedbe. Irányítsd az irányjelzőket, menetállapotokat és válassz több mint 200 funkció közül – ablaktörlők, távolsági fényszóró, akkumulátor-előmelegítés, ülésmozgatás, regeneráció állítása és még sok más."
@@ -1013,10 +1031,11 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               <p className="text-xs font-medium">
                 {language === "hu" ? "Melyik oldalra szeretnéd?" : "Which side do you want?"}
               </p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 {[
                   { id: "left", label: language === "hu" ? "Bal oldal" : "Left side", price: "79 900 Ft" },
                   { id: "right", label: language === "hu" ? "Jobb oldal" : "Right side", price: "79 900 Ft" },
+                  { id: "both", label: language === "hu" ? "Mindkettő" : "Both sides", price: "159 800 Ft" },
                 ].map((side) => (
                   <button
                     key={side.id}
