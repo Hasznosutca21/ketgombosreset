@@ -323,11 +323,10 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
         <div class="header">
           <div class="header-left">
             <div class="header-company">
-              <strong>Tesland Győr - Innovateam Hungária Kft</strong><br>
-              9011 Győr Váci Mihály út 140<br>
-              +36203682641<br>
-              bogdan.krisztian@innovateamkft.hu<br>
-              14708268-2-08
+              <strong>Tesland | Mediavox Multimedia KFT</strong><br>
+              Nagytarcsa, Ganz Ábrahám utca 3.<br>
+              Tel: +36209355355<br>
+              Email: info@tesland.hu
             </div>
           </div>
           <div class="header-right">
@@ -428,7 +427,7 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
         </div>
 
         <div class="footer">
-          <span>Tesland Győr</span>
+          <span>Tesland | Mediavox Multimedia KFT</span>
           <span>1/ 1</span>
         </div>
       </body>
