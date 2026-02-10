@@ -102,23 +102,28 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
 
   // Auto-fill from customers table based on email
   useEffect(() => {
-    if (selectedAppointment !== "manual") return; // skip if prefilled from appointment
+    if (selectedAppointment !== "manual") return;
     const email = form.customer_email.trim();
     if (!email || !email.includes("@")) return;
 
     const timeout = setTimeout(async () => {
       try {
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from("customers")
           .select("first_name, last_name, phone, address")
           .eq("email", email)
           .maybeSingle();
+        if (error) {
+          console.error("Customer lookup error:", error);
+          return;
+        }
         if (data) {
           setForm((prev) => ({
             ...prev,
-            customer_name: prev.customer_name || `${data.last_name} ${data.first_name}`.trim(),
-            customer_phone: prev.customer_phone || data.phone || "",
+            customer_name: `${data.last_name} ${data.first_name}`.trim(),
+            customer_phone: data.phone || prev.customer_phone,
           }));
+          toast.success(language === "hu" ? "Ügyfél adatok betöltve" : "Customer data loaded");
         }
       } catch (e) {
         console.error("Customer lookup error:", e);
