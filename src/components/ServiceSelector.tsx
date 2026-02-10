@@ -146,6 +146,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [knobInfoOpen, setKnobInfoOpen] = useState(false);
   const [knobCommanderInfoOpen, setKnobCommanderInfoOpen] = useState(false);
   const [stripInfoOpen, setStripInfoOpen] = useState(false);
+  const [stalkInfoOpen, setStalkInfoOpen] = useState(false);
+  const [selectedStalkSide, setSelectedStalkSide] = useState<string>("");
   const [dashCommanderInfoOpen, setDashCommanderInfoOpen] = useState(false);
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
@@ -524,7 +526,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                       { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: "89 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob" },
                       { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob_commander" },
                       { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "strip" },
-                      { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, hasInfo: false, infoTarget: "" },
+                      { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, hasInfo: true, infoTarget: "stalk" },
                       { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: "169 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash" },
                       { id: "dash_commander", hu: "S3XY Dash + Commander", en: "S3XY Dash + Commander", icon: Package, price: "204 990 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash_commander" },
                     ].filter(product => {
@@ -580,6 +582,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                                     setKnobCommanderInfoOpen(true);
                                   } else if (product.infoTarget === "strip") {
                                     setStripInfoOpen(true);
+                                  } else if (product.infoTarget === "stalk") {
+                                    setStalkInfoOpen(true);
                                   } else {
                                     setCommanderInfoOpen(true);
                                   }
@@ -944,6 +948,78 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 variant="outline" 
                 size="sm" 
                 onClick={() => setStripInfoOpen(false)}
+              >
+                {language === "hu" ? "Bezárás" : "Close"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* S3XY Stalk Info Dialog */}
+      <Dialog open={stalkInfoOpen} onOpenChange={(open) => {
+        setStalkInfoOpen(open);
+        if (!open) setSelectedStalkSide("");
+      }}>
+        <DialogContent className="max-w-sm mx-4">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-medium flex items-center gap-2">
+              <Navigation className="w-4 h-4" />
+              S3XY Stalk
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {language === "hu" 
+                ? "S3XY Stalks – a vezérlés visszakerül a kezedbe. Irányítsd az irányjelzőket, menetállapotokat és válassz több mint 200 funkció közül – ablaktörlők, távolsági fényszóró, akkumulátor-előmelegítés, ülésmozgatás, regeneráció állítása és még sok más."
+                : "S3XY Stalks – control returns to your hands. Manage turn signals, drive states and choose from 200+ functions – wipers, high beams, battery preheat, seat adjustment, regen settings and much more."}
+            </p>
+            <ul className="text-xs text-muted-foreground space-y-1.5 list-none">
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "200+ vezérelhető funkció" : "200+ controllable functions"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "CR2032 elemek, 1+ év élettartam" : "CR2032 batteries, 1+ year lifespan"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "Leszerelés nélkül cserélhető elem" : "Battery replaceable without removal"}
+              </li>
+            </ul>
+
+            <div className="pt-2 border-t border-border space-y-3">
+              <p className="text-xs font-medium">
+                {language === "hu" ? "Melyik oldalra szeretnéd?" : "Which side do you want?"}
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { id: "left", label: language === "hu" ? "Bal oldal" : "Left side" },
+                  { id: "right", label: language === "hu" ? "Jobb oldal" : "Right side" },
+                ].map((side) => (
+                  <button
+                    key={side.id}
+                    type="button"
+                    onClick={() => setSelectedStalkSide(side.id)}
+                    className={cn(
+                      "p-3 text-sm rounded-lg border transition-colors text-center",
+                      selectedStalkSide === side.id
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-muted/30 border-border hover:border-foreground/50"
+                    )}
+                  >
+                    {side.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setStalkInfoOpen(false)}
               >
                 {language === "hu" ? "Bezárás" : "Close"}
               </Button>
