@@ -517,7 +517,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                   <div className="space-y-2">
                     {[
                       { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true, hasInfo: true, infoTarget: "commander" },
-                      { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, availableForSX: false, hasInfo: true, infoTarget: "knob" },
+                      { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: "89 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob" },
                       { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false, hasInfo: false, infoTarget: "" },
                       { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: false, infoTarget: "" },
                       { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, hasInfo: false, infoTarget: "" },
@@ -820,7 +820,10 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 {language === "hu" ? "Vezetés közbeni figyelemelvonás nélkül" : "No distraction while driving"}
               </li>
             </ul>
-            <div className="pt-2 border-t border-border flex justify-end">
+            <div className="pt-2 border-t border-border flex items-center justify-between">
+              <p className="text-xs font-medium">
+                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} 89 900 Ft
+              </p>
               <Button 
                 variant="outline" 
                 size="sm" 
