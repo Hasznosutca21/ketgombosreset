@@ -526,7 +526,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                       { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: "89 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob" },
                       { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob_commander" },
                       { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "strip" },
-                      { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, hasInfo: true, infoTarget: "stalk" },
+                      { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: "79 900 Ft / oldal", availableForSX: false, hasInfo: true, infoTarget: "stalk" },
                       { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: "169 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash" },
                       { id: "dash_commander", hu: "S3XY Dash + Commander", en: "S3XY Dash + Commander", icon: Package, price: "204 990 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash_commander" },
                     ].filter(product => {
@@ -995,8 +995,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  { id: "left", label: language === "hu" ? "Bal oldal" : "Left side" },
-                  { id: "right", label: language === "hu" ? "Jobb oldal" : "Right side" },
+                  { id: "left", label: language === "hu" ? "Bal oldal" : "Left side", price: "79 900 Ft" },
+                  { id: "right", label: language === "hu" ? "Jobb oldal" : "Right side", price: "79 900 Ft" },
                 ].map((side) => (
                   <button
                     key={side.id}
@@ -1009,7 +1009,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                         : "bg-muted/30 border-border hover:border-foreground/50"
                     )}
                   >
-                    {side.label}
+                    <div>{side.label}</div>
+                    <div className={cn("text-xs mt-1", selectedStalkSide === side.id ? "text-background/70" : "text-muted-foreground")}>{side.price}</div>
                   </button>
                 ))}
               </div>
