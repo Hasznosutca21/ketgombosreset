@@ -140,6 +140,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [selectedSoftcloseOption, setSelectedSoftcloseOption] = useState<string>("");
   const [commanderInfoOpen, setCommanderInfoOpen] = useState(false);
   const [dashInfoOpen, setDashInfoOpen] = useState(false);
+  const [knobInfoOpen, setKnobInfoOpen] = useState(false);
   const [dashCommanderInfoOpen, setDashCommanderInfoOpen] = useState(false);
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
@@ -515,7 +516,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                   <div className="space-y-2">
                     {[
                       { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true, hasInfo: true, infoTarget: "commander" },
-                      { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, availableForSX: false, hasInfo: false, infoTarget: "" },
+                      { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: null, availableForSX: false, hasInfo: true, infoTarget: "knob" },
                       { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false, hasInfo: false, infoTarget: "" },
                       { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: false, infoTarget: "" },
                       { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, hasInfo: false, infoTarget: "" },
@@ -568,6 +569,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                                     setDashInfoOpen(true);
                                   } else if (product.infoTarget === "dash_commander") {
                                     setDashCommanderInfoOpen(true);
+                                  } else if (product.infoTarget === "knob") {
+                                    setKnobInfoOpen(true);
                                   } else {
                                     setCommanderInfoOpen(true);
                                   }
@@ -768,6 +771,52 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 variant="outline" 
                 size="sm" 
                 onClick={() => setCommanderInfoOpen(false)}
+              >
+                {language === "hu" ? "Bezárás" : "Close"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* S3XY Knob Info Dialog */}
+      <Dialog open={knobInfoOpen} onOpenChange={setKnobInfoOpen}>
+        <DialogContent className="max-w-sm mx-4">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-medium flex items-center gap-2">
+              <Circle className="w-4 h-4" />
+              S3XY Knob
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {language === "hu" 
+                ? "Az S3XY Knob egy elegáns, többfunkciós vezérlő, amely zökkenőmentesen integrálható a Tesla Model 3 és Model Y járművekbe."
+                : "The S3XY Knob is an elegant, multi-function controller that integrates seamlessly into Tesla Model 3 and Model Y vehicles."}
+            </p>
+            <ul className="text-xs text-muted-foreground space-y-1.5 list-none">
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "80+ választható funkció" : "80+ selectable functions"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "5 egyedileg konfigurálható vezérlőoldal" : "5 custom configurable control pages"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "Egyetlen mozdulattal elérhető műveletek" : "One-touch accessible operations"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "Vezetés közbeni figyelemelvonás nélkül" : "No distraction while driving"}
+              </li>
+            </ul>
+            <div className="pt-2 border-t border-border flex justify-end">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setKnobInfoOpen(false)}
               >
                 {language === "hu" ? "Bezárás" : "Close"}
               </Button>
