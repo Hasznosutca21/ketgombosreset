@@ -506,6 +506,11 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 ? "Válaszd ki a beszerelni kívánt termékeket."
                 : "Select the products you want to install."}
             </p>
+            <p className="text-xs text-muted-foreground italic">
+              {language === "hu" 
+                ? "Az árak a beszerelés díját is tartalmazzák."
+                : "Prices include installation."}
+            </p>
             
             {(() => {
               const { vehicleId } = parseVehicleSelection(selectedVehicle);
