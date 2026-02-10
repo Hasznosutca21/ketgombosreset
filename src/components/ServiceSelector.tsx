@@ -32,6 +32,7 @@ import s3xyDashImage from "@/assets/products/s3xy-dash.webp";
 import s3xyDashCommanderImage from "@/assets/products/s3xy-dash-commander.webp";
 import s3xyKnobImage from "@/assets/products/s3xy-knob.webp";
 import s3xyKnobCommanderImage from "@/assets/products/s3xy-knob-commander.webp";
+import s3xyStripImage from "@/assets/products/s3xy-strip.webp";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -909,6 +910,13 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
+            <div className="rounded-lg overflow-hidden bg-muted/30">
+              <img 
+                src={s3xyStripImage} 
+                alt="S3XY Strip" 
+                className="w-full h-auto object-cover max-h-40"
+              />
+            </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
               {language === "hu" 
                 ? "S3XY Smart RGB Lightstrip – több mint hangulatfény. Valós idejű fényjelzések holttérfigyeléshez, sebességhatárokhoz és Sentry Mode-hoz."
