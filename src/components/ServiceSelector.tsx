@@ -1009,6 +1009,11 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             )}
             <p className="text-xs text-muted-foreground leading-relaxed">
               {language === "hu" 
+                ? "Fontos: az S3XY Stalk kizárólag a Tesla Model 3 Highland verziókhoz érhető el, amelyek nem rendelkeznek hagyományos indexkarral."
+                : "Important: the S3XY Stalk is only available for Tesla Model 3 Highland versions that do not have a traditional turn signal stalk."}
+            </p>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {language === "hu" 
                 ? "S3XY Stalks – a vezérlés visszakerül a kezedbe. Irányítsd az irányjelzőket, menetállapotokat és válassz több mint 200 funkció közül – ablaktörlők, távolsági fényszóró, akkumulátor-előmelegítés, ülésmozgatás, regeneráció állítása és még sok más."
                 : "S3XY Stalks – control returns to your hands. Manage turn signals, drive states and choose from 200+ functions – wipers, high beams, battery preheat, seat adjustment, regen settings and much more."}
             </p>
