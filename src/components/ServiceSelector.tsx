@@ -529,13 +529,13 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                   )}
                   <div className="space-y-2">
                     {[
-                      { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true, hasInfo: true, infoTarget: "commander" },
-                      { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: "89 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob" },
-                      { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob_commander" },
-                      { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "strip" },
-                      { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: "79 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "stalk" },
-                      { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: "169 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash" },
-                      { id: "dash_commander", hu: "S3XY Dash + Commander", en: "S3XY Dash + Commander", icon: Package, price: "204 990 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash_commander" },
+                      { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "bruttó 89 900 Ft", availableForSX: true, hasInfo: true, infoTarget: "commander" },
+                      { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: "bruttó 89 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob" },
+                      { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "bruttó 145 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob_commander" },
+                      { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "bruttó 59 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "strip" },
+                      { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: "bruttó 79 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "stalk" },
+                      { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: "bruttó 169 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash" },
+                      { id: "dash_commander", hu: "S3XY Dash + Commander", en: "S3XY Dash + Commander", icon: Package, price: "bruttó 204 990 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash_commander" },
                     ].filter(product => {
                       // For Model S/X: only Commander is available
                       if (isModelSX) {
@@ -1043,9 +1043,9 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               </p>
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { id: "left", label: language === "hu" ? "Bal oldal" : "Left side", price: "79 900 Ft" },
-                  { id: "right", label: language === "hu" ? "Jobb oldal" : "Right side", price: "79 900 Ft" },
-                  { id: "both", label: language === "hu" ? "Mindkettő" : "Both sides", price: "159 800 Ft" },
+                  { id: "left", label: language === "hu" ? "Bal oldal" : "Left side", price: "bruttó 79 900 Ft" },
+                  { id: "right", label: language === "hu" ? "Jobb oldal" : "Right side", price: "bruttó 79 900 Ft" },
+                  { id: "both", label: language === "hu" ? "Mindkettő" : "Both sides", price: "bruttó 159 800 Ft" },
                 ].map((side) => (
                   <button
                     key={side.id}
