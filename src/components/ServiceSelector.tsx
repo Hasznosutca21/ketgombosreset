@@ -34,6 +34,7 @@ import s3xyKnobImage from "@/assets/products/s3xy-knob.webp";
 import s3xyKnobCommanderImage from "@/assets/products/s3xy-knob-commander.webp";
 import s3xyStripImage from "@/assets/products/s3xy-strip.webp";
 import s3xyStalkLeftImage from "@/assets/products/s3xy-stalk-left.webp";
+import s3xyStalkRightImage from "@/assets/products/s3xy-stalk-right.webp";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -975,6 +976,15 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 <img 
                   src={s3xyStalkLeftImage} 
                   alt="S3XY Stalk - Bal oldal" 
+                  className="w-full h-auto object-cover max-h-40"
+                />
+              </div>
+            )}
+            {selectedStalkSide === "right" && (
+              <div className="rounded-lg overflow-hidden bg-muted/30">
+                <img 
+                  src={s3xyStalkRightImage} 
+                  alt="S3XY Stalk - Jobb oldal" 
                   className="w-full h-auto object-cover max-h-40"
                 />
               </div>
