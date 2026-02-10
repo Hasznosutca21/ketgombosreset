@@ -64,6 +64,14 @@ export const hu = {
       description: "12V akkumulátor diagnosztika és csere",
       price: "bruttó 89 900 Ft",
       duration: "10 perc",
+      details: `A Tesla Model 3 és Model Y járművekben található 12V-os alacsony feszültségű akkumulátor kulcsfontosságú a jármű elektronikai rendszereinek működéséhez.
+
+Az akkumulátor élettartama jellemzően 3-5 év, ezt követően csere szükséges a megbízható működés érdekében.
+
+• Gyári minőségű 12V akkumulátor
+• Professzionális diagnosztika és csere
+• Akkumulátor állapotfelmérés (SoH)
+• Az ár tartalmazza a beszerelés díját`,
     },
     // Karbantartás
     maintenance: {
@@ -540,6 +548,14 @@ export const en = {
       description: "12V battery diagnostics and replacement",
       price: "bruttó 89 900 Ft",
       duration: "10 min",
+      details: `The 12V low voltage battery in Tesla Model 3 and Model Y vehicles is essential for the operation of the vehicle's electronic systems.
+
+The battery lifespan is typically 3-5 years, after which replacement is needed for reliable operation.
+
+• Factory-quality 12V battery
+• Professional diagnostics and replacement
+• Battery State of Health (SoH) assessment
+• Price includes installation`,
     },
     // Maintenance
     maintenance: {

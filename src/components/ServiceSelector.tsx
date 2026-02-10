@@ -35,6 +35,7 @@ import s3xyKnobCommanderImage from "@/assets/products/s3xy-knob-commander.webp";
 import s3xyStripImage from "@/assets/products/s3xy-strip.webp";
 import s3xyStalkLeftImage from "@/assets/products/s3xy-stalk-left.webp";
 import s3xyStalkRightImage from "@/assets/products/s3xy-stalk-right.webp";
+import lowVoltageBatteryImage from "@/assets/products/low-voltage-battery.jpg";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -155,6 +156,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
     title: string;
     details: string;
     duration: string;
+    serviceId?: string;
   } | null>(null);
 
   // Find which category contains the selected service
@@ -181,6 +183,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
         title: serviceData.title,
         details: serviceData.details,
         duration: serviceData.duration,
+        serviceId,
       });
       setDetailsOpen(true);
     }
@@ -383,6 +386,11 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             <DialogTitle className="text-xl font-medium">{selectedDetails?.title}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
+            {selectedDetails?.serviceId === 'lowvoltagebattery' && (
+              <div className="rounded-lg overflow-hidden">
+                <img src={lowVoltageBatteryImage} alt="12V akkumulátor" className="w-full h-48 object-contain bg-muted/30" />
+              </div>
+            )}
             <div className="text-sm text-muted-foreground">
               {t.estTime}: {selectedDetails?.duration}
             </div>
