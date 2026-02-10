@@ -144,6 +144,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [dashInfoOpen, setDashInfoOpen] = useState(false);
   const [knobInfoOpen, setKnobInfoOpen] = useState(false);
   const [knobCommanderInfoOpen, setKnobCommanderInfoOpen] = useState(false);
+  const [stripInfoOpen, setStripInfoOpen] = useState(false);
   const [dashCommanderInfoOpen, setDashCommanderInfoOpen] = useState(false);
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
@@ -521,7 +522,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                       { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true, hasInfo: true, infoTarget: "commander" },
                       { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: "89 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob" },
                       { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob_commander" },
-                      { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: false, infoTarget: "" },
+                      { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "strip" },
                       { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, hasInfo: false, infoTarget: "" },
                       { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: "169 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash" },
                       { id: "dash_commander", hu: "S3XY Dash + Commander", en: "S3XY Dash + Commander", icon: Package, price: "204 990 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash_commander" },
@@ -576,6 +577,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                                     setKnobInfoOpen(true);
                                   } else if (product.infoTarget === "knob_commander") {
                                     setKnobCommanderInfoOpen(true);
+                                  } else if (product.infoTarget === "strip") {
+                                    setStripInfoOpen(true);
                                   } else {
                                     setCommanderInfoOpen(true);
                                   }
@@ -888,6 +891,51 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 variant="outline" 
                 size="sm" 
                 onClick={() => setKnobCommanderInfoOpen(false)}
+              >
+                {language === "hu" ? "Bezárás" : "Close"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* S3XY Strip Info Dialog */}
+      <Dialog open={stripInfoOpen} onOpenChange={setStripInfoOpen}>
+        <DialogContent className="max-w-sm mx-4">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-medium flex items-center gap-2">
+              <Minus className="w-4 h-4" />
+              S3XY Strip
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {language === "hu" 
+                ? "S3XY Smart RGB Lightstrip – több mint hangulatfény. Valós idejű fényjelzések holttérfigyeléshez, sebességhatárokhoz és Sentry Mode-hoz."
+                : "S3XY Smart RGB Lightstrip – more than ambient lighting. Real-time light signals for blind spot monitoring, speed limits, and Sentry Mode."}
+            </p>
+            <ul className="text-xs text-muted-foreground space-y-1.5 list-none">
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "Testreszabható az S3XY Appban" : "Customizable in the S3XY App"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "Egyszerű telepítés, Commander nélkül" : "Easy installation, no Commander needed"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "Tesla Model 3 és Model Y (2021+)" : "Tesla Model 3 and Model Y (2021+)"}
+              </li>
+            </ul>
+            <div className="pt-2 border-t border-border flex items-center justify-between">
+              <p className="text-xs font-medium">
+                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} 59 900 Ft
+              </p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setStripInfoOpen(false)}
               >
                 {language === "hu" ? "Bezárás" : "Close"}
               </Button>
