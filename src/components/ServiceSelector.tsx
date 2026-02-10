@@ -30,6 +30,7 @@ import s3xyIcon from "@/assets/s3xy-icon.png";
 import s3xyCommanderImage from "@/assets/products/s3xy-commander.jpg";
 import s3xyDashImage from "@/assets/products/s3xy-dash.webp";
 import s3xyDashCommanderImage from "@/assets/products/s3xy-dash-commander.webp";
+import s3xyKnobImage from "@/assets/products/s3xy-knob.webp";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -789,6 +790,13 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
+            <div className="rounded-lg overflow-hidden bg-muted/30">
+              <img 
+                src={s3xyKnobImage} 
+                alt="S3XY Knob" 
+                className="w-full h-auto object-cover max-h-40"
+              />
+            </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
               {language === "hu" 
                 ? "Az S3XY Knob egy elegáns, többfunkciós vezérlő, amely zökkenőmentesen integrálható a Tesla Model 3 és Model Y járművekbe."
