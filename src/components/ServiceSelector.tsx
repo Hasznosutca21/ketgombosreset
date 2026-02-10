@@ -142,6 +142,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [commanderInfoOpen, setCommanderInfoOpen] = useState(false);
   const [dashInfoOpen, setDashInfoOpen] = useState(false);
   const [knobInfoOpen, setKnobInfoOpen] = useState(false);
+  const [knobCommanderInfoOpen, setKnobCommanderInfoOpen] = useState(false);
   const [dashCommanderInfoOpen, setDashCommanderInfoOpen] = useState(false);
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
@@ -518,7 +519,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                     {[
                       { id: "commander", hu: "S3XY Commander", en: "S3XY Commander", icon: Gamepad2, price: "89 900 Ft", availableForSX: true, hasInfo: true, infoTarget: "commander" },
                       { id: "knob", hu: "S3XY Knob", en: "S3XY Knob", icon: Circle, price: "89 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob" },
-                      { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false, hasInfo: false, infoTarget: "" },
+                      { id: "knob_commander", hu: "S3XY Knob + Commander", en: "S3XY Knob + Commander", icon: Package, price: "145 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "knob_commander" },
                       { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: false, infoTarget: "" },
                       { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, hasInfo: false, infoTarget: "" },
                       { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: "169 900 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash" },
@@ -572,6 +573,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                                     setDashCommanderInfoOpen(true);
                                   } else if (product.infoTarget === "knob") {
                                     setKnobInfoOpen(true);
+                                  } else if (product.infoTarget === "knob_commander") {
+                                    setKnobCommanderInfoOpen(true);
                                   } else {
                                     setCommanderInfoOpen(true);
                                   }
@@ -828,6 +831,55 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 variant="outline" 
                 size="sm" 
                 onClick={() => setKnobInfoOpen(false)}
+              >
+                {language === "hu" ? "Bezárás" : "Close"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* S3XY Knob + Commander Info Dialog */}
+      <Dialog open={knobCommanderInfoOpen} onOpenChange={setKnobCommanderInfoOpen}>
+        <DialogContent className="max-w-sm mx-4">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-medium flex items-center gap-2">
+              <Package className="w-4 h-4" />
+              S3XY Knob + Commander
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {language === "hu" 
+                ? "A Commander és az S3XY Knob együtt alkotják a teljes S3XY vezérlőrendszert. A Commander a rendszer agya, míg az S3XY Knob az intuitív, fizikai kezelőfelület."
+                : "The Commander and S3XY Knob together form the complete S3XY control system. The Commander is the brain, while the S3XY Knob is the intuitive physical interface."}
+            </p>
+            <ul className="text-xs text-muted-foreground space-y-1.5 list-none">
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "80+ vezérelhető funkció" : "80+ controllable functions"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "5 testreszabható vezérlőoldal" : "5 customizable control pages"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "Egyérintéses vezérlés" : "One-touch control"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "Minimális figyelemelvonás vezetés közben" : "Minimal distraction while driving"}
+              </li>
+            </ul>
+            <div className="pt-2 border-t border-border flex items-center justify-between">
+              <p className="text-xs font-medium">
+                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} 145 900 Ft
+              </p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setKnobCommanderInfoOpen(false)}
               >
                 {language === "hu" ? "Bezárás" : "Close"}
               </Button>
