@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import s3xyIcon from "@/assets/s3xy-icon.png";
 import s3xyCommanderImage from "@/assets/products/s3xy-commander.jpg";
+import s3xyDashCommanderImage from "@/assets/products/s3xy-dash-commander.webp";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -138,6 +139,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [selectedSoftcloseOption, setSelectedSoftcloseOption] = useState<string>("");
   const [commanderInfoOpen, setCommanderInfoOpen] = useState(false);
   const [dashInfoOpen, setDashInfoOpen] = useState(false);
+  const [dashCommanderInfoOpen, setDashCommanderInfoOpen] = useState(false);
   const [selectedDetails, setSelectedDetails] = useState<{
     title: string;
     details: string;
@@ -517,7 +519,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                       { id: "strip", hu: "S3XY Strip", en: "S3XY Strip", icon: Minus, price: "59 900 Ft", availableForSX: false, hasInfo: false, infoTarget: "" },
                       { id: "stalk", hu: "S3XY Stalk", en: "S3XY Stalk", icon: Navigation, price: null, availableForSX: false, hasInfo: false, infoTarget: "" },
                       { id: "dash", hu: "S3XY Dash", en: "S3XY Dash", icon: LayoutDashboard, price: null, availableForSX: false, hasInfo: true, infoTarget: "dash" },
-                      { id: "dash_commander", hu: "S3XY Dash + Commander", en: "S3XY Dash + Commander", icon: Package, price: "204 990 Ft", availableForSX: false, hasInfo: false },
+                      { id: "dash_commander", hu: "S3XY Dash + Commander", en: "S3XY Dash + Commander", icon: Package, price: "204 990 Ft", availableForSX: false, hasInfo: true, infoTarget: "dash_commander" },
                     ].filter(product => {
                       // For Model S/X: only Commander is available
                       if (isModelSX) {
@@ -563,6 +565,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                                   e.stopPropagation();
                                   if (product.infoTarget === "dash") {
                                     setDashInfoOpen(true);
+                                  } else if (product.infoTarget === "dash_commander") {
+                                    setDashCommanderInfoOpen(true);
                                   } else {
                                     setCommanderInfoOpen(true);
                                   }
@@ -813,6 +817,66 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 variant="outline" 
                 size="sm" 
                 onClick={() => setDashInfoOpen(false)}
+              >
+                {language === "hu" ? "Bezárás" : "Close"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* S3XY Dash + Commander Info Dialog */}
+      <Dialog open={dashCommanderInfoOpen} onOpenChange={setDashCommanderInfoOpen}>
+        <DialogContent className="max-w-sm mx-4">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-medium flex items-center gap-2">
+              <Package className="w-4 h-4" />
+              S3XY Dash + Commander
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="rounded-lg overflow-hidden bg-muted/30">
+              <img 
+                src={s3xyDashCommanderImage} 
+                alt="S3XY Dash + Commander" 
+                className="w-full h-auto object-cover max-h-40"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {language === "hu" 
+                ? "Az S3XY Dash egy intelligens, teljes mértékben testreszabható kiegészítő műszerfal, amely támogatja az Apple CarPlay és az Android Auto rendszereket. Tökéletesen illeszkedik minden Tesla Model 3 és Model Y járműhöz, beleértve a Highland és Juniper verziókat is."
+                : "The S3XY Dash is an intelligent, fully customizable auxiliary dashboard supporting Apple CarPlay and Android Auto. Fits every Tesla Model 3 and Model Y, including Highland and Juniper versions."}
+            </p>
+            <ul className="text-xs text-muted-foreground space-y-1.5 list-none">
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "Apple CarPlay és Android Auto" : "Apple CarPlay and Android Auto"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "50+ járműfunkció vezérlése" : "Control 50+ vehicle functions"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "Valós idejű menetadatok" : "Real-time driving data"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "Testreszabható felület és sebességmérő" : "Customizable interface and speedometer"}
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5">•</span>
+                {language === "hu" ? "OTA frissítések" : "OTA updates"}
+              </li>
+            </ul>
+            <div className="pt-2 border-t border-border flex items-center justify-between">
+              <p className="text-xs font-medium">
+                {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} 204 990 Ft
+              </p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setDashCommanderInfoOpen(false)}
               >
                 {language === "hu" ? "Bezárás" : "Close"}
               </Button>
