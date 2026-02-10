@@ -100,6 +100,34 @@ const AdminWorkSheets = ({ language, prefillAppointment }: AdminWorkSheetsProps)
     notes: "",
   });
 
+  // Auto-fill from customers table based on email
+  useEffect(() => {
+    if (selectedAppointment !== "manual") return; // skip if prefilled from appointment
+    const email = form.customer_email.trim();
+    if (!email || !email.includes("@")) return;
+
+    const timeout = setTimeout(async () => {
+      try {
+        const { data } = await supabase
+          .from("customers")
+          .select("first_name, last_name, phone, address")
+          .eq("email", email)
+          .maybeSingle();
+        if (data) {
+          setForm((prev) => ({
+            ...prev,
+            customer_name: prev.customer_name || `${data.last_name} ${data.first_name}`.trim(),
+            customer_phone: prev.customer_phone || data.phone || "",
+          }));
+        }
+      } catch (e) {
+        console.error("Customer lookup error:", e);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [form.customer_email, selectedAppointment]);
+
   const dateLocale = language === "hu" ? hu : enUS;
   const t = {
     workSheets: language === "hu" ? "Munkalapok" : "Work Sheets",
