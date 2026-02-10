@@ -1122,6 +1122,13 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 {language === "hu" ? "OTA frissítések" : "OTA updates"}
               </li>
             </ul>
+            <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
+              <p className="text-xs font-medium text-amber-600 dark:text-amber-400">
+                ⚠️ {language === "hu" 
+                  ? "Figyelem: a termék csak előrendelésre érhető el. Beérkezés után installáljuk." 
+                  : "Note: this product is available for pre-order only. Installation after arrival."}
+              </p>
+            </div>
             <div className="pt-2 border-t border-border flex items-center justify-between">
               <p className="text-xs font-medium">
                 {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} bruttó 169 900 Ft
@@ -1182,6 +1189,13 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 {language === "hu" ? "OTA frissítések" : "OTA updates"}
               </li>
             </ul>
+            <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
+              <p className="text-xs font-medium text-amber-600 dark:text-amber-400">
+                ⚠️ {language === "hu" 
+                  ? "Figyelem: a termék csak előrendelésre érhető el. Beérkezés után installáljuk." 
+                  : "Note: this product is available for pre-order only. Installation after arrival."}
+              </p>
+            </div>
             <div className="pt-2 border-t border-border flex items-center justify-between">
               <p className="text-xs font-medium">
                 {language === "hu" ? "Termék ára beszereléssel:" : "Price with installation:"} bruttó 204 990 Ft
