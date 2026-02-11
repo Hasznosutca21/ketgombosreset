@@ -38,13 +38,14 @@
     --radius: 1rem;
 
     /* Liquid Glass tokens */
-    --glass-bg: rgba(255, 255, 255, 0.55);
-    --glass-bg-heavy: rgba(255, 255, 255, 0.72);
-    --glass-border: rgba(255, 255, 255, 0.45);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-    --glass-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
-    --glass-blur: 24px;
-    --glass-blur-heavy: 40px;
+    --glass-bg: rgba(255, 255, 255, 0.42);
+    --glass-bg-heavy: rgba(255, 255, 255, 0.58);
+    --glass-border: rgba(255, 255, 255, 0.55);
+    --glass-border-inner: rgba(255, 255, 255, 0.85);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255,255,255,0.7);
+    --glass-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.10), 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255,255,255,0.8);
+    --glass-blur: 32px;
+    --glass-blur-heavy: 56px;
 
     /* Tesla brand colors */
     --tesla-red: 0 0% 8%;
@@ -107,8 +108,8 @@
   /* Liquid Glass card */
   .liquid-glass {
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur)) saturate(1.8);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.8);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -116,13 +117,14 @@
 
   .liquid-glass:hover {
     box-shadow: var(--glass-shadow-lg);
-    border-color: rgba(255, 255, 255, 0.6);
+    border-color: var(--glass-border-inner);
+    background: rgba(255, 255, 255, 0.52);
   }
 
   .liquid-glass-heavy {
     background: var(--glass-bg-heavy);
-    backdrop-filter: blur(var(--glass-blur-heavy));
-    -webkit-backdrop-filter: blur(var(--glass-blur-heavy));
+    backdrop-filter: blur(var(--glass-blur-heavy)) saturate(2);
+    -webkit-backdrop-filter: blur(var(--glass-blur-heavy)) saturate(2);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -142,8 +144,8 @@
   .tesla-card {
     @apply bg-card rounded-2xl;
     background: var(--glass-bg-heavy);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur)) saturate(1.8);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.8);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -152,6 +154,7 @@
   .tesla-card:hover {
     box-shadow: var(--glass-shadow-lg);
     transform: translateY(-2px);
+    border-color: var(--glass-border-inner);
   }
 
   /* Glass card for dark sections */
