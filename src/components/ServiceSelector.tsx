@@ -137,7 +137,8 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
     services: [
       { id: "s3xy_products", icon: Package, vehicleRestriction: [] },
       { id: "softclose", icon: DoorClosed, vehicleRestriction: ["model-3", "model-y"] },
-      { id: "seat_ventilation", icon: Fan, vehicleRestriction: [] },
+      { id: "seat_ventilation", icon: Fan, vehicleRestriction: ["model-3", "model-y"], yearRestriction: { from: 2017, to: 2023 } },
+      { id: "performance_seat_upgrade", icon: Fan, vehicleRestriction: ["model-3", "model-y"], yearRestriction: { from: 2024, to: 2026 } },
     ],
   },
 ];
@@ -217,7 +218,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
 
   // Filter categories to only show services available for the selected vehicle
   const filteredCategories = useMemo(() => {
-    const { vehicleId } = parseVehicleSelection(selectedVehicle);
+    const { vehicleId, year } = parseVehicleSelection(selectedVehicle);
     
     return categories.map(category => {
       // Check category-level vehicle restriction
@@ -233,6 +234,13 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
           // Check vehicle restriction
           if (service.vehicleRestriction.length > 0) {
             if (!vehicleId || !service.vehicleRestriction.includes(vehicleId)) {
+              return false;
+            }
+          }
+          
+          // Check year restriction
+          if (service.yearRestriction && year) {
+            if (year < service.yearRestriction.from || year > service.yearRestriction.to) {
               return false;
             }
           }
@@ -810,9 +818,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             <div className="space-y-2">
               {[
                 { id: "model_3", label: "Model 3" },
-                { id: "model_3_highland", label: "Model 3 Highland" },
                 { id: "model_y", label: "Model Y" },
-                { id: "model_y_juniper", label: "Model Y Juniper" },
               ].map((option) => (
                 <button
                   key={option.id}

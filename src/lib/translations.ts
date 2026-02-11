@@ -267,6 +267,11 @@ Komfortközpontú kialakítás
 
 A megerősített oldaltámasz stabil tartást biztosít dinamikus vezetésnél, miközben az ülés hangolása maximális kényelmet nyújt a mindennapi használat és a hosszú utak során.`,
     },
+    performance_seat_upgrade: {
+      title: "Performance ülés upgrade",
+      description: "Sportülés fejlesztés Highland / Juniper modellekhez",
+      duration: "4 óra",
+    },
   },
 
   // Vehicle Selector
@@ -783,6 +788,11 @@ The number one choice for Model 3 and Model Y owners – a perfect balance betwe
 Comfort-Focused Design
 
 The reinforced side bolsters provide stable support during dynamic driving, while the seat tuning ensures maximum comfort for daily use and long journeys.`,
+    },
+    performance_seat_upgrade: {
+      title: "Performance Seat Upgrade",
+      description: "Sport seat upgrade for Highland / Juniper models",
+      duration: "4 hours",
     },
   },
 
