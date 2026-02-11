@@ -36,6 +36,7 @@ import s3xyStripImage from "@/assets/products/s3xy-strip.webp";
 import s3xyStalkLeftImage from "@/assets/products/s3xy-stalk-left.webp";
 import s3xyStalkRightImage from "@/assets/products/s3xy-stalk-right.webp";
 import lowVoltageBatteryImage from "@/assets/products/low-voltage-battery.jpg";
+import seatVentWhiteImage from "@/assets/products/seat-ventilation-white.jpg";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -826,22 +827,29 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               </p>
               <div className="flex gap-3">
                 {[
-                  { id: "white", label: language === "hu" ? "Fehér" : "White", colorClass: "bg-white border-2" },
-                  { id: "black", label: language === "hu" ? "Fekete" : "Black", colorClass: "bg-[#1C1C1C]" },
+                  { id: "white", label: language === "hu" ? "Fehér" : "White", colorClass: "bg-white border-2", image: seatVentWhiteImage },
+                  { id: "black", label: language === "hu" ? "Fekete" : "Black", colorClass: "bg-[#1C1C1C]", image: null },
                 ].map((color) => (
                   <button
                     key={color.id}
                     type="button"
                     onClick={() => setSelectedSeatVentColor(color.id)}
                     className={cn(
-                      "flex-1 p-3 text-sm rounded-lg border transition-colors flex items-center gap-3",
+                      "flex-1 text-sm rounded-lg border transition-colors overflow-hidden",
                       selectedSeatVentColor === color.id
                         ? "border-foreground ring-2 ring-foreground/20"
                         : "border-border hover:border-foreground/50"
                     )}
                   >
-                    <div className={cn("w-5 h-5 rounded-full border border-border", color.colorClass)} />
-                    <span>{color.label}</span>
+                    {color.image ? (
+                      <img src={color.image} alt={color.label} className="w-full h-20 object-cover" />
+                    ) : (
+                      <div className={cn("w-full h-20", color.colorClass)} />
+                    )}
+                    <div className="p-2 flex items-center justify-center gap-2">
+                      <div className={cn("w-4 h-4 rounded-full border border-border shrink-0", color.colorClass)} />
+                      <span>{color.label}</span>
+                    </div>
                   </button>
                 ))}
               </div>
