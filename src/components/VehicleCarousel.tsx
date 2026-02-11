@@ -10,7 +10,6 @@ import modelSImage from "@/assets/vehicles/model-s.png";
 import model3Image from "@/assets/vehicles/model-3.png";
 import modelXImage from "@/assets/vehicles/model-x.png";
 import modelYImage from "@/assets/vehicles/model-y.png";
-import optimusFigures from "@/assets/optimus-figures.png";
 
 interface VehicleCarouselProps {
   onSelect: (vehicle: string) => void;
@@ -39,9 +38,6 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
 
   return (
     <div className="animate-fade-in">
-      <div className="flex justify-center mb-4">
-        <img src={optimusFigures} alt="Tesla Optimus" className="h-24 md:h-32 w-auto object-contain opacity-90" />
-      </div>
       <h2 className="text-2xl md:text-4xl font-extralight tracking-tight mb-2 text-center">{t.selectVehicle}</h2>
       <p className="text-muted-foreground font-light mb-10 text-center">{t.chooseVehicleModel}</p>
 
