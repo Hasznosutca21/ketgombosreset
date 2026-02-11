@@ -144,6 +144,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [selectedStripVariant, setSelectedStripVariant] = useState<string>("");
   const [softcloseDialogOpen, setSoftcloseDialogOpen] = useState(false);
   const [selectedSoftcloseOption, setSelectedSoftcloseOption] = useState<string>("");
+  const [seatVentDialogOpen, setSeatVentDialogOpen] = useState(false);
+  const [selectedSeatVentVariant, setSelectedSeatVentVariant] = useState<string>("");
   const [commanderInfoOpen, setCommanderInfoOpen] = useState(false);
   const [dashInfoOpen, setDashInfoOpen] = useState(false);
   const [knobInfoOpen, setKnobInfoOpen] = useState(false);
@@ -306,6 +308,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                             setS3xyDialogOpen(true);
                           } else if (service.id === 'softclose') {
                             setSoftcloseDialogOpen(true);
+                          } else if (service.id === 'seat_ventilation') {
+                            setSeatVentDialogOpen(true);
                           } else {
                             onSelect(service.id);
                           }
@@ -761,6 +765,66 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               onClick={() => {
                 onSelect('softclose', { s3xyProducts: [`softclose_${selectedSoftcloseOption}`] });
                 setSoftcloseDialogOpen(false);
+              }}
+            >
+              {language === "hu" ? "Tovább a foglaláshoz" : "Continue to booking"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Seat Ventilation Dialog */}
+      <Dialog open={seatVentDialogOpen} onOpenChange={(open) => {
+        setSeatVentDialogOpen(open);
+        if (!open) {
+          setSelectedSeatVentVariant("");
+        }
+      }}>
+        <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-medium flex items-center gap-2">
+              <Fan className="w-5 h-5" />
+              {language === "hu" ? "Ülés szellőztetés" : "Seat Ventilation"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              {language === "hu" 
+                ? "Válaszd ki a jármű típusát a megfelelő szellőztetés csomaghoz."
+                : "Select your vehicle type for the appropriate ventilation package."}
+            </p>
+            
+            <div className="space-y-2">
+              {[
+                { id: "model_3", label: "Model 3" },
+                { id: "model_3_highland", label: "Model 3 Highland" },
+                { id: "model_y", label: "Model Y" },
+                { id: "model_y_juniper", label: "Model Y Juniper" },
+              ].map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => setSelectedSeatVentVariant(option.id)}
+                  className={cn(
+                    "w-full p-4 text-sm rounded-lg border transition-colors flex items-center gap-3",
+                    selectedSeatVentVariant === option.id
+                      ? "bg-foreground text-background border-foreground"
+                      : "bg-muted/30 border-border hover:border-foreground/50"
+                  )}
+                >
+                  <Fan className="w-4 h-4" />
+                  <span>{option.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <Button 
+              variant="tesla" 
+              className="w-full" 
+              disabled={!selectedSeatVentVariant}
+              onClick={() => {
+                onSelect('seat_ventilation', { s3xyProducts: [`seat_vent_${selectedSeatVentVariant}`] });
+                setSeatVentDialogOpen(false);
               }}
             >
               {language === "hu" ? "Tovább a foglaláshoz" : "Continue to booking"}
