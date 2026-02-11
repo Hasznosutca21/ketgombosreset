@@ -18,7 +18,7 @@ interface VehicleCarouselProps {
 
 const vehicleData = [
   { id: "model-s", name: "Model S", image: modelSImage, description: "Prémium szedán" },
-  { id: "model-3", name: "Model 3", image: model3Image, description: "A legnépszerűbb, főleg fehérben" },
+  { id: "model-3", name: "Model 3", image: model3Image, description: "A legnépszerűbb" },
   { id: "model-x", name: "Model X", image: modelXImage, description: "SUV" },
   { id: "model-y", name: "Model Y", image: modelYImage, description: "Kompakt SUV" },
 ];

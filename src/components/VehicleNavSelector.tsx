@@ -40,7 +40,7 @@ const vehicles = [
     id: "model-3", 
     name: "Model 3",
     image: model3Image,
-    description: "A legnépszerűbb, főleg fehérben",
+    description: "A legnépszerűbb",
     info: "Standard, LR, Performance",
   },
   { 
