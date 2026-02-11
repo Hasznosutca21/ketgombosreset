@@ -158,7 +158,7 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
     heating: {
       title: "Pollen szűrő csere",
       description: "Utastér szűrő csere a tiszta levegőért",
-      duration: "30 perc",
+      duration: "20 perc",
       price: "bruttó 19 900 Ft",
     },
     hepa: {
@@ -680,7 +680,7 @@ The price includes a personal consultation where we discuss the results and answ
     heating: {
       title: "Pollen Filter Replacement",
       description: "Cabin air filter replacement for clean air",
-      duration: "30 min",
+      duration: "20 min",
       price: "bruttó 19 900 Ft",
     },
     hepa: {
