@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { 
+import {
   Wrench, 
   Zap, 
   Settings, 
@@ -24,6 +24,7 @@ import {
   Minus,
   Navigation,
   LayoutDashboard,
+  Plug,
   LucideIcon
 } from "lucide-react";
 import s3xyIcon from "@/assets/s3xy-icon.png";
@@ -119,6 +120,15 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
       { id: "canbus", icon: Settings, vehicleRestriction: ["model-y"] },
       { id: "warranty", icon: Shield, vehicleRestriction: ["model-3"] },
       { id: "tires", icon: CircleDot, vehicleRestriction: [] },
+    ],
+  },
+  {
+    id: "charging",
+    icon: Plug,
+    services: [
+      { id: "chargeport_repair", icon: Plug, vehicleRestriction: [] },
+      { id: "home_charger_install", icon: Zap, vehicleRestriction: [] },
+      { id: "charging_diagnostics", icon: Settings, vehicleRestriction: [] },
     ],
   },
   {
