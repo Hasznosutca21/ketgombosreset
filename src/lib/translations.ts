@@ -232,7 +232,7 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
     seat_ventilation: {
       title: "Ülés szellőztetés",
       description: "Ülés szellőztetés beszerelése",
-      duration: "Egyedi",
+      duration: "4 óra",
       details: `Essential Pack – A legnépszerűbb konfiguráció
 
 Emeld új szintre a vezetési élményt a legkeresettebb összeállításunkkal.
@@ -729,7 +729,7 @@ Select which handle needs replacement on the interactive diagram!`,
     seat_ventilation: {
       title: "Seat Ventilation",
       description: "Seat ventilation installation",
-      duration: "Custom",
+      duration: "4 hours",
       details: `Essential Pack – The Most Popular Configuration
 
 Take your driving experience to the next level with our best-selling setup.
