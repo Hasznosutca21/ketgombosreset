@@ -57,7 +57,7 @@ import {
 import DoorHandleSelector from "@/components/DoorHandleSelector";
 
 interface ServiceSelectorProps {
-  onSelect: (service: string, extras?: { doorHandles?: string[]; trunkLightNotWorking?: boolean; s3xyProducts?: string[] }) => void;
+  onSelect: (service: string, extras?: { doorHandles?: string[]; trunkLightNotWorking?: boolean; trunkNotOpening?: boolean; s3xyProducts?: string[] }) => void;
   selected: string | null;
   selectedVehicle?: string | null;
   onBack?: () => void;
@@ -150,6 +150,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [selectedDoorHandles, setSelectedDoorHandles] = useState<string[]>([]);
   const [trunkDialogOpen, setTrunkDialogOpen] = useState(false);
   const [trunkLightNotWorking, setTrunkLightNotWorking] = useState(false);
+  const [trunkNotOpening, setTrunkNotOpening] = useState(false);
   const [s3xyDialogOpen, setS3xyDialogOpen] = useState(false);
   const [selectedS3xyProducts, setSelectedS3xyProducts] = useState<string[]>([]);
   const [selectedS3xyVehicleVariant, setSelectedS3xyVehicleVariant] = useState<string>("");
@@ -471,7 +472,10 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
       {/* Trunk Lid Issue Dialog */}
       <Dialog open={trunkDialogOpen} onOpenChange={(open) => {
         setTrunkDialogOpen(open);
-        if (!open) setTrunkLightNotWorking(false);
+        if (!open) {
+          setTrunkLightNotWorking(false);
+          setTrunkNotOpening(false);
+        }
       }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -483,29 +487,45 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
           <div className="space-y-6">
             <p className="text-sm text-muted-foreground">
               {language === "hu" 
-                ? "A kábelköteg szakadása különböző tüneteket okozhat. Kérjük jelezze, ha a lámpa sem működik."
-                : "Cable harness breakage can cause various symptoms. Please indicate if the light is also not working."}
+                ? "A kábelköteg szakadása különböző tüneteket okozhat. Kérjük jelölje be a fennálló problémákat."
+                : "Cable harness breakage can cause various symptoms. Please select the issues you're experiencing."}
             </p>
             
-            <div className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border">
-              <Checkbox 
-                id="trunk-light" 
-                checked={trunkLightNotWorking}
-                onCheckedChange={(checked) => setTrunkLightNotWorking(checked === true)}
-              />
-              <label 
-                htmlFor="trunk-light" 
-                className="text-sm font-medium leading-none cursor-pointer select-none"
-              >
-                {language === "hu" ? "Nem világít a lámpa?" : "Light is not working?"}
-              </label>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border">
+                <Checkbox 
+                  id="trunk-light" 
+                  checked={trunkLightNotWorking}
+                  onCheckedChange={(checked) => setTrunkLightNotWorking(checked === true)}
+                />
+                <label 
+                  htmlFor="trunk-light" 
+                  className="text-sm font-medium leading-none cursor-pointer select-none"
+                >
+                  {language === "hu" ? "Nem világít a lámpa" : "Light is not working"}
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border">
+                <Checkbox 
+                  id="trunk-not-opening" 
+                  checked={trunkNotOpening}
+                  onCheckedChange={(checked) => setTrunkNotOpening(checked === true)}
+                />
+                <label 
+                  htmlFor="trunk-not-opening" 
+                  className="text-sm font-medium leading-none cursor-pointer select-none"
+                >
+                  {language === "hu" ? "Nem nyílik a csomagtérajtó" : "Trunk lid does not open"}
+                </label>
+              </div>
             </div>
 
             <Button 
               variant="tesla" 
               className="w-full" 
               onClick={() => {
-                onSelect('body', { trunkLightNotWorking });
+                onSelect('body', { trunkLightNotWorking, trunkNotOpening });
                 setTrunkDialogOpen(false);
               }}
             >
