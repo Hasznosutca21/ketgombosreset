@@ -134,7 +134,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 pointer-events-none" />
 
         <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 md:px-12 liquid-glass" style={{ background: 'rgba(0,0,0,0.35)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <button onClick={handleStartOver} className="flex flex-col items-start gap-0.5 cursor-pointer hover:opacity-80 transition-opacity">
+          <button onClick={handleStartOver} className="flex flex-col items-center gap-0.5 cursor-pointer hover:opacity-80 transition-opacity">
             <img src={teslandLogo} alt="TESLAND" className="h-10 md:h-12 w-auto brightness-0 invert" />
             <img src={teslaOwnersLogo} alt="Tesla Owners Hungary" className="h-5 md:h-6 w-auto opacity-60" />
           </button>
