@@ -45,7 +45,7 @@ const Admin = () => {
     <div className="min-h-screen bg-background">
       <header className="flex items-center justify-between px-6 py-4 md:px-12 border-b border-border">
         <div className="flex items-center gap-3">
-          <img src={teslandLogo} alt="TESLAND" className="h-8 w-auto mix-blend-multiply dark:mix-blend-screen" />
+          <img src={teslandLogo} alt="TESLAND" className="h-8 w-auto" />
           <span className="text-xl font-semibold tracking-tight">{t.teslaService}</span>
           <Badge variant="secondary" className="ml-2">
             <Shield className="h-3 w-3 mr-1" />

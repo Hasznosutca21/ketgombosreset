@@ -13,7 +13,7 @@ const Contact = () => {
       <header className="border-b border-border px-6 py-4 md:px-12">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src={teslandLogo} alt="TESLAND" className="h-6 md:h-8 w-auto mix-blend-multiply dark:mix-blend-screen" />
+            <img src={teslandLogo} alt="TESLAND" className="h-6 md:h-8 w-auto" />
           </Link>
           <Button variant="ghost" asChild>
             <Link to="/">

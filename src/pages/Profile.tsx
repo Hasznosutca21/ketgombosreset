@@ -50,7 +50,7 @@ const Profile = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <header className="flex items-center justify-between px-6 py-4 md:px-12 border-b border-border">
         <div className="flex items-center gap-2">
-          <img src={teslandLogo} alt="TESLAND" className="h-12 md:h-16 w-auto mix-blend-multiply dark:mix-blend-screen" />
+          <img src={teslandLogo} alt="TESLAND" className="h-12 md:h-16 w-auto" />
         </div>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
