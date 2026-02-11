@@ -6,76 +6,91 @@
 
 @layer base {
   :root {
-    /* Tesla-inspired minimal dark theme for hero/header */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 8%;
+    /* Apple Liquid Glass - Light */
+    --background: 220 20% 97%;
+    --foreground: 220 15% 10%;
 
-    --card: 0 0% 98%;
-    --card-foreground: 0 0% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
+    --popover-foreground: 220 15% 10%;
 
-    --primary: 0 0% 8%;
+    --primary: 220 15% 12%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 8%;
+    --secondary: 220 15% 95%;
+    --secondary-foreground: 220 15% 10%;
 
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 220 15% 93%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 8%;
+    --accent: 220 15% 95%;
+    --accent-foreground: 220 15% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 8%;
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 220 60% 55%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
+
+    /* Liquid Glass tokens */
+    --glass-bg: rgba(255, 255, 255, 0.55);
+    --glass-bg-heavy: rgba(255, 255, 255, 0.72);
+    --glass-border: rgba(255, 255, 255, 0.45);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    --glass-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+    --glass-blur: 24px;
+    --glass-blur-heavy: 40px;
 
     /* Tesla brand colors */
     --tesla-red: 0 0% 8%;
     --tesla-red-glow: 0 0% 20%;
     
     /* Dark section variables (for hero) */
-    --dark-bg: 0 0% 4%;
-    --dark-fg: 0 0% 98%;
-    --dark-muted: 0 0% 60%;
-    --dark-border: 0 0% 18%;
+    --dark-bg: 220 15% 4%;
+    --dark-fg: 220 15% 98%;
+    --dark-muted: 220 10% 60%;
+    --dark-border: 220 15% 18%;
   }
 
   .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
+    --background: 220 15% 5%;
+    --foreground: 220 15% 96%;
 
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 98%;
+    --card: 220 15% 8%;
+    --card-foreground: 220 15% 96%;
 
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 220 15% 8%;
+    --popover-foreground: 220 15% 96%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 8%;
+    --primary: 220 15% 96%;
+    --primary-foreground: 220 15% 8%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 220 15% 12%;
+    --secondary-foreground: 220 15% 96%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 220 15% 14%;
+    --muted-foreground: 220 10% 55%;
 
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 220 15% 14%;
+    --accent-foreground: 220 15% 96%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 220 15% 96%;
 
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 0 0% 98%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 220 60% 55%;
+
+    --glass-bg: rgba(30, 32, 40, 0.55);
+    --glass-bg-heavy: rgba(30, 32, 40, 0.72);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    --glass-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.35);
   }
 
   * {
@@ -89,6 +104,30 @@
 }
 
 @layer components {
+  /* Liquid Glass card */
+  .liquid-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .liquid-glass:hover {
+    box-shadow: var(--glass-shadow-lg);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .liquid-glass-heavy {
+    background: var(--glass-bg-heavy);
+    backdrop-filter: blur(var(--glass-blur-heavy));
+    -webkit-backdrop-filter: blur(var(--glass-blur-heavy));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
   /* Dark section styling for hero */
   .dark-section {
     background: hsl(var(--dark-bg));
@@ -101,23 +140,31 @@
 
   /* Tesla-style minimal card */
   .tesla-card {
-    @apply bg-card border border-border rounded-xl;
-    transition: all 0.3s ease;
+    @apply bg-card rounded-2xl;
+    background: var(--glass-bg-heavy);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .tesla-card:hover {
-    @apply border-foreground/20;
+    box-shadow: var(--glass-shadow-lg);
     transform: translateY(-2px);
   }
 
   /* Glass card for dark sections */
   .glass-card {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl;
-    transition: all 0.3s ease;
+    @apply backdrop-blur-xl rounded-2xl;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .glass-card:hover {
-    @apply border-white/20 bg-white/10;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.18);
   }
 
   /* Minimal progress indicator */

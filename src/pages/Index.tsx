@@ -165,17 +165,17 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section - Dark */}
+      {/* Hero Section - Liquid Glass */}
       <div className="relative h-[50vh] min-h-[400px] overflow-hidden bg-black">
         <img 
           src={heroImage} 
           alt="Tesla Service Center" 
-          className="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none" 
+          className="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none scale-105" 
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 pointer-events-none" />
 
         {/* Header */}
-        <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 bg-black/60 backdrop-blur-md">
+        <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 md:px-12 liquid-glass" style={{ background: 'rgba(0,0,0,0.35)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <button 
             onClick={handleStartOver}
             className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
@@ -334,9 +334,9 @@ const Index = () => {
       </div>
 
       {/* Progress Steps - Transition area */}
-      <div className="bg-background">
+      <div className="bg-gradient-to-b from-background via-background to-muted/30 min-h-screen">
         <div className="max-w-4xl mx-auto px-6 -mt-12 relative z-20">
-          <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
+          <div className="liquid-glass-heavy rounded-2xl p-6 md:p-8">
             <div className="flex items-center justify-between">
               {steps.map((step, index) => {
                 const Icon = step.icon;
@@ -404,7 +404,7 @@ const Index = () => {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-border py-12 px-6 bg-muted/30">
+        <footer className="border-t border-border/50 py-12 px-6" style={{ background: 'var(--glass-bg)' }}>
           <div className="max-w-4xl mx-auto flex flex-col items-center gap-8 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <img src={teslandLogo} alt="TESLAND" className="h-8 w-auto opacity-60" />
