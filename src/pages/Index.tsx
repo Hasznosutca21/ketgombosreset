@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import heroImage from "@/assets/tesland-hero.jpg";
 import teslandLogo from "@/assets/tesland-logo.png";
 import teslaOwnersLogo from "@/assets/tesla-owners-hungary.png";
+import optimusFigures from "@/assets/optimus-figures.png";
 import ServiceSelector from "@/components/ServiceSelector";
 import VehicleCarousel from "@/components/VehicleCarousel";
 import AppointmentForm from "@/components/AppointmentForm";
@@ -259,6 +260,11 @@ const Index = () => {
           {currentStep === "appointment" && <AppointmentForm onSubmit={handleAppointmentSubmit} onBack={() => setCurrentStep("service")} isSubmitting={isSubmitting} selectedService={selectedService || undefined} />}
           {currentStep === "confirmation" && <ConfirmationView service={selectedService!} vehicle={selectedVehicle!} appointment={appointmentData!} appointmentId={savedAppointment?.id} onStartOver={handleStartOver} />}
         </main>
+
+        {/* Optimus Figures */}
+        <div className="flex justify-center py-8">
+          <img src={optimusFigures} alt="Tesla Optimus figures" className="h-40 md:h-56 w-auto object-contain opacity-80" />
+        </div>
 
         <footer className="border-t border-border/50 py-12 px-6" style={{ background: 'var(--glass-bg)' }}>
           <div className="max-w-4xl mx-auto flex flex-col items-center gap-8 text-sm text-muted-foreground">
