@@ -146,6 +146,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [selectedSoftcloseOption, setSelectedSoftcloseOption] = useState<string>("");
   const [seatVentDialogOpen, setSeatVentDialogOpen] = useState(false);
   const [selectedSeatVentVariant, setSelectedSeatVentVariant] = useState<string>("");
+  const [selectedSeatVentColor, setSelectedSeatVentColor] = useState<string>("");
   const [commanderInfoOpen, setCommanderInfoOpen] = useState(false);
   const [dashInfoOpen, setDashInfoOpen] = useState(false);
   const [knobInfoOpen, setKnobInfoOpen] = useState(false);
@@ -778,6 +779,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
         setSeatVentDialogOpen(open);
         if (!open) {
           setSelectedSeatVentVariant("");
+          setSelectedSeatVentColor("");
         }
       }}>
         <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
@@ -818,12 +820,39 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               ))}
             </div>
 
+            <div className="space-y-2">
+              <p className="text-sm font-medium">
+                {language === "hu" ? "Ülés szín" : "Seat color"}
+              </p>
+              <div className="flex gap-3">
+                {[
+                  { id: "white", label: language === "hu" ? "Fehér" : "White", colorClass: "bg-white border-2" },
+                  { id: "black", label: language === "hu" ? "Fekete" : "Black", colorClass: "bg-[#1C1C1C]" },
+                ].map((color) => (
+                  <button
+                    key={color.id}
+                    type="button"
+                    onClick={() => setSelectedSeatVentColor(color.id)}
+                    className={cn(
+                      "flex-1 p-3 text-sm rounded-lg border transition-colors flex items-center gap-3",
+                      selectedSeatVentColor === color.id
+                        ? "border-foreground ring-2 ring-foreground/20"
+                        : "border-border hover:border-foreground/50"
+                    )}
+                  >
+                    <div className={cn("w-5 h-5 rounded-full border border-border", color.colorClass)} />
+                    <span>{color.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <Button 
               variant="tesla" 
               className="w-full" 
-              disabled={!selectedSeatVentVariant}
+              disabled={!selectedSeatVentVariant || !selectedSeatVentColor}
               onClick={() => {
-                onSelect('seat_ventilation', { s3xyProducts: [`seat_vent_${selectedSeatVentVariant}`] });
+                onSelect('seat_ventilation', { s3xyProducts: [`seat_vent_${selectedSeatVentVariant}_${selectedSeatVentColor}`] });
                 setSeatVentDialogOpen(false);
               }}
             >
