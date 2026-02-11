@@ -69,7 +69,7 @@ const VehicleSelector = ({ onSelect, selected, onBack }: VehicleSelectorProps) =
                   </div>
                 )}
                 <div className="w-full aspect-[16/10] mb-2 md:mb-4 flex items-center justify-center">
-                  <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-contain" />
+                  <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-screen opacity-90" />
                 </div>
                 <h3 className="text-sm md:text-lg font-semibold text-foreground mb-0.5 md:mb-1">{vehicle.name}</h3>
                 <p className="hidden md:block text-sm text-muted-foreground text-center">{vehicle.description}</p>
