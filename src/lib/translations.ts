@@ -66,7 +66,7 @@ export const hu = {
     chargeport_repair: {
       title: "Töltőport javítás",
       description: "CCS / Type 2 töltőcsatlakozó javítás – CP_A163 hiba",
-      duration: "1-2 óra",
+      duration: "1 óra",
       price: "bruttó 35 000 Ft",
     },
     home_charger_install: {
@@ -589,7 +589,7 @@ export const en = {
     chargeport_repair: {
       title: "Charge Port Repair",
       description: "CCS / Type 2 charging connector repair – CP_A163 fault",
-      duration: "1-2 hours",
+      duration: "1 hour",
       price: "35 000 Ft gross",
     },
     home_charger_install: {
