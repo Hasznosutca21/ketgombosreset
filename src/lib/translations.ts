@@ -50,6 +50,10 @@ export const hu = {
       title: "Akkumulátor",
       description: "12V akkumulátor (Intel processzoros típus)",
     },
+    charging: {
+      title: "Töltés",
+      description: "Töltőport javítás, otthoni töltő és diagnosztika",
+    },
     accessories: {
       title: "Kiegészítők beszerelése",
       description: "Tesla kiegészítők professzionális beszerelése",
@@ -58,6 +62,22 @@ export const hu = {
 
   // Services
   services: {
+    // Töltés szolgáltatások
+    chargeport_repair: {
+      title: "Töltőport javítás",
+      description: "CCS / Type 2 töltőcsatlakozó javítás",
+      duration: "1-2 óra",
+    },
+    home_charger_install: {
+      title: "Otthoni töltő beszerelés",
+      description: "Wall Connector telepítés és beüzemelés",
+      duration: "2-3 óra",
+    },
+    charging_diagnostics: {
+      title: "Töltési hiba diagnosztika",
+      description: "Töltéssel kapcsolatos hibák felderítése",
+      duration: "30 perc",
+    },
     // Akkumulátor szolgáltatások
     lowvoltagebattery: {
       title: "Alacsony feszültségű akkumulátor csere",
@@ -547,6 +567,10 @@ export const en = {
       title: "Battery",
       description: "12V battery (Intel processor type)",
     },
+    charging: {
+      title: "Charging",
+      description: "Charge port repair, home charger and diagnostics",
+    },
     accessories: {
       title: "Accessories Installation",
       description: "Professional Tesla accessories installation",
@@ -555,6 +579,22 @@ export const en = {
 
   // Services
   services: {
+    // Charging services
+    chargeport_repair: {
+      title: "Charge Port Repair",
+      description: "CCS / Type 2 charging connector repair",
+      duration: "1-2 hours",
+    },
+    home_charger_install: {
+      title: "Home Charger Installation",
+      description: "Wall Connector installation and setup",
+      duration: "2-3 hours",
+    },
+    charging_diagnostics: {
+      title: "Charging Diagnostics",
+      description: "Troubleshooting charging-related issues",
+      duration: "30 min",
+    },
     // Battery services
     lowvoltagebattery: {
       title: "Low Voltage Battery Replacement",
