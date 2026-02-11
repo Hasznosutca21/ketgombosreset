@@ -13,6 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import heroImage from "@/assets/tesland-hero.jpg";
 import teslandLogo from "@/assets/tesland-logo.png";
+import teslaOwnersLogo from "@/assets/tesla-owners-hungary.png";
 import ServiceSelector from "@/components/ServiceSelector";
 import VehicleCarousel from "@/components/VehicleCarousel";
 import AppointmentForm from "@/components/AppointmentForm";
@@ -208,6 +209,7 @@ const Index = () => {
         </header>
 
         <div className="relative z-10 flex flex-col items-center justify-center h-full pt-16 px-6 text-center text-white">
+          <img src={teslaOwnersLogo} alt="Tesla Owners Hungary" className="w-20 h-20 md:w-28 md:h-28 mb-6 opacity-40" />
           <h1 className="text-2xl md:text-4xl lg:text-5xl font-extralight tracking-wide mb-4 animate-fade-in">{t.scheduleYourService}</h1>
           <Dialog>
             <DialogTrigger asChild>
