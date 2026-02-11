@@ -127,7 +127,7 @@ const Auth = () => {
           <img src={optimusImg} alt="Tesland Optimus" className="max-h-[500px] object-contain" />
         </div>
         <div className="w-full max-w-md flex flex-col items-center">
-          <img src={teslandLogo} alt="Tesland" className="h-8 mb-4 object-contain" />
+          <img src={teslandLogo} alt="Tesland" className="h-10 mb-4 object-contain brightness-0 opacity-80 dark:invert" />
         <Card className="w-full glass-card">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">
