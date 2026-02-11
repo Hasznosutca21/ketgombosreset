@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
 import PasswordInput from "@/components/PasswordInput";
 import AuthSkeleton from "@/components/AuthSkeleton";
+import optimusImg from "@/assets/tesland-optimus.png";
 
 type AuthMode = "login" | "signup";
 
@@ -121,6 +122,9 @@ const Auth = () => {
       </header>
 
       <main className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="hidden lg:flex items-center justify-center mr-8">
+          <img src={optimusImg} alt="Tesland Optimus" className="max-h-[500px] object-contain" />
+        </div>
         <Card className="w-full max-w-md glass-card">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">
