@@ -170,7 +170,7 @@ Az árban foglalt személyes konzultáció során átbeszéljük az eredményeke
     ptcheater: {
       title: "PTC heater csere",
       description: "Elektromos kiegészítő fűtőelem csere, hideg időben biztosítja a hatékony fűtést",
-      duration: "3-4 óra",
+      duration: "1 óra",
       price: "bruttó 370 000 Ft",
     },
     // Extra funkciók
@@ -692,7 +692,7 @@ The price includes a personal consultation where we discuss the results and answ
     ptcheater: {
       title: "PTC Heater Replacement",
       description: "Electric auxiliary heater replacement for efficient heating in cold weather",
-      duration: "3-4 hours",
+      duration: "1 hour",
       price: "bruttó 370 000 Ft",
     },
     // Extra Features
