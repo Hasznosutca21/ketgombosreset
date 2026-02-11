@@ -233,6 +233,19 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
       title: "Ülés szellőztetés",
       description: "Ülés szellőztetés beszerelése",
       duration: "Egyedi",
+      details: `Essential Pack – A legnépszerűbb konfiguráció
+
+Emeld új szintre a vezetési élményt a legkeresettebb összeállításunkkal.
+
+Az Essential Pack azoknak készült, akik a Ludicrous stílusú sportülések agresszív megjelenését szeretnék, kompromisszumok nélkül a mindennapi használhatóság terén.
+
+Miért válaszd az Essential Pack csomagot?
+
+Model 3 és Model Y tulajdonosok első számú választása – tökéletes egyensúly a sportos dizájn és a komfort között.
+
+Komfortközpontú kialakítás
+
+A megerősített oldaltámasz stabil tartást biztosít dinamikus vezetésnél, miközben az ülés hangolása maximális kényelmet nyújt a mindennapi használat és a hosszú utak során.`,
     },
   },
 
@@ -717,6 +730,19 @@ Select which handle needs replacement on the interactive diagram!`,
       title: "Seat Ventilation",
       description: "Seat ventilation installation",
       duration: "Custom",
+      details: `Essential Pack – The Most Popular Configuration
+
+Take your driving experience to the next level with our best-selling setup.
+
+The Essential Pack is designed for those who want the aggressive look of Ludicrous-style sport seats, without compromising everyday usability.
+
+Why choose the Essential Pack?
+
+The number one choice for Model 3 and Model Y owners – a perfect balance between sporty design and comfort.
+
+Comfort-Focused Design
+
+The reinforced side bolsters provide stable support during dynamic driving, while the seat tuning ensures maximum comfort for daily use and long journeys.`,
     },
   },
 
