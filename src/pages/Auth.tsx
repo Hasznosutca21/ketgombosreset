@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Zap, Mail, ArrowLeft, Loader2, Phone, MapPin, User as UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import teslandLogo from "@/assets/tesland-logo.png";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
@@ -125,7 +126,9 @@ const Auth = () => {
         <div className="hidden lg:flex items-center justify-center mr-8">
           <img src={optimusImg} alt="Tesland Optimus" className="max-h-[500px] object-contain" />
         </div>
-        <Card className="w-full max-w-md glass-card">
+        <div className="w-full max-w-md flex flex-col items-center">
+          <img src={teslandLogo} alt="Tesland" className="h-8 mb-4 object-contain" />
+        <Card className="w-full glass-card">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">
               {mode === "login" ? t.signIn : t.createAccount}
@@ -244,6 +247,7 @@ const Auth = () => {
             </div>
           </CardContent>
         </Card>
+        </div>
       </main>
     </div>
   );
