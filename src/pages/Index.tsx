@@ -134,8 +134,9 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 pointer-events-none" />
 
         <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 md:px-12 liquid-glass" style={{ background: 'rgba(0,0,0,0.35)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <button onClick={handleStartOver} className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+          <button onClick={handleStartOver} className="flex flex-col items-start gap-0.5 cursor-pointer hover:opacity-80 transition-opacity">
             <img src={teslandLogo} alt="TESLAND" className="h-10 md:h-12 w-auto brightness-0 invert" />
+            <img src={teslaOwnersLogo} alt="Tesla Owners Hungary" className="h-5 md:h-6 w-auto opacity-60" />
           </button>
 
           <div className="hidden md:flex items-center gap-4">
@@ -209,7 +210,6 @@ const Index = () => {
         </header>
 
         <div className="relative z-10 flex flex-col items-center justify-center h-full pt-16 px-6 text-center text-white">
-          <img src={teslaOwnersLogo} alt="Tesla Owners Hungary" className="w-20 h-20 md:w-28 md:h-28 mb-6 opacity-40" />
           <h1 className="text-2xl md:text-4xl lg:text-5xl font-extralight tracking-wide mb-4 animate-fade-in">{t.scheduleYourService}</h1>
           <Dialog>
             <DialogTrigger asChild>
