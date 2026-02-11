@@ -65,7 +65,7 @@ export const hu = {
     // Töltés szolgáltatások
     chargeport_repair: {
       title: "Töltőport javítás",
-      description: "CCS / Type 2 töltőcsatlakozó javítás",
+      description: "CCS / Type 2 töltőcsatlakozó javítás – CP_A163 hiba",
       duration: "1-2 óra",
     },
     home_charger_install: {
@@ -587,7 +587,7 @@ export const en = {
     // Charging services
     chargeport_repair: {
       title: "Charge Port Repair",
-      description: "CCS / Type 2 charging connector repair",
+      description: "CCS / Type 2 charging connector repair – CP_A163 fault",
       duration: "1-2 hours",
     },
     home_charger_install: {
