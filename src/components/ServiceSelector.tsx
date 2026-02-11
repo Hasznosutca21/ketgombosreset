@@ -280,14 +280,14 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
               value={category.id}
               className={cn(
                 "tesla-card border overflow-hidden",
-                hasSelectedService && "border-primary"
+                hasSelectedService && "border-foreground"
               )}
             >
               <AccordionTrigger className="px-6 py-5 hover:no-underline hover:bg-muted/50 transition-colors [&[data-state=open]>div>.chevron]:rotate-180">
                 <div className="flex items-center gap-4 w-full">
                   <div className={cn(
                     "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
-                    hasSelectedService ? "bg-primary text-primary-foreground" : "bg-muted"
+                    hasSelectedService ? "bg-foreground text-background" : "bg-muted"
                   )}>
                     {category.id === 'accessories' ? (
                       <img src={s3xyIcon} alt="S3XY" className="w-6 h-6 object-contain dark:invert-0 invert" />
@@ -338,7 +338,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                         className={cn(
                           "p-5 text-left rounded-lg transition-all duration-200 border relative",
                           isSelected 
-                            ? "bg-primary text-primary-foreground border-primary" 
+                            ? "bg-foreground text-background border-foreground" 
                             : "bg-muted/30 border-border hover:border-foreground/30 hover:bg-muted/50"
                         )}
                       >
@@ -348,7 +348,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                             className={cn(
                               "absolute top-3 right-3 p-1.5 rounded-full transition-colors cursor-pointer",
                               isSelected 
-                                ? "bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground" 
+                                ? "bg-background/20 hover:bg-background/30 text-background" 
                                 : "bg-muted hover:bg-foreground/10"
                             )}
                           >
@@ -359,7 +359,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                           <div
                             className={cn(
                               "w-12 h-12 rounded-full flex items-center justify-center transition-colors",
-                              isSelected ? "bg-primary/20 text-primary" : "bg-muted"
+                              isSelected ? "bg-background/20 text-background" : "bg-muted"
                             )}
                           >
                             {service.id === 's3xy_products' ? (
@@ -372,21 +372,21 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                             <h4 className="font-medium text-sm mb-1">{serviceData.title}</h4>
                             <p className={cn(
                               "text-xs mb-2 line-clamp-2",
-                              isSelected ? "text-primary-foreground/70" : "text-muted-foreground"
+                              isSelected ? "text-background/70" : "text-muted-foreground"
                             )}>
                               {serviceData.description}
                             </p>
                             <div className="flex flex-col gap-0.5">
                               <div className={cn(
                                 "text-xs",
-                                isSelected ? "text-primary-foreground/60" : "text-muted-foreground"
+                                isSelected ? "text-background/60" : "text-muted-foreground"
                               )}>
                                 {t.estTime}: {serviceData.duration}
                               </div>
                               {hasPrice && (
                                 <div className={cn(
                                   "text-sm font-medium mt-1",
-                                  isSelected ? "text-primary-foreground" : "text-foreground"
+                                  isSelected ? "text-background" : "text-foreground"
                                 )}>
                                   {serviceData.price}
                                 </div>
@@ -679,7 +679,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                                     className={cn(
                                       "p-2 text-xs rounded-md border transition-colors text-center",
                                       selectedS3xyVehicleVariant === variant.id
-                                        ? "bg-primary text-primary-foreground border-primary"
+                                        ? "bg-foreground text-background border-foreground"
                                         : "bg-background border-border hover:border-foreground/50"
                                     )}
                                   >
@@ -710,7 +710,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                                     className={cn(
                                       "p-2 text-xs rounded-md border transition-colors text-center",
                                       selectedStripVariant === variant.id
-                                        ? "bg-primary text-primary-foreground border-primary"
+                                        ? "bg-foreground text-background border-foreground"
                                         : "bg-background border-border hover:border-foreground/50"
                                     )}
                                   >
@@ -781,7 +781,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                   className={cn(
                     "w-full p-4 text-sm rounded-lg border transition-colors flex items-center justify-between",
                     selectedSoftcloseOption === option.id
-                      ? "bg-primary text-primary-foreground border-primary"
+                      ? "bg-foreground text-background border-foreground"
                       : "bg-muted/30 border-border hover:border-foreground/50"
                   )}
                 >
@@ -847,7 +847,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                   className={cn(
                     "w-full p-4 text-sm rounded-lg border transition-colors flex items-center gap-3",
                     selectedSeatVentVariant === option.id
-                      ? "bg-primary text-primary-foreground border-primary"
+                      ? "bg-foreground text-background border-foreground"
                       : "bg-muted/30 border-border hover:border-foreground/50"
                   )}
                 >
@@ -1199,12 +1199,12 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                     className={cn(
                       "p-3 text-sm rounded-lg border transition-colors text-center",
                       selectedStalkSide === side.id
-                        ? "bg-primary text-primary-foreground border-primary"
+                        ? "bg-foreground text-background border-foreground"
                         : "bg-muted/30 border-border hover:border-foreground/50"
                     )}
                   >
                     <div>{side.label}</div>
-                    <div className={cn("text-xs mt-1", selectedStalkSide === side.id ? "text-primary-foreground/70" : "text-muted-foreground")}>{side.price}</div>
+                    <div className={cn("text-xs mt-1", selectedStalkSide === side.id ? "text-background/70" : "text-muted-foreground")}>{side.price}</div>
                   </button>
                 ))}
               </div>

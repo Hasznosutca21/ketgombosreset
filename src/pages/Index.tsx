@@ -240,7 +240,7 @@ const Index = () => {
                 return (
                   <div key={step.id} className="flex items-center">
                     <div className="flex flex-col items-center">
-                      <div className={cn("w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300", isActive && "bg-primary text-primary-foreground", isCompleted && "bg-primary/10 text-primary", !isActive && !isCompleted && "bg-muted text-muted-foreground")}>
+                      <div className={cn("w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300", isActive && "bg-foreground text-background", isCompleted && "bg-foreground/10 text-foreground", !isActive && !isCompleted && "bg-muted text-muted-foreground")}>
                         <Icon className="w-5 h-5 md:w-5 md:h-5" />
                       </div>
                       <span className={cn("text-xs md:text-sm mt-2 font-medium transition-colors", isActive && "text-foreground", !isActive && "text-muted-foreground")}>{step.label}</span>
