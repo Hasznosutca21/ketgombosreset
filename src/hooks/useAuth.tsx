@@ -1,126 +1,69 @@
 import { useState, useEffect, createContext, useContext, ReactNode, useCallback } from "react";
-import { User, Session } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
-
-const REMEMBER_ME_KEY = "auth_remember_me";
+import {
+  ApiUser,
+  getStoredUser,
+  getStoredTokens,
+  apiLogin,
+  apiRegister,
+  apiLogout,
+  clearAuth,
+  RegisterBody,
+} from "@/lib/api";
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: ApiUser | null;
   isLoading: boolean;
   isAdmin: boolean;
-  signIn: (email: string, password: string, rememberMe?: boolean) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: string | null }>;
+  signUp: (data: RegisterBody) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<ApiUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Handle session cleanup on browser close if "remember me" was not checked
+  const isAdmin = user?.permission === "ADMIN";
+
+  // Restore user from localStorage on mount
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      const rememberMe = localStorage.getItem(REMEMBER_ME_KEY);
-      if (rememberMe === "false" && session) {
-        // Clear the session from storage on browser close
-        // Note: We can't do async operations in beforeunload reliably,
-        // so we just clear the storage
-        localStorage.removeItem("sb-yjiumsnrmgyfamxkpftk-auth-token");
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [session]);
-
-  useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        checkAdminRole(session.user.id);
-      }
-      setIsLoading(false);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          checkAdminRole(session.user.id);
-        } else {
-          setIsAdmin(false);
-        }
-        setIsLoading(false);
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const checkAdminRole = async (userId: string) => {
-    const { data, error } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
-
-    if (!error && data) {
-      setIsAdmin(true);
-    } else {
-      setIsAdmin(false);
+    const stored = getStoredUser();
+    const { accessToken } = getStoredTokens();
+    if (stored && accessToken) {
+      setUser(stored);
     }
-  };
-
-  const signIn = useCallback(async (email: string, password: string, rememberMe: boolean = true) => {
-    // Store the remember me preference
-    localStorage.setItem(REMEMBER_ME_KEY, String(rememberMe));
-    
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    return { error };
+    setIsLoading(false);
   }, []);
 
-  const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-    return { error };
-  };
+  const signIn = useCallback(async (email: string, password: string) => {
+    const result = await apiLogin(email, password);
+    if (result.success && result.data) {
+      setUser(result.data.user);
+      return { error: null };
+    }
+    return { error: result.message || "Bejelentkezés sikertelen" };
+  }, []);
+
+  const signUp = useCallback(async (data: RegisterBody) => {
+    const result = await apiRegister(data);
+    if (result.success && result.data) {
+      setUser(result.data.user);
+      return { error: null };
+    }
+    return { error: result.message || "Regisztráció sikertelen" };
+  }, []);
 
   const signOut = useCallback(async () => {
-    try {
-      localStorage.removeItem(REMEMBER_ME_KEY);
-      await supabase.auth.signOut();
-      setUser(null);
-      setSession(null);
-      setIsAdmin(false);
-    } catch (error) {
-      console.error("Sign out error:", error);
-      // Force clear state even if signOut fails
-      setUser(null);
-      setSession(null);
-      setIsAdmin(false);
-    }
+    await apiLogout();
+    setUser(null);
   }, []);
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        session,
         isLoading,
         isAdmin,
         signIn,
