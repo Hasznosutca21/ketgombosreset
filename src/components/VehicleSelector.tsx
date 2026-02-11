@@ -23,7 +23,7 @@ interface VehicleSelectorProps {
 
 const vehicles = [
   { id: "model-s", name: "Model S", image: modelSImage, description: "Prémium szedán, nagy hatótáv", info: "Plaid és Long Range változatok" },
-  { id: "model-3", name: "Model 3", image: model3Image, description: "A legnépszerűbb, főleg fehérben", info: "Standard, Long Range és Performance" },
+  { id: "model-3", name: "Model 3", image: model3Image, description: "A legnépszerűbb", info: "Standard, Long Range és Performance" },
   { id: "model-x", name: "Model X", image: modelXImage, description: "SUV, Falcon Wing ajtók", info: "Plaid és Long Range változatok" },
   { id: "model-y", name: "Model Y", image: modelYImage, description: "Kompakt SUV, családbarát", info: "Long Range és Performance" },
 ];
