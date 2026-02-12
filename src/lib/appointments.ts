@@ -39,6 +39,13 @@ export const getServiceSlotCount = (durationMinutes: number): number => {
   return Math.ceil(durationMinutes / 30);
 };
 
+// Bay/station assignment: bay 1 = maintenance + ptcheater, bay 2 = everything else
+const BAY_1_SERVICES = ['maintenance', 'ptcheater'];
+
+export const getServiceBay = (serviceId: string): number => {
+  return BAY_1_SERVICES.includes(serviceId) ? 1 : 2;
+};
+
 // TODO: These functions are stubs - the actual booking flow needs to be
 // reworked to use the new REST API's /reservations endpoints.
 // For now they return empty/null to avoid build errors.
