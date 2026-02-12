@@ -785,8 +785,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </p>
             <div className="space-y-2">
               {[
-                { id: "glossy", label: language === "hu" ? "Fényes (Glossy)" : "Glossy", desc: language === "hu" ? "Eredeti gyári hatás, tükröződő felület" : "Original factory look, reflective surface" },
-                { id: "matte", label: language === "hu" ? "Matt (Matte)" : "Matte", desc: language === "hu" ? "Modern, szatén hatású felület" : "Modern, satin-like surface" },
+                { id: "glossy", label: language === "hu" ? "Fényes (Glossy)" : "Glossy", desc: language === "hu" ? "Eredeti gyári hatás, tükröződő felület" : "Original factory look, reflective surface", price: language === "hu" ? "bruttó 1 079 500 Ft-tól" : "from 1,079,500 HUF gross" },
+                { id: "matte", label: language === "hu" ? "Matt (Matte)" : "Matte", desc: language === "hu" ? "Modern, szatén hatású felület" : "Modern, satin-like surface", price: language === "hu" ? "bruttó 1 104 900 Ft" : "1,104,900 HUF gross" },
               ].map((option) => (
                 <button
                   key={option.id}
@@ -801,6 +801,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 >
                   <span className="font-medium text-sm">{option.label}</span>
                   <p className={cn("text-xs mt-1", selectedPpfVariant === option.id ? "text-background/70" : "text-muted-foreground")}>{option.desc}</p>
+                  <p className={cn("text-xs mt-1 font-medium", selectedPpfVariant === option.id ? "text-background/80" : "text-foreground/70")}>{option.price}</p>
                 </button>
               ))}
             </div>
@@ -811,21 +812,22 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                   {language === "hu" ? "Fóliázás kiterjedése:" : "Coverage area:"}
                 </p>
                 {[
-                  { id: "full", label: language === "hu" ? "Teljes autó" : "Full car" },
-                  { id: "front", label: language === "hu" ? "Csak az eleje" : "Front only" },
+                  { id: "full", label: language === "hu" ? "Teljes autó" : "Full car", price: language === "hu" ? "bruttó 1 079 500 Ft" : "1,079,500 HUF gross" },
+                  { id: "front", label: language === "hu" ? "Csak az eleje" : "Front only", price: language === "hu" ? "bruttó 457 200 Ft" : "457,200 HUF gross" },
                 ].map((option) => (
                   <button
                     key={option.id}
                     type="button"
                     onClick={() => setSelectedPpfCoverage(option.id)}
                     className={cn(
-                      "w-full p-3 text-sm text-left rounded-lg border transition-colors",
+                      "w-full p-3 text-sm text-left rounded-lg border transition-colors flex items-center justify-between",
                       selectedPpfCoverage === option.id
                         ? "bg-foreground text-background border-foreground"
                         : "bg-muted/30 border-border hover:border-foreground/50"
                     )}
                   >
-                    {option.label}
+                    <span>{option.label}</span>
+                    <span className={cn("ml-auto text-xs font-medium", selectedPpfCoverage === option.id ? "text-background/80" : "text-foreground/70")}>{option.price}</span>
                   </button>
                 ))}
               </div>

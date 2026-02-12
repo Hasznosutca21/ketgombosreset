@@ -30,6 +30,9 @@ const SERVICE_PRICES: Record<string, { amount: number; name: string }> = {
   body: { amount: 50000, name: "Karosszéria javítás" },
   warranty: { amount: 0, name: "Garanciális szerviz" },
   tires: { amount: 15000, name: "Abroncs szerviz" },
+  ppf_glossy_full: { amount: 1079500, name: "PPF fényes - Teljes autó" },
+  ppf_glossy_front: { amount: 457200, name: "PPF fényes - Csak az eleje" },
+  ppf_matte: { amount: 1104900, name: "PPF matt - Teljes autó" },
 };
 
 serve(async (req) => {
