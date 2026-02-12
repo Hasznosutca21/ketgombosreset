@@ -167,6 +167,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [selectedSoftcloseOption, setSelectedSoftcloseOption] = useState<string>("");
   const [ppfDialogOpen, setPpfDialogOpen] = useState(false);
   const [selectedPpfVariant, setSelectedPpfVariant] = useState<string>("");
+  const [selectedPpfCoverage, setSelectedPpfCoverage] = useState<string>("");
   const [seatVentDialogOpen, setSeatVentDialogOpen] = useState(false);
   const [selectedSeatVentVariant, setSelectedSeatVentVariant] = useState<string>("");
   const [selectedSeatVentColor, setSelectedSeatVentColor] = useState<string>("");
@@ -767,7 +768,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
       {/* PPF Dialog */}
       <Dialog open={ppfDialogOpen} onOpenChange={(open) => {
         setPpfDialogOpen(open);
-        if (!open) setSelectedPpfVariant("");
+        if (!open) { setSelectedPpfVariant(""); setSelectedPpfCoverage(""); }
       }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -790,7 +791,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 <button
                   key={option.id}
                   type="button"
-                  onClick={() => setSelectedPpfVariant(option.id)}
+                  onClick={() => { setSelectedPpfVariant(option.id); setSelectedPpfCoverage(""); }}
                   className={cn(
                     "w-full p-4 text-left rounded-lg border transition-colors",
                     selectedPpfVariant === option.id
@@ -803,12 +804,40 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 </button>
               ))}
             </div>
+
+            {selectedPpfVariant === "glossy" && (
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  {language === "hu" ? "Fóliázás kiterjedése:" : "Coverage area:"}
+                </p>
+                {[
+                  { id: "full", label: language === "hu" ? "Teljes autó" : "Full car" },
+                  { id: "front", label: language === "hu" ? "Csak az eleje" : "Front only" },
+                ].map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setSelectedPpfCoverage(option.id)}
+                    className={cn(
+                      "w-full p-3 text-sm text-left rounded-lg border transition-colors",
+                      selectedPpfCoverage === option.id
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-muted/30 border-border hover:border-foreground/50"
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <Button
               variant="tesla"
               className="w-full"
-              disabled={!selectedPpfVariant}
+              disabled={!selectedPpfVariant || (selectedPpfVariant === "glossy" && !selectedPpfCoverage)}
               onClick={() => {
-                onSelect(`ppf_${selectedPpfVariant}`);
+                const coverage = selectedPpfVariant === "glossy" ? `_${selectedPpfCoverage}` : "";
+                onSelect(`ppf_${selectedPpfVariant}${coverage}`);
                 setPpfDialogOpen(false);
               }}
             >
