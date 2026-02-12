@@ -101,8 +101,8 @@ const About = () => {
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             {language === "hu" 
-              ? "A TESLAND-ot azzal a céllal alapítottuk, hogy a magyar Tesla tulajdonosoknak világszínvonalú szervizszolgáltatást nyújtsunk. Nagytarcsai központunkban a legmodernebb diagnosztikai eszközökkel és szakképzett technikusokkal várjuk ügyfeleinket. Küldetésünk, hogy minden Tesla tulajdonos biztonságban és elégedetten hagyhassa el szervizünket."
-              : "TESLAND was founded with the goal of providing world-class service to Hungarian Tesla owners. At our Nagytarcsa center, we welcome customers with the most modern diagnostic tools and trained technicians. Our mission is for every Tesla owner to leave our service safely and satisfied."}
+              ? "A TESLAND több mint 6 éve nyújt magas színvonalú szolgáltatásokat a magyar Tesla-tulajdonosok számára. Működésünk első 4 évében kizárólag pimpelési megoldásokra fókuszáltunk, majd ezt követően szervizszolgáltatásokkal is bővítettük kínálatunkat.\n\nNagytarcsán és Győrben, modern diagnosztikai eszközökkel és szakképzett csapattal gondoskodunk arról, hogy Teslád a lehető legjobb kezekben legyen."
+              : "TESLAND has been providing high-quality services to Hungarian Tesla owners for over 6 years. During our first 4 years, we focused exclusively on customization solutions, and then expanded our offerings with service solutions.\n\nIn Nagytarcsa and Győr, with modern diagnostic tools and a skilled team, we ensure your Tesla is in the best hands."}
           </p>
         </div>
       </section>
