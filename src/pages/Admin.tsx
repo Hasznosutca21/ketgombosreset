@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Calendar, Loader2, LogOut, Shield } from "lucide-react";
+import { ArrowLeft, Calendar, Loader2, LogOut, Shield, FileText } from "lucide-react";
 import teslandLogo from "@/assets/tesland-logo.png";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import AdminBlogManager from "@/components/AdminBlogManager";
 import { toast } from "sonner";
 
 const Admin = () => {
@@ -64,26 +66,45 @@ const Admin = () => {
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-12">
-        <Card className="glass-card">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl flex items-center justify-center gap-2">
-              <Calendar className="h-6 w-6 text-primary" />
-              {t.appointmentsDashboard}
-            </CardTitle>
-            <CardDescription>
-              {language === "hu"
-                ? "Az admin felület átállítása az új REST API-ra folyamatban van."
-                : "Admin panel migration to the new REST API is in progress."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-center text-muted-foreground">
-              {language === "hu"
-                ? "A foglalások, ügyfelek és munkalapok kezelése hamarosan elérhető lesz az új API-n keresztül."
-                : "Reservation, customer and worksheet management will be available via the new API soon."}
-            </p>
-          </CardContent>
-        </Card>
+        <Tabs defaultValue="blog">
+          <TabsList className="mb-6">
+            <TabsTrigger value="appointments" className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              {language === "hu" ? "Időpontok" : "Appointments"}
+            </TabsTrigger>
+            <TabsTrigger value="blog" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Blog
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="appointments">
+            <Card className="glass-card">
+              <CardHeader className="text-center">
+                <CardTitle className="text-2xl flex items-center justify-center gap-2">
+                  <Calendar className="h-6 w-6 text-primary" />
+                  {t.appointmentsDashboard}
+                </CardTitle>
+                <CardDescription>
+                  {language === "hu"
+                    ? "Az admin felület átállítása az új REST API-ra folyamatban van."
+                    : "Admin panel migration to the new REST API is in progress."}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-center text-muted-foreground">
+                  {language === "hu"
+                    ? "A foglalások, ügyfelek és munkalapok kezelése hamarosan elérhető lesz az új API-n keresztül."
+                    : "Reservation, customer and worksheet management will be available via the new API soon."}
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="blog">
+            <AdminBlogManager />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
