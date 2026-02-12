@@ -11,7 +11,7 @@ import { hu, enUS } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
-import { getBookedAppointmentsForDate, getServiceDurationMinutes, getServiceSlotCount } from "@/lib/appointments";
+import { getBookedAppointmentsForDate, getServiceDurationMinutes, getServiceSlotCount, getServiceBay } from "@/lib/appointments";
 
 interface AppointmentFormProps {
   onSubmit: (data: {
@@ -77,7 +77,14 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
 
   const blockedSlots = useMemo(() => {
     const blocked = new Set<string>();
-    bookedAppointments.forEach(({ time: bookedTime, service }) => {
+    const currentBay = selectedService ? getServiceBay(selectedService) : 2;
+
+    // Only consider appointments on the same bay
+    const sameBayAppointments = bookedAppointments.filter(
+      ({ service }) => getServiceBay(service) === currentBay
+    );
+
+    sameBayAppointments.forEach(({ time: bookedTime, service }) => {
       const serviceData = t.services[service as keyof typeof t.services];
       let durationMinutes = 30;
       if (serviceData && 'duration' in serviceData) {
@@ -97,13 +104,13 @@ const AppointmentForm = ({ onSubmit, onBack, isSubmitting = false, selectedServi
       for (let i = 0; i < currentSlotCount; i++) {
         const checkMinutes = slotMinutes + (i * 30);
         if (checkMinutes >= 17 * 60) { blocked.add(slot); break; }
-        bookedAppointments.forEach(({ time: bookedTime }) => {
+        sameBayAppointments.forEach(({ time: bookedTime }) => {
           if (bookedTime === minutesToTime(checkMinutes)) blocked.add(slot);
         });
       }
     });
     return blocked;
-  }, [bookedAppointments, t.services, currentServiceDuration]);
+  }, [bookedAppointments, t.services, currentServiceDuration, selectedService]);
 
   // Auto-fill from user
   useEffect(() => {
