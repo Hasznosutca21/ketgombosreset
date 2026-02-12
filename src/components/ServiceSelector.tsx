@@ -165,6 +165,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
   const [selectedStripVariant, setSelectedStripVariant] = useState<string>("");
   const [softcloseDialogOpen, setSoftcloseDialogOpen] = useState(false);
   const [selectedSoftcloseOption, setSelectedSoftcloseOption] = useState<string>("");
+  const [ppfDialogOpen, setPpfDialogOpen] = useState(false);
+  const [selectedPpfVariant, setSelectedPpfVariant] = useState<string>("");
   const [seatVentDialogOpen, setSeatVentDialogOpen] = useState(false);
   const [selectedSeatVentVariant, setSelectedSeatVentVariant] = useState<string>("");
   const [selectedSeatVentColor, setSelectedSeatVentColor] = useState<string>("");
@@ -337,6 +339,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                             setS3xyDialogOpen(true);
                           } else if (service.id === 'softclose') {
                             setSoftcloseDialogOpen(true);
+                          } else if (service.id === 'ppf') {
+                            setPpfDialogOpen(true);
                           } else if (service.id === 'seat_ventilation') {
                             setSeatVentDialogOpen(true);
                           } else {
@@ -760,7 +764,60 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
         </DialogContent>
       </Dialog>
 
-      {/* Softclose Dialog */}
+      {/* PPF Dialog */}
+      <Dialog open={ppfDialogOpen} onOpenChange={(open) => {
+        setPpfDialogOpen(open);
+        if (!open) setSelectedPpfVariant("");
+      }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-medium flex items-center gap-2">
+              <Shield className="w-5 h-5" />
+              {language === "hu" ? "PPF festékvédő fólia" : "PPF Paint Protection Film"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              {language === "hu"
+                ? "Válaszd ki a fólia típusát."
+                : "Select the film type."}
+            </p>
+            <div className="space-y-2">
+              {[
+                { id: "glossy", label: language === "hu" ? "Fényes (Glossy)" : "Glossy", desc: language === "hu" ? "Eredeti gyári hatás, tükröződő felület" : "Original factory look, reflective surface" },
+                { id: "matte", label: language === "hu" ? "Matt (Matte)" : "Matte", desc: language === "hu" ? "Modern, szatén hatású felület" : "Modern, satin-like surface" },
+              ].map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => setSelectedPpfVariant(option.id)}
+                  className={cn(
+                    "w-full p-4 text-left rounded-lg border transition-colors",
+                    selectedPpfVariant === option.id
+                      ? "bg-foreground text-background border-foreground"
+                      : "bg-muted/30 border-border hover:border-foreground/50"
+                  )}
+                >
+                  <span className="font-medium text-sm">{option.label}</span>
+                  <p className={cn("text-xs mt-1", selectedPpfVariant === option.id ? "text-background/70" : "text-muted-foreground")}>{option.desc}</p>
+                </button>
+              ))}
+            </div>
+            <Button
+              variant="tesla"
+              className="w-full"
+              disabled={!selectedPpfVariant}
+              onClick={() => {
+                onSelect(`ppf_${selectedPpfVariant}`);
+                setPpfDialogOpen(false);
+              }}
+            >
+              {language === "hu" ? "Tovább a foglaláshoz" : "Continue to booking"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={softcloseDialogOpen} onOpenChange={(open) => {
         setSoftcloseDialogOpen(open);
         if (!open) {
