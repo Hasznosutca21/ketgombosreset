@@ -54,6 +54,10 @@ export const hu = {
       title: "Töltés",
       description: "Töltőport javítás, otthoni töltő és diagnosztika",
     },
+    wrapping: {
+      title: "Autófóliázás",
+      description: "PPF festékvédő fólia felhelyezés",
+    },
     accessories: {
       title: "Kiegészítők beszerelése",
       description: "Tesla kiegészítők professzionális beszerelése",
@@ -62,6 +66,12 @@ export const hu = {
 
   // Services
   services: {
+    // Fóliázás szolgáltatások
+    ppf: {
+      title: "PPF (festékvédő fólia)",
+      description: "Paint Protection Film felhelyezés a karosszéria védelmére",
+      duration: "Egyedi",
+    },
     // Töltés szolgáltatások
     chargeport_repair: {
       title: "Töltőport javítás",
@@ -577,6 +587,10 @@ export const en = {
       title: "Charging",
       description: "Charge port repair, home charger and diagnostics",
     },
+    wrapping: {
+      title: "Car Wrapping",
+      description: "PPF paint protection film application",
+    },
     accessories: {
       title: "Accessories Installation",
       description: "Professional Tesla accessories installation",
@@ -585,6 +599,12 @@ export const en = {
 
   // Services
   services: {
+    // Wrapping services
+    ppf: {
+      title: "PPF (Paint Protection Film)",
+      description: "Paint Protection Film application for bodywork protection",
+      duration: "Custom",
+    },
     // Charging services
     chargeport_repair: {
       title: "Charge Port Repair",
