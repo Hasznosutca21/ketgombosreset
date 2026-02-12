@@ -141,6 +141,9 @@ const Index = () => {
 
           <div className="hidden md:flex items-center gap-4">
             <Button variant="ghost" size="sm" asChild className="text-white/80 hover:text-white hover:bg-white/10">
+              <a href="/blog">{language === "hu" ? "Blog" : "Blog"}</a>
+            </Button>
+            <Button variant="ghost" size="sm" asChild className="text-white/80 hover:text-white hover:bg-white/10">
               <a href="/manage">{t.manageMyAppointment}</a>
             </Button>
             <LanguageSwitcher variant="glass" />
@@ -191,6 +194,9 @@ const Index = () => {
                       <a href="/profile" className="flex items-center"><User className="h-4 w-4 mr-2" />{t.myProfile || "My Profile"}</a>
                     </Button>
                   )}
+                  <Button variant="ghost" className="justify-start" asChild>
+                    <a href="/blog">Blog</a>
+                  </Button>
                   <Button variant="ghost" className="justify-start" asChild>
                     <a href="/manage">{t.manageMyAppointment}</a>
                   </Button>
@@ -266,6 +272,7 @@ const Index = () => {
               <img src={teslandLogo} alt="TESLAND" className="h-8 w-auto opacity-60" />
             </div>
             <div className="flex flex-wrap justify-center gap-8">
+              <Link to="/blog" className="hover:text-foreground transition-colors">Blog</Link>
               <Link to="/about" className="hover:text-foreground transition-colors">{language === "hu" ? "Rólunk" : "About"}</Link>
               <Link to="/contact" className="hover:text-foreground transition-colors">{t.contact}</Link>
               <Link to="/terms" className="hover:text-foreground transition-colors">{language === "hu" ? "ÁSZF" : "Terms"}</Link>
