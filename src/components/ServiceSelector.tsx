@@ -133,6 +133,13 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
     ],
   },
   {
+    id: "wrapping",
+    icon: Shield,
+    services: [
+      { id: "ppf", icon: Shield, vehicleRestriction: [] },
+    ],
+  },
+  {
     id: "accessories",
     icon: Package,
     services: [
