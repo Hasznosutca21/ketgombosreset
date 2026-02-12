@@ -785,8 +785,8 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
             </p>
             <div className="space-y-2">
               {[
-                { id: "glossy", label: language === "hu" ? "Fényes (Glossy)" : "Glossy", desc: language === "hu" ? "Eredeti gyári hatás, tükröződő felület" : "Original factory look, reflective surface", price: language === "hu" ? "bruttó 1 079 500 Ft-tól" : "from 1,079,500 HUF gross" },
-                { id: "matte", label: language === "hu" ? "Matt (Matte)" : "Matte", desc: language === "hu" ? "Modern, szatén hatású felület" : "Modern, satin-like surface", price: language === "hu" ? "bruttó 1 104 900 Ft" : "1,104,900 HUF gross" },
+                { id: "glossy", label: language === "hu" ? "Fényes (Glossy)" : "Glossy", desc: language === "hu" ? "Eredeti gyári hatás, tükröződő felület" : "Original factory look, reflective surface", price: language === "hu" ? "bruttó 1 079 500 Ft-tól" : "from 1,079,500 HUF gross", duration: language === "hu" ? "3 nap (teljes) / 1,5 nap (eleje)" : "3 days (full) / 1.5 days (front)" },
+                { id: "matte", label: language === "hu" ? "Matt (Matte)" : "Matte", desc: language === "hu" ? "Modern, szatén hatású felület" : "Modern, satin-like surface", price: language === "hu" ? "bruttó 1 104 900 Ft" : "1,104,900 HUF gross", duration: language === "hu" ? "3 nap" : "3 days" },
               ].map((option) => (
                 <button
                   key={option.id}
@@ -801,7 +801,10 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                 >
                   <span className="font-medium text-sm">{option.label}</span>
                   <p className={cn("text-xs mt-1", selectedPpfVariant === option.id ? "text-background/70" : "text-muted-foreground")}>{option.desc}</p>
-                  <p className={cn("text-xs mt-1 font-medium", selectedPpfVariant === option.id ? "text-background/80" : "text-foreground/70")}>{option.price}</p>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className={cn("text-xs font-medium", selectedPpfVariant === option.id ? "text-background/80" : "text-foreground/70")}>{option.price}</span>
+                    <span className={cn("text-xs", selectedPpfVariant === option.id ? "text-background/60" : "text-muted-foreground")}>{option.duration}</span>
+                  </div>
                 </button>
               ))}
             </div>
