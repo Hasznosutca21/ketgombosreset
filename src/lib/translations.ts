@@ -70,7 +70,7 @@ export const hu = {
     ppf: {
       title: "PPF (festékvédő fólia)",
       description: "Paint Protection Film felhelyezés a karosszéria védelmére",
-      duration: "Egyedi",
+      duration: "1,5–3 nap",
     },
     // Töltés szolgáltatások
     chargeport_repair: {
@@ -603,7 +603,7 @@ export const en = {
     ppf: {
       title: "PPF (Paint Protection Film)",
       description: "Paint Protection Film application for bodywork protection",
-      duration: "Custom",
+      duration: "1.5–3 days",
     },
     // Charging services
     chargeport_repair: {
