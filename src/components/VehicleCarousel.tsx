@@ -61,7 +61,7 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
                       </div>
                     )}
                     <div className="w-full aspect-[16/10] mb-4 flex items-center justify-center">
-                      <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-screen opacity-90" />
+                      <img src={vehicle.image} alt={vehicle.name} width={600} height={338} loading="lazy" decoding="async" className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-screen opacity-90" />
                     </div>
                     <h3 className="text-lg font-semibold">{vehicle.name}</h3>
                     <p className="text-sm text-muted-foreground">{vehicle.description}</p>
