@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import heroImage from "@/assets/tesland-hero.jpg";
+const heroImage = "/images/tesland-hero.jpg";
 import teslandLogo from "@/assets/tesland-logo.png";
 import teslaOwnersLogo from "@/assets/tesla-owners-hungary.png";
 import ServiceSelector from "@/components/ServiceSelector";
