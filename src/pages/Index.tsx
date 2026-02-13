@@ -130,7 +130,7 @@ const Index = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <div className="relative h-[50vh] min-h-[400px] overflow-hidden bg-black">
-        <img src={heroImage} alt="Tesla Service Center" className="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none scale-105" />
+        <img src={heroImage} alt="Tesla Service Center" className="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none scale-105" fetchPriority="high" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 pointer-events-none" />
 
         <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 md:px-12 liquid-glass" style={{ background: 'rgba(0,0,0,0.35)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
