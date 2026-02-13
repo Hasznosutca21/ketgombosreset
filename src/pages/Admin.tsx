@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import AdminBlogManager from "@/components/AdminBlogManager";
+import AdminReservations from "@/components/AdminReservations";
 import { toast } from "sonner";
 
 const Admin = () => {
@@ -79,26 +80,7 @@ const Admin = () => {
           </TabsList>
 
           <TabsContent value="appointments">
-            <Card className="glass-card">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl flex items-center justify-center gap-2">
-                  <Calendar className="h-6 w-6 text-primary" />
-                  {t.appointmentsDashboard}
-                </CardTitle>
-                <CardDescription>
-                  {language === "hu"
-                    ? "Az admin felület átállítása az új REST API-ra folyamatban van."
-                    : "Admin panel migration to the new REST API is in progress."}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-center text-muted-foreground">
-                  {language === "hu"
-                    ? "A foglalások, ügyfelek és munkalapok kezelése hamarosan elérhető lesz az új API-n keresztül."
-                    : "Reservation, customer and worksheet management will be available via the new API soon."}
-                </p>
-              </CardContent>
-            </Card>
+            <AdminReservations />
           </TabsContent>
 
           <TabsContent value="blog">
