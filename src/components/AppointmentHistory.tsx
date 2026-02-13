@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getMyReservations, Reservation, getStoredUser } from "@/lib/api";
 import WorkflowProgress from "./WorkflowProgress";
+import ArrivalCheckIn from "./ArrivalCheckIn";
 import { format } from "date-fns";
 import { hu as huLocale, enUS } from "date-fns/locale";
 
@@ -136,6 +137,21 @@ const AppointmentHistory = ({ userEmail }: AppointmentHistoryProps) => {
                   <span>
                     <strong>{t.partNeeded}:</strong> {missingPart}
                   </span>
+                </div>
+              )}
+
+              {/* Arrival check-in – only for today's upcoming appointments */}
+              {!waiting && !r.workflow?.is_end_state && (() => {
+                const resDate = new Date(r.reservation_from);
+                const now = new Date();
+                const diffHours = (resDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+                return diffHours > -2 && diffHours < 4;
+              })() && (
+                <div className="pt-2">
+                  <ArrivalCheckIn
+                    reservationId={r.id}
+                    locationName={r.location?.name}
+                  />
                 </div>
               )}
             </CardContent>

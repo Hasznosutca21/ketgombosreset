@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.send-waiting-for-parts-email]
 verify_jwt = false
+
+[functions.notify-customer-arrival]
+verify_jwt = false
