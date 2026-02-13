@@ -130,13 +130,13 @@ const Index = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <div className="relative h-[50vh] min-h-[400px] overflow-hidden bg-black">
-        <img src={heroImage} alt="Tesla Service Center" className="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none scale-105" fetchPriority="high" />
+        <img src={heroImage} alt="Tesla Service Center" width={1920} height={677} className="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none scale-105" fetchPriority="high" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 pointer-events-none" />
 
         <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 md:px-12 liquid-glass" style={{ background: 'rgba(0,0,0,0.35)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <button onClick={handleStartOver} className="flex flex-col items-center gap-0.5 cursor-pointer hover:opacity-80 transition-opacity">
-            <img src={teslandLogo} alt="TESLAND" className="h-10 md:h-12 w-auto brightness-0 invert" />
-            <img src={teslaOwnersLogo} alt="Tesla Owners Hungary" className="h-5 md:h-6 w-auto opacity-60" />
+            <img src={teslandLogo} alt="TESLAND" width={180} height={48} className="h-10 md:h-12 w-auto brightness-0 invert" />
+            <img src={teslaOwnersLogo} alt="Tesla Owners Hungary" width={24} height={24} className="h-5 md:h-6 w-auto opacity-60" />
           </button>
 
           <div className="hidden md:flex items-center gap-4">
@@ -269,7 +269,7 @@ const Index = () => {
         <footer className="border-t border-border/50 py-12 px-6" style={{ background: 'var(--glass-bg)' }}>
           <div className="max-w-4xl mx-auto flex flex-col items-center gap-8 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <img src={teslandLogo} alt="TESLAND" className="h-8 w-auto opacity-60" />
+              <img src={teslandLogo} alt="TESLAND" width={120} height={32} loading="lazy" decoding="async" className="h-8 w-auto opacity-60" />
             </div>
             <div className="flex flex-wrap justify-center gap-8">
               <Link to="/blog" className="hover:text-foreground transition-colors">Blog</Link>
