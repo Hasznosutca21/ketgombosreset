@@ -24,6 +24,7 @@ import {
 } from "@/lib/api";
 import WaitingForPartsDialog from "./WaitingForPartsDialog";
 import AdminRescheduleDialog from "./AdminRescheduleDialog";
+import WorkflowProgress from "./WorkflowProgress";
 import { format } from "date-fns";
 import { hu as huLocale, enUS } from "date-fns/locale";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -296,6 +297,16 @@ const AdminReservations = () => {
                             </span>
                           </div>
                         )}
+
+                        {/* Workflow progress bar */}
+                        <div className="mt-3 pt-3 border-t border-border/50">
+                          <WorkflowProgress
+                            currentWorkflowId={r.workflow?.id}
+                            isWaitingForParts={waiting}
+                            missingPart={missingPart}
+                            compact
+                          />
+                        </div>
                       </div>
 
                       <div className="flex flex-col gap-1.5 flex-shrink-0">
