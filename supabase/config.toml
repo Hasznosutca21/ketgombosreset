@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.tesla-register-partner]
 verify_jwt = false
+
+[functions.send-waiting-for-parts-email]
+verify_jwt = false

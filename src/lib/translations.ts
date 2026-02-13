@@ -520,6 +520,23 @@ A megerősített oldaltámasz stabil tartást biztosít dinamikus vezetésnél, 
   failedToLoad: "Időpontok betöltése sikertelen",
   onlyAdminsCanDelete: "Csak adminok törölhetnek időpontokat",
   
+  // Waiting for parts
+  waitingForParts: "Alkatrészre vár",
+  markWaitingForParts: "Alkatrészre vár jelölés",
+  markWaitingForPartsDesc: "Jelölje meg a foglalást befejezetlen munkával és adja meg a hiányzó alkatrészt",
+  missingPart: "Hiányzó alkatrész",
+  missingPartPlaceholder: "Pl. Hátsó féktárcsa, PTC heater modul...",
+  additionalNotes: "Megjegyzés",
+  additionalNotesPlaceholder: "Egyéb megjegyzés az ügyfél számára...",
+  markAndReschedule: "Jelölés és visszahívás",
+  markOnly: "Csak jelölés",
+  incompleteWork: "Befejezetlen munka",
+  partNeeded: "Szükséges alkatrész",
+  callbackScheduled: "Visszahívás ütemezve",
+  markedAsWaiting: "Foglalás sikeresen megjelölve: alkatrészre vár",
+  failedToMarkWaiting: "Jelölés sikertelen",
+  notificationSent: "Értesítés elküldve az ügyfélnek",
+  
   // Vehicle VIN Lock
   yourVehicle: "Az Ön járműve",
   vinLockedVehicle: "VIN alapján azonosítva",
@@ -1052,6 +1069,23 @@ The reinforced side bolsters provide stable support during dynamic driving, whil
   failedToDelete: "Failed to delete appointment",
   failedToLoad: "Failed to load appointments",
   onlyAdminsCanDelete: "Only admins can delete appointments",
+  
+  // Waiting for parts
+  waitingForParts: "Waiting for parts",
+  markWaitingForParts: "Mark as waiting for parts",
+  markWaitingForPartsDesc: "Mark this reservation as incomplete and specify the missing part",
+  missingPart: "Missing part",
+  missingPartPlaceholder: "E.g. Rear brake disc, PTC heater module...",
+  additionalNotes: "Additional notes",
+  additionalNotesPlaceholder: "Additional notes for the customer...",
+  markAndReschedule: "Mark & reschedule",
+  markOnly: "Mark only",
+  incompleteWork: "Incomplete work",
+  partNeeded: "Part needed",
+  callbackScheduled: "Callback scheduled",
+  markedAsWaiting: "Reservation marked as waiting for parts",
+  failedToMarkWaiting: "Failed to mark reservation",
+  notificationSent: "Notification sent to customer",
   
   // Vehicle VIN Lock
   yourVehicle: "Your Vehicle",
