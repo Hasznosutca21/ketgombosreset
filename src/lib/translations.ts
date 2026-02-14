@@ -283,25 +283,6 @@ A megerősített oldaltámasz stabil tartást biztosít dinamikus vezetésnél, 
       description: "Sportülés fejlesztés Highland / Juniper modellekhez",
       duration: "4 óra",
     },
-    matrix_headlight: {
-      title: "Matrix lámpa upgrade",
-      description: "Matrix LED fényszóró átalakítás",
-      duration: "2-3 óra",
-      price: "bruttó 350 000 Ft",
-      details: `Model 3 Matrix Lámpa Upgrade (2018–2020)
-
-Komplett csomag ára:
-
-✔ Matrix LED fényszórók
-✔ Szakszerű beszerelés
-✔ Teljes körű programozás és kalibrálás
-
-Az upgrade célja a modernebb megjelenés, jobb fényelosztás és a Matrix funkciók kihasználása.
-
-Rejtett költségek nélkül – az ár minden szükséges munkafolyamatot tartalmaz.
-
-Elérhető: 2018–2020-as évjáratú Model 3 modellekhez`,
-    },
   },
 
   // Vehicle Selector
@@ -851,25 +832,6 @@ The reinforced side bolsters provide stable support during dynamic driving, whil
       title: "Performance Seat Upgrade",
       description: "Sport seat upgrade for Highland / Juniper models",
       duration: "4 hours",
-    },
-    matrix_headlight: {
-      title: "Matrix Headlight Upgrade",
-      description: "Matrix LED headlight conversion",
-      duration: "2-3 hours",
-      price: "350 000 Ft gross",
-      details: `Model 3 Matrix Headlight Upgrade (2018–2020)
-
-Complete package price:
-
-✔ Matrix LED headlights
-✔ Professional installation
-✔ Full programming and calibration
-
-The upgrade aims for a more modern look, better light distribution, and utilization of Matrix functions.
-
-No hidden costs – the price includes all necessary work processes.
-
-Available: for 2018–2020 Model 3 models`,
     },
   },
 
