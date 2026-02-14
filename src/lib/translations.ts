@@ -283,6 +283,12 @@ A megerősített oldaltámasz stabil tartást biztosít dinamikus vezetésnél, 
       description: "Sportülés fejlesztés Highland / Juniper modellekhez",
       duration: "4 óra",
     },
+    matrix_headlight: {
+      title: "Matrix lámpa upgrade",
+      description: "Matrix LED fényszóró átalakítás",
+      duration: "2-3 óra",
+      price: "bruttó 350 000 Ft",
+    },
   },
 
   // Vehicle Selector
@@ -832,6 +838,12 @@ The reinforced side bolsters provide stable support during dynamic driving, whil
       title: "Performance Seat Upgrade",
       description: "Sport seat upgrade for Highland / Juniper models",
       duration: "4 hours",
+    },
+    matrix_headlight: {
+      title: "Matrix Headlight Upgrade",
+      description: "Matrix LED headlight conversion",
+      duration: "2-3 hours",
+      price: "350 000 Ft gross",
     },
   },
 
