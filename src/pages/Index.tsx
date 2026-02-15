@@ -62,9 +62,6 @@ const Index = () => {
   const handleServiceSelect = (service: string, extras?: { doorHandles?: string[] }) => {
     setSelectedService(service || null);
     setSelectedServiceExtras(extras || null);
-    if (service) {
-      setCurrentStep("appointment");
-    }
   };
 
   const handleAppointmentSubmit = async (data: typeof appointmentData) => {
@@ -265,7 +262,7 @@ const Index = () => {
 
         <main className="max-w-4xl mx-auto px-6 py-12">
           {currentStep === "vehicle" && <VehicleCarousel onSelect={handleVehicleSelect} selected={selectedVehicle} />}
-          {currentStep === "service" && <ServiceSelector onSelect={handleServiceSelect} selected={selectedService} selectedVehicle={selectedVehicle} onBack={() => setCurrentStep("vehicle")} />}
+          {currentStep === "service" && <ServiceSelector onSelect={handleServiceSelect} selected={selectedService} selectedVehicle={selectedVehicle} onBack={() => setCurrentStep("vehicle")} onNext={() => setCurrentStep("appointment")} />}
           {currentStep === "appointment" && <AppointmentForm onSubmit={handleAppointmentSubmit} onBack={() => setCurrentStep("service")} isSubmitting={isSubmitting} selectedService={selectedService || undefined} />}
           {currentStep === "confirmation" && <ConfirmationView service={selectedService!} vehicle={selectedVehicle!} appointment={appointmentData!} appointmentId={savedAppointment?.id} onStartOver={handleStartOver} />}
         </main>
