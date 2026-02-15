@@ -1469,12 +1469,20 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack, onNext }
           </div>
         </DialogContent>
       </Dialog>
-      {selected && onNext && (
-        <div className="mt-8 flex justify-center">
-          <Button variant="tesla" size="lg" onClick={onNext} className="min-w-[200px]">
-            {language === "hu" ? "Tovább" : "Next"}
-            <ChevronDown className="w-4 h-4 ml-2 rotate-[-90deg]" />
-          </Button>
+      {selected && (
+        <div className="mt-8 flex justify-center gap-3">
+          {onBack && (
+            <Button variant="teslaOutline" size="lg" onClick={onBack} className="min-w-[140px]">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              {t.back}
+            </Button>
+          )}
+          {onNext && (
+            <Button variant="tesla" size="lg" onClick={onNext} className="min-w-[200px]">
+              {language === "hu" ? "Tovább" : "Next"}
+              <ChevronDown className="w-4 h-4 ml-2 rotate-[-90deg]" />
+            </Button>
+          )}
         </div>
       )}
     </div>
