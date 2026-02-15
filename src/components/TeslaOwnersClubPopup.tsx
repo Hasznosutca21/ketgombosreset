@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -6,13 +7,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
 import teslaOwnersClubLogo from "@/assets/tesla-owners-club-logo.png";
 
 const STORAGE_KEY = "tesla-owners-club-popup-dismissed";
 
 const TeslaOwnersClubPopup = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const dismissed = sessionStorage.getItem(STORAGE_KEY);
@@ -25,6 +26,11 @@ const TeslaOwnersClubPopup = () => {
   const handleDismiss = () => {
     setOpen(false);
     sessionStorage.setItem(STORAGE_KEY, "true");
+  };
+
+  const handleJoin = () => {
+    handleDismiss();
+    navigate("/tesla-owners-club");
   };
 
   return (
@@ -46,14 +52,8 @@ const TeslaOwnersClubPopup = () => {
           Legyél tagja Magyarország legnagyobb Tesla közösségének. Találkozók, hírek, kedvezmények és még sok más vár rád!
         </p>
         <div className="flex flex-col gap-3">
-          <Button
-            variant="tesla"
-            size="lg"
-            asChild
-          >
-            <a href="https://www.teslaownersclub.hu" target="_blank" rel="noopener noreferrer">
-              Csatlakozom
-            </a>
+          <Button variant="tesla" size="lg" onClick={handleJoin}>
+            Megnézem
           </Button>
           <Button variant="ghost" size="sm" onClick={handleDismiss}>
             Később
