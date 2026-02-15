@@ -62,6 +62,7 @@ interface ServiceSelectorProps {
   selected: string | null;
   selectedVehicle?: string | null;
   onBack?: () => void;
+  onNext?: () => void;
 }
 
 // Categories with their services
@@ -151,7 +152,7 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
   },
 ];
 
-const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: ServiceSelectorProps) => {
+const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack, onNext }: ServiceSelectorProps) => {
   const { t, language } = useLanguage();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [doorHandleDialogOpen, setDoorHandleDialogOpen] = useState(false);
@@ -1468,6 +1469,14 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
           </div>
         </DialogContent>
       </Dialog>
+      {selected && onNext && (
+        <div className="mt-8 flex justify-center">
+          <Button variant="tesla" size="lg" onClick={onNext} className="min-w-[200px]">
+            {language === "hu" ? "Tovább" : "Next"}
+            <ChevronDown className="w-4 h-4 ml-2 rotate-[-90deg]" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
