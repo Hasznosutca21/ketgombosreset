@@ -329,85 +329,93 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack }: Servic
                     const hasPrice = !!serviceData.price;
 
                     return (
-                      <button
-                        key={service.id}
-                        onClick={() => {
-                          if (service.id === 'doorhandle') {
-                            setDoorHandleDialogOpen(true);
-                          } else if (service.id === 'body') {
-                            setTrunkDialogOpen(true);
-                          } else if (service.id === 's3xy_products') {
-                            setS3xyDialogOpen(true);
-                          } else if (service.id === 'softclose') {
-                            setSoftcloseDialogOpen(true);
-                          } else if (service.id === 'ppf') {
-                            setPpfDialogOpen(true);
-                          } else if (service.id === 'seat_ventilation') {
-                            setSeatVentDialogOpen(true);
-                          } else {
-                            onSelect(service.id);
-                          }
-                        }}
-                        className={cn(
-                          "p-5 text-left rounded-lg transition-all duration-200 border relative",
-                          isSelected 
-                            ? "bg-foreground text-background border-foreground" 
-                            : "bg-muted/30 border-border hover:border-foreground/30 hover:bg-muted/50"
-                        )}
-                      >
-                        {hasDetails && (
-                          <div
-                            onClick={(e) => handleInfoClick(e, service.id)}
-                            className={cn(
-                              "absolute top-3 right-3 p-1.5 rounded-full transition-colors cursor-pointer",
-                              isSelected 
-                                ? "bg-background/20 hover:bg-background/30 text-background" 
-                                : "bg-muted hover:bg-foreground/10"
-                            )}
-                          >
-                            <Info className="w-4 h-4" />
-                          </div>
-                        )}
-                        <div className="flex flex-col items-center text-center gap-3">
-                          <div
-                            className={cn(
-                              "w-12 h-12 rounded-full flex items-center justify-center transition-colors",
-                              isSelected ? "bg-background/20 text-background" : "bg-muted"
-                            )}
-                          >
-                            {service.id === 's3xy_products' ? (
-                              <img src={s3xyIcon} alt="S3XY" className="w-6 h-6 object-contain dark:invert-0 invert" />
-                            ) : (
-                              <Icon className="w-5 h-5" />
-                            )}
-                          </div>
-                          <div>
-                            <h4 className="font-medium text-sm mb-1">{serviceData.title}</h4>
-                            <p className={cn(
-                              "text-xs mb-2 line-clamp-2",
-                              isSelected ? "text-background/70" : "text-muted-foreground"
-                            )}>
-                              {serviceData.description}
-                            </p>
-                            <div className="flex flex-col gap-0.5">
-                              <div className={cn(
-                                "text-xs",
-                                isSelected ? "text-background/60" : "text-muted-foreground"
-                              )}>
-                                {t.estTime}: {serviceData.duration}
-                              </div>
-                              {hasPrice && (
-                                <div className={cn(
-                                  "text-sm font-medium mt-1",
-                                  isSelected ? "text-background" : "text-foreground"
-                                )}>
-                                  {serviceData.price}
-                                </div>
+                      <div key={service.id} className="relative">
+                        <button
+                          onClick={() => {
+                            if (isSelected) return; // don't re-select
+                            if (service.id === 'doorhandle') {
+                              setDoorHandleDialogOpen(true);
+                            } else if (service.id === 'body') {
+                              setTrunkDialogOpen(true);
+                            } else if (service.id === 's3xy_products') {
+                              setS3xyDialogOpen(true);
+                            } else if (service.id === 'softclose') {
+                              setSoftcloseDialogOpen(true);
+                            } else if (service.id === 'ppf') {
+                              setPpfDialogOpen(true);
+                            } else if (service.id === 'seat_ventilation') {
+                              setSeatVentDialogOpen(true);
+                            } else {
+                              onSelect(service.id);
+                            }
+                          }}
+                          className={cn(
+                            "w-full p-5 text-left rounded-lg transition-all duration-200 border relative",
+                            isSelected 
+                              ? "bg-primary/10 border-primary ring-2 ring-primary/20" 
+                              : "bg-muted/30 border-border hover:border-foreground/30 hover:bg-muted/50"
+                          )}
+                        >
+                          {hasDetails && (
+                            <div
+                              onClick={(e) => handleInfoClick(e, service.id)}
+                              className={cn(
+                                "absolute top-3 right-3 p-1.5 rounded-full transition-colors cursor-pointer",
+                                isSelected 
+                                  ? "bg-primary/10 hover:bg-primary/20 text-primary" 
+                                  : "bg-muted hover:bg-foreground/10"
+                              )}
+                            >
+                              <Info className="w-4 h-4" />
+                            </div>
+                          )}
+                          <div className="flex flex-col items-center text-center gap-3">
+                            <div
+                              className={cn(
+                                "w-12 h-12 rounded-full flex items-center justify-center transition-colors",
+                                isSelected ? "bg-primary/15 text-primary" : "bg-muted"
+                              )}
+                            >
+                              {service.id === 's3xy_products' ? (
+                                <img src={s3xyIcon} alt="S3XY" className="w-6 h-6 object-contain dark:invert-0 invert" />
+                              ) : (
+                                <Icon className="w-5 h-5" />
                               )}
                             </div>
+                            <div>
+                              <h4 className="font-medium text-sm mb-1">{serviceData.title}</h4>
+                              <p className={cn(
+                                "text-xs mb-2 line-clamp-2",
+                                isSelected ? "text-muted-foreground" : "text-muted-foreground"
+                              )}>
+                                {serviceData.description}
+                              </p>
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-xs text-muted-foreground">
+                                  {t.estTime}: {serviceData.duration}
+                                </div>
+                                {hasPrice && (
+                                  <div className="text-sm font-medium mt-1">
+                                    {serviceData.price}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </button>
+                        </button>
+                        {isSelected && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSelect("");
+                            }}
+                            className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-muted border border-border hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors flex items-center justify-center shadow-sm z-10"
+                            title={language === 'hu' ? 'Visszavonás' : 'Undo'}
+                          >
+                            <Minus className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
