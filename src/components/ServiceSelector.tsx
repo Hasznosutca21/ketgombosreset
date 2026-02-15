@@ -1470,7 +1470,7 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack, onNext }
         </DialogContent>
       </Dialog>
       {selected && (
-        <div className="mt-8 flex justify-center gap-3">
+        <div className="fixed bottom-0 left-0 right-0 z-40 p-4 flex justify-center gap-3" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
           {onBack && (
             <Button variant="teslaOutline" size="lg" onClick={onBack} className="min-w-[140px]">
               <ArrowLeft className="w-4 h-4 mr-2" />
