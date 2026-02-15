@@ -51,13 +51,13 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
                   <button
                     onClick={() => handleSelect(vehicle.id)}
                     className={cn(
-                      "w-full flex flex-col items-center p-4 md:p-6 rounded-2xl border-2 transition-all bg-card hover:bg-muted/50",
-                      isSelected ? "border-foreground shadow-lg" : "border-border hover:border-foreground/30"
+                      "w-full flex flex-col items-center p-4 md:p-6 rounded-2xl border-2 transition-all bg-card hover:bg-muted/30",
+                      isSelected ? "border-primary ring-2 ring-primary/20 shadow-lg" : "border-border hover:border-foreground/30"
                     )}
                   >
                     {isSelected && (
-                      <div className="self-start w-6 h-6 rounded-full bg-foreground flex items-center justify-center mb-2">
-                        <Check className="w-4 h-4 text-background" />
+                      <div className="self-start w-6 h-6 rounded-full bg-primary flex items-center justify-center mb-2">
+                        <Check className="w-4 h-4 text-primary-foreground" />
                       </div>
                     )}
                     <div className="w-full aspect-[16/10] mb-4 flex items-center justify-center">
