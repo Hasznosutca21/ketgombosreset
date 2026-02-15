@@ -56,8 +56,8 @@ const VehicleCarousel = ({ onSelect, selected }: VehicleCarouselProps) => {
                     )}
                   >
                     {isSelected && (
-                      <div className="self-start w-6 h-6 rounded-full bg-primary flex items-center justify-center mb-2">
-                        <Check className="w-4 h-4 text-primary-foreground" />
+                      <div className="self-end mb-1">
+                        <Check className="w-5 h-5 text-primary" />
                       </div>
                     )}
                     <div className="w-full aspect-[16/10] mb-4 flex items-center justify-center">
