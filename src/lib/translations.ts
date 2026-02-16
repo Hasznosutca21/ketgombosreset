@@ -250,6 +250,32 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
       description: "Válassz a Tesla S3XY termékek közül",
       duration: "15-30 perc",
     },
+    rear_display: {
+      title: "Hátsó kijelző",
+      description: "8\" IPS hátsó kijelző beszerelése",
+      price: "bruttó 139 900 Ft",
+      duration: "1 óra",
+      details: `Alapvető funkciók és előnyök
+
+• Ultra-tiszta 8" IPS hátsó kijelző 1280×800 felbontással és 1000 nit fényerővel – napsütésben is kiválóan olvasható.
+• Android 13.0 + 8-magos 64-bites processzor, 4GB RAM és 32GB tárhely a folyamatos alkalmazáshasználathoz és 4K lejátszáshoz.
+• Vezeték nélküli CarPlay & Android Auto Bluetooth párosítással – a hátsó utasok saját médiát és navigációt élvezhetnek.
+• Háromféle hangkimenet: beépített Hi-Fi hangszóró, Bluetooth fejhallgató vagy autós Bluetooth.
+• Hátsó utastér vezérlő: ülésfűtés (3 fokozat), független klíma be/ki, hőmérséklet és ventillátor sebesség, média hangerő és számváltás.
+• Gyári stílusú dizájn, amely tisztán illeszkedik és megőrzi az eredeti kartámaszt; többféle csiszolt UI téma.
+• 4G kapcsolat + 45W USB-C gyorstöltés az úton is online és feltöltve tartja az eszközöket.
+• OTA frissítések a Tesla firmware változásai után is biztosítják a kompatibilitást.
+• Gyerekzár, képernyő fényerő és egy érintéses kijelző kikapcsolás a kényelemért és biztonságért.
+
+Intelligens hátsó vezérlés
+
+• Ülésfűtés: három fokozat, független bal/jobb vezérlés.
+• Klíma: hátsó légkondicionálás be/ki, hőmérséklet és ventillátor sebesség.
+• Utasülés állítás: első utas háttámla fel/le és előre/hátra.
+• Média: hangerő, előző/következő, lejátszás/szünet.
+• Biztonság: gyerekzár, automatikus zár, állítható fényerő, egy érintéses kijelző kikapcsolás.
+• Parkolás / Kemping mód: klíma futtatása; gyors ajtó zár/nyitás hátulról.`,
+    },
     softclose: {
       title: "Softclose",
       description: "Elektromos ajtóbehúzó beszerelése",
@@ -794,6 +820,32 @@ Select which handle needs replacement on the interactive diagram!`,
       title: "S3XY Products",
       description: "Choose from Tesla S3XY products",
       duration: "15-30 min",
+    },
+    rear_display: {
+      title: "Rear Display",
+      description: "8\" IPS rear display installation",
+      price: "bruttó 139 900 Ft",
+      duration: "1 hour",
+      details: `Core Features & Benefits
+
+• Ultra-clear 8" IPS rear screen with 1280×800 resolution and 1000 nits for vivid, daylight-readable visuals.
+• Android 13.0 + 8-core 64-bit performance with 4GB RAM & 32GB storage for buttery-smooth apps and 4K playback.
+• Wireless CarPlay & Android Auto with seamless Bluetooth pairing—rear passengers enjoy their own media and navigation.
+• Triple audio output: built-in Hi-Fi speaker, Bluetooth headphones, or car Bluetooth.
+• Rear cabin control hub: seat heating (3 levels), independent A/C on/off, temp & fan speed, media volume & tracks.
+• Factory-style design that fits cleanly and preserves the original armrest; multiple polished UI themes.
+• 4G connectivity + 45W USB-C fast charging keep devices online and powered on road trips.
+• OTA updates resolve compatibility after Tesla firmware changes—no manual file handling.
+• Child lock, screen brightness & one-tap screen off for comfort and safety.
+
+Smart Rear Controls
+
+• Seat Heating: three levels, independent left/right control.
+• Climate: rear A/C on/off, temperature, and fan speed.
+• Passenger Seat Adjust: front passenger backrest up/down and fore/aft.
+• Media: volume, previous/next, pause/play.
+• Safety: child lock, auto lock, adjustable brightness, one-tap screen off.
+• Parking / Camp Mode: keep A/C running; quick door lock/unlock from the rear.`,
     },
     softclose: {
       title: "Softclose",
