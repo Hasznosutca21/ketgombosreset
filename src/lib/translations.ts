@@ -255,26 +255,13 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
       description: "8\" IPS hátsó kijelző beszerelése",
       price: "bruttó 139 900 Ft",
       duration: "1 óra",
-      details: `Alapvető funkciók és előnyök
+      details: `Tesla Hátsó Kijelző – Intelligens Utastér Vezérlés
 
-• Ultra-tiszta 8" IPS hátsó kijelző 1280×800 felbontással és 1000 nit fényerővel – napsütésben is kiválóan olvasható.
-• Android 13.0 + 8-magos 64-bites processzor, 4GB RAM és 32GB tárhely a folyamatos alkalmazáshasználathoz és 4K lejátszáshoz.
-• Vezeték nélküli CarPlay & Android Auto Bluetooth párosítással – a hátsó utasok saját médiát és navigációt élvezhetnek.
-• Háromféle hangkimenet: beépített Hi-Fi hangszóró, Bluetooth fejhallgató vagy autós Bluetooth.
-• Hátsó utastér vezérlő: ülésfűtés (3 fokozat), független klíma be/ki, hőmérséklet és ventillátor sebesség, média hangerő és számváltás.
-• Gyári stílusú dizájn, amely tisztán illeszkedik és megőrzi az eredeti kartámaszt; többféle csiszolt UI téma.
-• 4G kapcsolat + 45W USB-C gyorstöltés az úton is online és feltöltve tartja az eszközöket.
-• OTA frissítések a Tesla firmware változásai után is biztosítják a kompatibilitást.
-• Gyerekzár, képernyő fényerő és egy érintéses kijelző kikapcsolás a kényelemért és biztonságért.
+A Tesla hátsó kijelző egy modern, Android-alapú megoldás, amely teljes kontrollt ad a hátsó utasok kezébe. Az 8"-os IPS érintőkijelző nagy fényerejének köszönhetően minden körülmények között jól látható, míg az Android 13 rendszer gyors és zökkenőmentes működést biztosít.
 
-Intelligens hátsó vezérlés
+A készülék lehetővé teszi a hátsó klíma, ülésfűtés, média és első utasülés vezérlését, valamint támogatja a vezeték nélküli Apple CarPlay és Android Auto funkciókat. A beépített 4G kapcsolat és a 45W USB-C gyorstöltés gondoskodik róla, hogy az eszközök útközben is online és feltöltött állapotban maradjanak.
 
-• Ülésfűtés: három fokozat, független bal/jobb vezérlés.
-• Klíma: hátsó légkondicionálás be/ki, hőmérséklet és ventillátor sebesség.
-• Utasülés állítás: első utas háttámla fel/le és előre/hátra.
-• Média: hangerő, előző/következő, lejátszás/szünet.
-• Biztonság: gyerekzár, automatikus zár, állítható fényerő, egy érintéses kijelző kikapcsolás.
-• Parkolás / Kemping mód: klíma futtatása; gyors ajtó zár/nyitás hátulról.`,
+A gyári stílusú kialakítás tökéletesen illeszkedik a belső térbe, miközben az OTA frissítések hosszú távon is biztosítják a kompatibilitást a Tesla szoftverfrissítéseivel.`,
     },
     softclose: {
       title: "Softclose",
@@ -826,26 +813,13 @@ Select which handle needs replacement on the interactive diagram!`,
       description: "8\" IPS rear display installation",
       price: "bruttó 139 900 Ft",
       duration: "1 hour",
-      details: `Core Features & Benefits
+      details: `Tesla Rear Display – Smart Cabin Control
 
-• Ultra-clear 8" IPS rear screen with 1280×800 resolution and 1000 nits for vivid, daylight-readable visuals.
-• Android 13.0 + 8-core 64-bit performance with 4GB RAM & 32GB storage for buttery-smooth apps and 4K playback.
-• Wireless CarPlay & Android Auto with seamless Bluetooth pairing—rear passengers enjoy their own media and navigation.
-• Triple audio output: built-in Hi-Fi speaker, Bluetooth headphones, or car Bluetooth.
-• Rear cabin control hub: seat heating (3 levels), independent A/C on/off, temp & fan speed, media volume & tracks.
-• Factory-style design that fits cleanly and preserves the original armrest; multiple polished UI themes.
-• 4G connectivity + 45W USB-C fast charging keep devices online and powered on road trips.
-• OTA updates resolve compatibility after Tesla firmware changes—no manual file handling.
-• Child lock, screen brightness & one-tap screen off for comfort and safety.
+The Tesla rear display is a modern, Android-based solution that gives full control to rear passengers. The 8" IPS touchscreen's high brightness ensures excellent visibility in all conditions, while Android 13 provides fast and seamless operation.
 
-Smart Rear Controls
+The device enables control of rear climate, seat heating, media and front passenger seat adjustment, and supports wireless Apple CarPlay and Android Auto. Built-in 4G connectivity and 45W USB-C fast charging ensure devices stay online and charged on the go.
 
-• Seat Heating: three levels, independent left/right control.
-• Climate: rear A/C on/off, temperature, and fan speed.
-• Passenger Seat Adjust: front passenger backrest up/down and fore/aft.
-• Media: volume, previous/next, pause/play.
-• Safety: child lock, auto lock, adjustable brightness, one-tap screen off.
-• Parking / Camp Mode: keep A/C running; quick door lock/unlock from the rear.`,
+The factory-style design fits perfectly into the interior, while OTA updates ensure long-term compatibility with Tesla software updates.`,
     },
     softclose: {
       title: "Softclose",
