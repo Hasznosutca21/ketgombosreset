@@ -240,11 +240,6 @@ Válaszd ki, melyik kilincset kell cserélni az interaktív ábrán!`,
       price: "bruttó 55 000 Ft",
       duration: "10 perc",
     },
-    tires: {
-      title: "Abroncs szerviz",
-      description: "Gumiabroncs csere és centírozás",
-      duration: "1 óra",
-    },
     accessories: {
       title: "Kiegészítők beszerelése",
       description: "Tesla kiegészítők professzionális beszerelése",
@@ -789,11 +784,6 @@ Select which handle needs replacement on the interactive diagram!`,
       description: "Motor replacement for facelift models",
       price: "bruttó 55 000 Ft",
       duration: "10 min",
-    },
-    tires: {
-      title: "Tire Service",
-      description: "Tire replacement and balancing",
-      duration: "1 hour",
     },
     accessories: {
       title: "Accessories Installation",

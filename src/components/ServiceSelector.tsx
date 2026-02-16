@@ -10,7 +10,7 @@ import {
   Flame,
   Lightbulb,
   MonitorPlay,
-  CircleDot,
+  
   Info,
   Donut,
   ArrowLeft,
@@ -121,7 +121,6 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
       { id: "body", icon: Package, vehicleRestriction: ["model-3"] },
       { id: "canbus", icon: Settings, vehicleRestriction: ["model-y"] },
       { id: "warranty", icon: Shield, vehicleRestriction: ["model-3"] },
-      { id: "tires", icon: CircleDot, vehicleRestriction: [] },
     ],
   },
   {
