@@ -12,6 +12,30 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate the user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 401 }
+      );
+    }
+
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 401 }
+      );
+    }
+
     const { reservation_id, arrival_type, language } = await req.json();
 
     if (!reservation_id) {
@@ -24,10 +48,10 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const fcmServerKey = Deno.env.get('FCM_SERVER_KEY');
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const adminClient = createClient(supabaseUrl, supabaseServiceKey);
 
     // Get all admin push subscriptions to notify admins
-    const { data: adminSubs, error: adminSubError } = await supabase
+    const { data: adminSubs, error: adminSubError } = await adminClient
       .from('admin_push_subscriptions')
       .select('*');
 
