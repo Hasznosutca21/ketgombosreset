@@ -23,7 +23,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { saveAppointment, SavedAppointment } from "@/lib/appointments";
 import { toast } from "sonner";
-import TeslaOwnersClubPopup from "@/components/TeslaOwnersClubPopup";
+
 
 type Step = "service" | "vehicle" | "appointment" | "confirmation";
 
@@ -128,7 +128,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      <TeslaOwnersClubPopup />
+      
       {/* Hero Section */}
       <div className="relative h-[50vh] min-h-[400px] overflow-hidden bg-black">
         <img src={heroImage} alt="Tesla Service Center" width={1920} height={677} className="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none scale-105" fetchPriority="high" />
