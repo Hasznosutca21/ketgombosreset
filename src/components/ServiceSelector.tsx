@@ -39,6 +39,7 @@ import s3xyStalkRightImage from "@/assets/products/s3xy-stalk-right.webp";
 import lowVoltageBatteryImage from "@/assets/products/low-voltage-battery.jpg";
 import chargePortRepairImage from "@/assets/products/charge-port-repair.webp";
 import seatVentWhiteImage from "@/assets/products/seat-ventilation-white.jpg";
+import rearDisplayImage from "@/assets/products/rear-display.png";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -441,6 +442,11 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack, onNext }
             {selectedDetails?.serviceId === 'chargeport_repair' && (
               <div className="rounded-lg overflow-hidden">
                 <img src={chargePortRepairImage} alt="Töltőport javítás - CP_A163" className="w-full h-48 object-cover bg-muted/30" />
+              </div>
+            )}
+            {selectedDetails?.serviceId === 'rear_display' && (
+              <div className="rounded-lg overflow-hidden">
+                <img src={rearDisplayImage} alt="Hátsó kijelző" className="w-full h-48 object-contain bg-muted/30" />
               </div>
             )}
             <div className="text-sm text-muted-foreground">
