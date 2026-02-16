@@ -147,6 +147,7 @@ const categories: { id: string; icon: typeof Wrench; services: ServiceDef[]; veh
       { id: "softclose", icon: DoorClosed, vehicleRestriction: ["model-3", "model-y"] },
       { id: "seat_ventilation", icon: Fan, vehicleRestriction: ["model-3", "model-y"], yearRestriction: { from: 2017, to: 2023 } },
       { id: "performance_seat_upgrade", icon: Fan, vehicleRestriction: ["model-3", "model-y"], yearRestriction: { from: 2024, to: 2026 } },
+      { id: "rear_display", icon: MonitorPlay, vehicleRestriction: ["model-3", "model-y"] },
     ],
   },
 ];
