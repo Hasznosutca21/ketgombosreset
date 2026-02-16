@@ -48,14 +48,22 @@ const ArrivalCheckIn = ({ reservationId, locationName, compact, onArrival }: Arr
     if (checkedIn) return;
     setLoading(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) {
+        toast.error(
+          language === "hu" ? "Kérjük, jelentkezzen be." : "Please sign in first."
+        );
+        setLoading(false);
+        return;
+      }
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
       
       const res = await fetch(`${supabaseUrl}/functions/v1/notify-customer-arrival`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${supabaseKey}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           reservation_id: reservationId,
