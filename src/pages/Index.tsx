@@ -62,6 +62,9 @@ const Index = () => {
   const handleServiceSelect = (service: string, extras?: { doorHandles?: string[] }) => {
     setSelectedService(service || null);
     setSelectedServiceExtras(extras || null);
+    if (service) {
+      setCurrentStep("appointment");
+    }
   };
 
   const handleAppointmentSubmit = async (data: typeof appointmentData) => {
