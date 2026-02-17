@@ -267,12 +267,6 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack, onNext }
 
   return (
     <div className="animate-fade-in">
-      {onBack && (
-        <Button variant="ghost" onClick={onBack} className="mb-6 -ml-2">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          {t.back}
-        </Button>
-      )}
       
       <h2 className="text-2xl md:text-4xl font-extralight tracking-tight mb-2">{t.selectService}</h2>
       <p className="text-muted-foreground font-light mb-8">{t.chooseServiceType}</p>
@@ -1475,22 +1469,6 @@ const ServiceSelector = ({ onSelect, selected, selectedVehicle, onBack, onNext }
           </div>
         </DialogContent>
       </Dialog>
-      {selected && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 p-4 flex justify-center gap-3" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
-          {onBack && (
-            <Button variant="teslaOutline" size="lg" onClick={onBack} className="min-w-[140px]">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              {t.back}
-            </Button>
-          )}
-          {onNext && (
-            <Button variant="tesla" size="lg" onClick={onNext} className="min-w-[200px]">
-              {language === "hu" ? "Tovább" : "Next"}
-              <ChevronDown className="w-4 h-4 ml-2 rotate-[-90deg]" />
-            </Button>
-          )}
-        </div>
-      )}
     </div>
   );
 };
